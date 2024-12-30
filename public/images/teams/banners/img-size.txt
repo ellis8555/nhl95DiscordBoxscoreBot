@@ -1,0 +1,2 @@
+Banner = 1.6 cm x 7.9 cm
+Thumb = 2.1 cm x 2.1 cm
