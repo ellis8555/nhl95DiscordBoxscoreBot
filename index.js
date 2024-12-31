@@ -8,6 +8,7 @@ import generateCanvasImage from './lib/canvas/gererateCanvasImage.js';
 import { bot_consts } from "./lib/constants/consts.js";
 
 const {  
+  token,
   uniqueIdsFileName, 
   uniqueIdsFileTEST, 
   nhl95Server, 
@@ -172,4 +173,4 @@ client.on(Events.MessageCreate, async message => {
 
 });
 
-client.login(process.env.token);
+client.login(token);
