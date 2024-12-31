@@ -1,2 +1,4 @@
 /node_modules
 *.env
+s12UniqueIds.csv
+s12UniqueIds-TEST.csv
