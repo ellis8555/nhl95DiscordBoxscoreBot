@@ -5,6 +5,7 @@ import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-
 import { fileURLToPath } from 'url';
 import fs from "node:fs"
 import path from "node:path";
+import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js";
 import generateCanvasImage from './lib/canvas/gererateCanvasImage.js';
 import { bot_consts } from "./lib/constants/consts.js";
 
@@ -27,10 +28,10 @@ const __dirname = path.dirname(__filename);
 const uniqueIdsFile = uniqueIdsFileTEST
 const serverName = testServer
 const channelName = listeningChannel
-const sendResponseToOutputchannel = false // when true response sent to outputChannel otherwise result posted in same channel state is submitted
+const sendResponseToOutputchannel = true // when true response sent to outputChannel otherwise result posted in same channel state is submitted
 const outputChannelName = outputChannel
-const allowDuplicates =  true // true is for testing
-const writeToUniqueIdsFile = false // false for testing. make sure uniqueIdsFileTEST is being used when testing
+const allowDuplicates =  false // true is for testing
+const writeToUniqueIdsFile = true // false for testing. make sure uniqueIdsFileTEST is being used when testing
 // TODO:
 const saveStateName = saveStatePattern
 const league = leagueName
@@ -44,6 +45,8 @@ const client = new Client({
   ]
 });
 
+let sheets;
+let spreadsheetId;
 let uniqueIdsFilePath;
 let uniqueGameStateIds;
 let adminBoxscoreChannelId; // get the channel the bot will be listening in.
@@ -75,6 +78,17 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
     } else {
       console.log(`Channel '${outputChannelName}' not found.`)
     }
+
+    // begin connections to google sheets
+    const serviceAccount = JSON.parse(fs.readFileSync("./serviceKeys.json"));
+
+    // Initialize the Sheets API client in the main thread
+    const auth = new google.auth.GoogleAuth({
+      credentials: serviceAccount,
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    });
+    sheets = google.sheets({ version: "v4", auth });
+    spreadsheetId = process.env.spreadSheetId;
   } else {
     console.log(`${serverName} server not found.`)
   }
@@ -100,6 +114,7 @@ client.on(Events.MessageCreate, async message => {
     // begin to process the actual files
 
   for (const gameState of gameStates){
+    await message.channel.send(`Processing - ${gameState.name}`)
     const fileName = gameState.name;
     try {
       const gameFileURL = gameState.attachment
@@ -131,6 +146,7 @@ client.on(Events.MessageCreate, async message => {
         uniqueGameStateIds.push(matchup); // Update the in-memory array
       }
 
+      // TODO: begin drawing boxscore image
         const gameDataObj = {
           __dirname,
           homeTeam: romData.data.homeTeamGameStats.HomeTeam,
@@ -147,8 +163,16 @@ client.on(Events.MessageCreate, async message => {
           scoringSummary: romData.data.allGoalsScored,
           penaltySummary: romData.data.allPenalties
         };
-  
+
         const imageBuffer = await generateCanvasImage(gameDataObj);
+        // send game data to google shees
+        const sheetsArgsObj = {
+          sheets,
+          spreadsheetId,
+          romData
+        }
+        await appendGoogleSheetsData(sheetsArgsObj);
+        await message.channel.send(`${gameState.name} processed.`)
         const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' })
 
         if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
