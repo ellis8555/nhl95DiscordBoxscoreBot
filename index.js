@@ -88,7 +88,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
     sheets = google.sheets({ version: "v4", auth });
-    spreadsheetId = process.env.spreadSheetId;
+    spreadsheetId = process.env.dev_spreadSheetId;
   } else {
     console.log(`${serverName} server not found.`)
   }
