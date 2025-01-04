@@ -1,3 +1,4 @@
+import { google } from "googleapis";
 import { AttachmentBuilder, Client, Events, GatewayIntentBits } from 'discord.js';
 import { teamCodes } from "./lib/game-state-parsing/teamcodes.js";
 import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-state.js';
@@ -26,7 +27,7 @@ const __dirname = path.dirname(__filename);
 const uniqueIdsFile = uniqueIdsFileTEST
 const serverName = testServer
 const channelName = listeningChannel
-const sendResponseToOutputchannel = true // when true response sent to outputChannel otherwise result posted in same channel state is submitted
+const sendResponseToOutputchannel = false // when true response sent to outputChannel otherwise result posted in same channel state is submitted
 const outputChannelName = outputChannel
 const allowDuplicates =  true // true is for testing
 const writeToUniqueIdsFile = false // false for testing. make sure uniqueIdsFileTEST is being used when testing
@@ -84,7 +85,7 @@ client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
   if (message.attachments.size < 1) return;
 
-  let gameStateFileNames = []; // holds fileNames for states that are duplicates
+  let duplicateGameStateFileNames = []; // holds fileNames for states that are duplicates
 
   const gameStates = [...message.attachments.values()].filter(state => {
     const isGameState = saveStateName.test(state.name)
@@ -121,7 +122,7 @@ client.on(Events.MessageCreate, async message => {
         const matchup = gamesUniqueId.substring(2, 9);
         const isHomeAwayDuplicated = uniqueGameStateIds.includes(matchup)
         if(isDuplicate || isHomeAwayDuplicated){
-          gameStateFileNames.push(fileName)
+          duplicateGameStateFileNames.push(fileName)
           continue;
         }
         
@@ -160,10 +161,10 @@ client.on(Events.MessageCreate, async message => {
       }
   }
   
-  if(gameStateFileNames.length > 0){
-    const fileCount = gameStateFileNames.length;
+  if(duplicateGameStateFileNames.length > 0){
+    const fileCount = duplicateGameStateFileNames.length;
     let duplicateStringMessage = "";
-    gameStateFileNames.forEach(file => {
+    duplicateGameStateFileNames.forEach(file => {
       duplicateStringMessage += ` ${file}\n`;
     })
     await message.channel.send(
