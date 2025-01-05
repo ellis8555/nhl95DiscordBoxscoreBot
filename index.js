@@ -112,7 +112,7 @@ client.on(Events.MessageCreate, async message => {
     // begin to process the actual files
 
   for (const gameState of gameStates){
-    await message.channel.send(`Processing - ${gameState.name}`)
+    await message.channel.send(`Processing: ${gameState.name}`)
     const fileName = gameState.name;
     try {
       const gameFileURL = gameState.attachment
@@ -170,7 +170,7 @@ client.on(Events.MessageCreate, async message => {
           romData
         }
         await appendGoogleSheetsData(sheetsArgsObj);
-        await message.channel.send(`${gameState.name} processed.`)
+        await message.channel.send(`Processed: ${gameState.name}.`)
         const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' })
 
         if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
@@ -181,7 +181,7 @@ client.on(Events.MessageCreate, async message => {
       }catch(error){
         await message.channel.send(`Failed to process file ${gameState.name}. Please check the file and try again.`)
       }
-  }
+    }
   
   if(duplicateGameStateFileNames.length > 0){
     const fileCount = duplicateGameStateFileNames.length;
