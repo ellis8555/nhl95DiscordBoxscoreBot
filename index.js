@@ -5,7 +5,7 @@ import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-
 import { fileURLToPath } from 'url';
 import fs from "node:fs"
 import path from "node:path";
-import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js";
+import createBoxscore from "./lib/google-sheets/createBoxscore.js";
 import { bot_consts } from "./lib/constants/consts.js";
 import createWorker from "./lib/workers/createWorker.js";
 
@@ -147,7 +147,7 @@ client.on(Events.MessageCreate, async message => {
       }
       
       const data = romData.data;
-      const createBoxscore = createWorker('./lib/workers/scripts/googleSheetsApi.js', {data, __dirname})
+      const createBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', {data, __dirname})
 
       // send game data to google shees
       const sheetsArgsObj = {
