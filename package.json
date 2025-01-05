@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node --env-file=.env index.js"
+    "prod": "node --env-file=.env index.js",
+    "dev": "node --env-file=.dev.env index.js"
   },
   "keywords": [],
   "author": "",
