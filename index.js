@@ -34,8 +34,7 @@ const outputChannelName = outputChannel
 const saveStateName = saveStatePattern
 const league = leagueName
 const seasonNumber = seasonNum
-// TODO:
-console.time("Discord time")
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -161,7 +160,7 @@ client.on(Events.MessageCreate, async message => {
       if (status === "success") {
           const imageBuffer = Buffer.from(image)
           const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
-          await message.channel.send(`Processed - ${gameState.name}.`)
+          await message.channel.send(`Processed - ${gameState.name} - COMPLETE`)
 
           if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
             await client.channels.cache.get(outputChannelId).send({files: [attachment] });  // this outputs to boxscore channel
@@ -169,12 +168,11 @@ client.on(Events.MessageCreate, async message => {
             await message.channel.send({files: [attachment] }); // this is channel where states are posted
           }
       }
-      console.timeEnd("Discord time")
-      }catch(error){
-        await message.channel.send(`Failed to process file ${gameState.name}. Please check the file and try again.`)
-      }
+    }catch(error){
+      await message.channel.send(`Failed to process file ${gameState.name}. Please check the file and try again.`)
+    }
   }
-  
+
   if(duplicateGameStateFileNames.length > 0){
     const fileCount = duplicateGameStateFileNames.length;
     let duplicateStringMessage = "";
