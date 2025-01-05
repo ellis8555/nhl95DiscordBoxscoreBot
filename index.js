@@ -5,9 +5,9 @@ import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-
 import { fileURLToPath } from 'url';
 import fs from "node:fs"
 import path from "node:path";
-import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js";
-import generateCanvasImage from './lib/canvas/gererateCanvasImage.js';
+import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js"
 import { bot_consts } from "./lib/constants/consts.js";
+import createWorker from "./lib/workers/createWorker.js";
 
 const {  
   token,
@@ -129,6 +129,7 @@ client.on(Events.MessageCreate, async message => {
       }
       const romData = await readOgRomBinaryGameState(romArgs)
 
+      
       if(writeToUniqueIdsFile){ // write game id's to .csv files when true
         const gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
         const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
@@ -143,46 +144,35 @@ client.on(Events.MessageCreate, async message => {
         uniqueGameStateIds.push(gamesUniqueId); // Update the in-memory array
         uniqueGameStateIds.push(matchup); // Update the in-memory array
       }
+      
+      const data = romData.data;
+      const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', {data, __dirname})
 
-      // TODO: begin drawing boxscore image
-        const gameDataObj = {
-          __dirname,
-          homeTeam: romData.data.homeTeamGameStats.HomeTeam,
-          homeTeamScore: romData.data.homeTeamGameStats.HomeGOALS,
-          homeTeamGoalieStats: romData.data.homeTeamGoalieStats,
-          homeTeamPlayerStats: romData.data.homeTeamPlayerStats,
-          homeTeamGameStats: romData.data.homeTeamGameStats,
-          awayTeam: romData.data.awayTeamGameStats.AwayTeam,
-          awayTeamScore: romData.data.awayTeamGameStats.AwayGOALS,
-          awayTeamGoalieStats: romData.data.awayTeamGoalieStats,
-          awayTeamPlayerStats: romData.data.awayTeamPlayerStats,
-          awayTeamGameStats: romData.data.awayTeamGameStats,
-          otherGameStats: romData.data.otherGameStats,
-          scoringSummary: romData.data.allGoalsScored,
-          penaltySummary: romData.data.allPenalties
-        };
-
-        const imageBuffer = await generateCanvasImage(gameDataObj);
-        // send game data to google shees
-        const sheetsArgsObj = {
-          sheets,
-          spreadsheetId,
-          romData
-        }
-        await appendGoogleSheetsData(sheetsArgsObj);
-        await message.channel.send(`Processed: ${gameState.name}.`)
-        const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' })
-
-        if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
-          await client.channels.cache.get(outputChannelId).send({files: [attachment] });  // this outputs to boxscore channel
-        } else { // send to same channel in which the state was submitted.
-          await message.channel.send({files: [attachment] }); // this is channel where states are posted
-        }
-      }catch(error){
-        await message.channel.send(`Failed to process file ${gameState.name}. Please check the file and try again.`)
+      // send game data to google shees
+      const sheetsArgsObj = {
+        sheets,
+        spreadsheetId,
+        romData
       }
+      await appendGoogleSheetsData(sheetsArgsObj);
+
+      const { status, image } = await generateBoxscore;
+      if (status === "success") {
+          const imageBuffer = Buffer.from(image)
+          const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
+          await message.channel.send(`Processed - ${gameState.name} - COMPLETE`)
+
+          if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
+            await client.channels.cache.get(outputChannelId).send({files: [attachment] });  // this outputs to boxscore channel
+          } else { // send to same channel in which the state was submitted.
+            await message.channel.send({files: [attachment] }); // this is channel where states are posted
+          }
+      }
+    }catch(error){
+      await message.channel.send(`Failed to process file ${gameState.name}. Please check the file and try again.`)
     }
-  
+  }
+
   if(duplicateGameStateFileNames.length > 0){
     const fileCount = duplicateGameStateFileNames.length;
     let duplicateStringMessage = "";
