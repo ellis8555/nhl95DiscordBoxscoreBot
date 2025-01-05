@@ -161,7 +161,7 @@ client.on(Events.MessageCreate, async message => {
       if (status === "success") {
           const imageBuffer = Buffer.from(image)
           const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
-          await message.channel.send(`${gameState.name} processed.`)
+          await message.channel.send(`Processed - ${gameState.name}.`)
 
           if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
             await client.channels.cache.get(outputChannelId).send({files: [attachment] });  // this outputs to boxscore channel
