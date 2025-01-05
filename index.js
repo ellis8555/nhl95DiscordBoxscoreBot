@@ -11,27 +11,25 @@ import { bot_consts } from "./lib/constants/consts.js";
 
 const {  
   token,
-  uniqueIdsFileName, 
-  uniqueIdsFileTEST, 
-  nhl95Server, 
-  testServer, 
+  uniqueIdsFileName,  
+  server,
   listeningChannel, 
   outputChannel, 
   saveStatePattern, 
   leagueName,
   seasonNum,
+  sendResponseToOutputchannel,
+  allowDuplicates,
+  writeToUniqueIdsFile
 } = bot_consts
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // TODO: // these are important to update on a regular basis!
-const uniqueIdsFile = uniqueIdsFileTEST
-const serverName = testServer
+const uniqueIdsFile = uniqueIdsFileName
+const serverName = server
 const channelName = listeningChannel
-const sendResponseToOutputchannel = true // when true response sent to outputChannel otherwise result posted in same channel state is submitted
 const outputChannelName = outputChannel
-const allowDuplicates =  false // true is for testing
-const writeToUniqueIdsFile = true // false for testing. make sure uniqueIdsFileTEST is being used when testing
 // TODO:
 const saveStateName = saveStatePattern
 const league = leagueName
@@ -88,7 +86,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
     sheets = google.sheets({ version: "v4", auth });
-    spreadsheetId = process.env.dev_spreadSheetId;
+    spreadsheetId = process.env.spreadSheetId;
   } else {
     console.log(`${serverName} server not found.`)
   }
