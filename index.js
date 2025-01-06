@@ -180,10 +180,10 @@ client.on(Events.MessageCreate, async message => {
     const fileCount = duplicateGameStateFileNames.length;
     let duplicateStringMessage = "";
     duplicateGameStateFileNames.forEach(file => {
-      duplicateStringMessage += ` ${file}\n`;
+      duplicateStringMessage += `${file}\n`;
     })
     await message.channel.send(
-      `The following ${fileCount} game state(s) were NOT processed.\n Game(s) are either a duplicate(s) OR the home/away did not switch.\n${duplicateStringMessage}`
+      `The following ${fileCount} game state(s) were NOT processed.\nDuplication or home/away did not switch.\n\`${duplicateStringMessage}\``
     )
   }
 
