@@ -167,9 +167,10 @@ client.on(Events.MessageCreate, async message => {
           await new Promise(resolve => setTimeout(resolve, 250));
         }
         try { // append to google sheets try block
-          const googleSheetsResponse = await appendGoogleSheetsData(sheetsArgsObj);
-          if(googleSheetsResponse.status === "error"){
-            throw new Error(`Error: ${fileName} has not been appended to the sheets.`)
+          const googleSheeptsResponse = await appendGoogleSheetsData(sheetsArgsObj);
+          // if error returned throw error
+          if(googleSheeptsResponse && googleSheeptsResponse.status === 'error'){
+            throw new Error(googleSheeptsResponse.message)
           }
         } catch (error) {
           // don't need to throw an error so boxscore can still be produced in next lines
@@ -227,12 +228,11 @@ if(readingGameStateError.length > 0){
 }
 
 // let user know which events did not occur on which states
-if(userErrorMessage !== ""){ // no errors occured
-  await message.channel.send(`End processing files.`)
+if(userErrorMessage === ""){ // no errors occured
+  await message.channel.send(`\n\nGoogle test sheet tabs appended.\nEnd processing files.`)
 } else { // if errors occured
-  await message.channel.send(userErrorMessage)
+  await message.channel.send('\n\n' + userErrorMessage + '\nEnd processing files')
 }
-
 });
 
 client.login(token);
