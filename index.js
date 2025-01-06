@@ -28,7 +28,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // TODO: // these are important to update on a regular basis!
 const uniqueIdsFile = uniqueIdsFileName
-const serverName = server
 const channelName = listeningChannel
 const outputChannelName = outputChannel
 // TODO:
@@ -61,7 +60,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       .map(id => id.trim())
   }
 
-  const guild = client.guilds.cache.find(guild => guild.name === serverName);
+  const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
 
     const channel = guild.channels.cache.find(channel => channel.name === channelName)
@@ -89,7 +88,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
     sheets = google.sheets({ version: "v4", auth });
     spreadsheetId = process.env.spreadSheetId;
   } else {
-    console.log(`${serverName} server not found.`)
+    console.log(`${server} server not found.`)
   }
 });
 
