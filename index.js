@@ -20,7 +20,8 @@ const {
   seasonNum,
   sendResponseToOutputchannel,
   allowDuplicates,
-  writeToUniqueIdsFile
+  writeToUniqueIdsFile,
+  writeToGoogleSheets
 } = bot_consts
 
 const __filename = fileURLToPath(import.meta.url);
@@ -148,13 +149,15 @@ client.on(Events.MessageCreate, async message => {
       const data = romData.data;
       const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', {data, __dirname})
 
-      // send game data to google shees
-      const sheetsArgsObj = {
-        sheets,
-        spreadsheetId,
-        romData
+      if(writeToGoogleSheets){
+        // send game data to google shees
+        const sheetsArgsObj = {
+          sheets,
+          spreadsheetId,
+          romData
+        }
+        await appendGoogleSheetsData(sheetsArgsObj);
       }
-      await appendGoogleSheetsData(sheetsArgsObj);
 
       const { status, image } = await generateBoxscore;
       if (status === "success") {
@@ -180,7 +183,7 @@ client.on(Events.MessageCreate, async message => {
       duplicateStringMessage += ` ${file}\n`;
     })
     await message.channel.send(
-      `The following ${fileCount} game state(s) were NOT processed as they appear to be duplicates OR the home/away did not switch.\n${duplicateStringMessage}`
+      `The following ${fileCount} game state(s) were NOT processed.\n Game(s) are either a duplicate(s) OR the home/away did not switch.\n${duplicateStringMessage}`
     )
   }
 
