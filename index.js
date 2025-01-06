@@ -156,6 +156,9 @@ client.on(Events.MessageCreate, async message => {
           spreadsheetId,
           romData
         }
+        if(gameStates.length > 0){ // add a delay so as not to exceed google sheets rate limit
+          await new Promise(resolve => setTimeout(resolve, 250));
+        }
         await appendGoogleSheetsData(sheetsArgsObj);
       }
 
