@@ -98,7 +98,9 @@ client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
   if (message.attachments.size < 1) return;
 
-  let duplicateGameStateFileNames = []; // holds fileNames for states that are duplicates
+  const duplicateGameStateFileNames = []; // holds fileNames for states that are duplicates
+  const readingGameStateError = [] // holds errors related to reading in the game file
+  const googleSheetApiErrors = [];  // holds references to any errors during game appends
 
   const gameStates = [...message.attachments.values()].filter(state => {
     const isGameState = saveStateName.test(state.name)
@@ -113,22 +115,28 @@ client.on(Events.MessageCreate, async message => {
     // begin to process the actual files
 
   for (const gameState of gameStates){
+    let romData;
     await message.channel.send(`Processing: ${gameState.name}`)
     const fileName = gameState.name;
-    try {
-      const gameFileURL = gameState.attachment
-      const fetchGameFile = await fetch(gameFileURL);
-      const gameFileBuffer = await fetchGameFile.arrayBuffer();
-  
-      // begin reading the game file data
-      const romArgs = {
-        file:gameFileBuffer,
-        seasonNumber,
-        gameType : "season",
-        leagueName : league,
-        teamsDictCodes:teamCodes
+    try { // catch all try block
+      try { // game parsing try block       
+        const gameFileURL = gameState.attachment
+        const fetchGameFile = await fetch(gameFileURL);
+        const gameFileBuffer = await fetchGameFile.arrayBuffer();
+    
+        // begin reading the game file data
+        const romArgs = {
+          file:gameFileBuffer,
+          seasonNumber,
+          gameType : "season",
+          leagueName : league,
+          teamsDictCodes:teamCodes
+        }
+        romData = await readOgRomBinaryGameState(romArgs)
+      } catch (error) {
+        readingGameStateError.push(fileName)
+        throw new Error(`Error: ${fileName} could not be parsed properly.`)
       }
-      const romData = await readOgRomBinaryGameState(romArgs)
 
       
       if(writeToUniqueIdsFile){ // write game id's to .csv files when true
@@ -159,7 +167,15 @@ client.on(Events.MessageCreate, async message => {
         if(gameStates.length > 0){ // add a delay so as not to exceed google sheets rate limit
           await new Promise(resolve => setTimeout(resolve, 250));
         }
-        await appendGoogleSheetsData(sheetsArgsObj);
+        try { // append to google sheets try block
+          const googleSheetsResponse = await appendGoogleSheetsData(sheetsArgsObj);
+          if(googleSheetsResponse.status === "error"){
+            throw new Error(`Error: ${fileName} has not been appended to the sheets.`)
+          }
+        } catch (error) {
+          // don't need to throw an error so boxscore can still be produced in next lines
+          googleSheetApiErrors.push(fileName)
+        }
       }
 
       const { status, image } = await generateBoxscore;
@@ -175,20 +191,48 @@ client.on(Events.MessageCreate, async message => {
           }
       }
     }catch(error){
-      await message.channel.send(`Failed to process file ${gameState.name}. Please check the file and try again.`)
+      await message.channel.send(error.message)
     }
   }
 
+  let userErrorMessage = ""
+
+  // display user message game state duplications or home/away error
   if(duplicateGameStateFileNames.length > 0){
-    const fileCount = duplicateGameStateFileNames.length;
+    const duplicateFileCount = duplicateGameStateFileNames.length;
     let duplicateStringMessage = "";
     duplicateGameStateFileNames.forEach(file => {
       duplicateStringMessage += `${file}\n`;
     })
-    await message.channel.send(
-      `The following ${fileCount} game state(s) were NOT processed.\nDuplication or home/away did not switch.\n\`${duplicateStringMessage}\``
-    )
+
+    userErrorMessage += `The following ${duplicateFileCount} game state(s) were NOT processed.\nDuplication or home/away did not switch.\n\`${duplicateStringMessage}\``
   }
+
+// display user message games that were not added to google sheets
+if(googleSheetApiErrors.length > 0){
+  const googleErrorFileCount = googleSheetApiErrors.length;
+  let googleSheetsAppendErrorStringMessage = "";
+  googleSheetApiErrors.forEach(file => {
+    googleSheetsAppendErrorStringMessage += `${file}\n`;
+  })
+    userErrorMessage += `The following ${googleErrorFileCount} game state(s) were not appended to google sheets.\n\`${googleSheetsAppendErrorStringMessage}\`\n\n`
+}
+
+if(readingGameStateError.length > 0){
+  const gameParsingErrorCount = readingGameStateError.length;
+  let gameParsingErrorStringMessage = "";
+  readingGameStateError.forEach(file => {
+    gameParsingErrorStringMessage += `${file}\n`;
+  })
+  userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not appended to google sheets.\n\`${gameParsingErrorStringMessage}\`\n\n`
+}
+
+// let user know which events did not occur on which states
+if(userErrorMessage !== ""){ // no errors occured
+  await message.channel.send(`End processing files.`)
+} else { // if errors occured
+  await message.channel.send(userErrorMessage)
+}
 
 });
 
