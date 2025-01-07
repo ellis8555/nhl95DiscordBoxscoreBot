@@ -1,13 +1,14 @@
-import { google } from "googleapis";
-import { AttachmentBuilder, Client, Events, GatewayIntentBits } from 'discord.js';
-import { teamCodes } from "./lib/game-state-parsing/teamcodes.js";
-import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-state.js';
-import { fileURLToPath } from 'url';
 import fs from "node:fs"
 import path from "node:path";
+import { fileURLToPath } from 'url';
+import { google } from "googleapis";
+import { AttachmentBuilder, Client, Events, GatewayIntentBits } from 'discord.js';
+// lib files
+import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-state.js';
 import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js"
-import { bot_consts } from "./lib/constants/consts.js";
 import createWorker from "./lib/workers/createWorker.js";
+import { teamCodes } from "./lib/game-state-parsing/teamcodes.js";
+import { bot_consts } from "./lib/constants/consts.js";
 
 const {  
   token,
@@ -151,11 +152,11 @@ client.on(Events.MessageCreate, async message => {
         uniqueGameStateIds.push(matchup); // Update the in-memory array
       }
       
-      const data = romData.data;
+      const data = romData.data; // hand boxscore processing to worker
       const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', {data, __dirname})
 
       if(writeToGoogleSheets){
-        // send game data to google shees
+        // send game data to google sheets
         const sheetsArgsObj = {
           sheets,
           spreadsheetId,
