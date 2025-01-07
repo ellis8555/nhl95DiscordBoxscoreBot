@@ -26,11 +26,9 @@ const {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// TODO: // these are important to update on a regular basis!
 const uniqueIdsFile = uniqueIdsFileName
 const channelName = listeningChannel
 const outputChannelName = outputChannel
-// TODO:
 const saveStateName = saveStatePattern
 const league = leagueName
 const seasonNumber = seasonNum
@@ -164,10 +162,10 @@ client.on(Events.MessageCreate, async message => {
           romData
         }
         try { // append to google sheets try block
-          const googleSheeptsResponse = await appendGoogleSheetsData(sheetsArgsObj);
+          const googleSheetsResponse = await appendGoogleSheetsData(sheetsArgsObj);
           // if error returned throw error
-          if(googleSheeptsResponse && googleSheeptsResponse.status === 'error'){
-            throw new Error(googleSheeptsResponse.message)
+          if(googleSheetsResponse && googleSheetsResponse.status === 'error'){
+            throw new Error(googleSheetsResponse.message)
           }
         } catch (error) {
           // don't need to throw an error so boxscore can still be produced in next lines
