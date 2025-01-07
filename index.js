@@ -174,7 +174,7 @@ client.on(Events.MessageCreate, async message => {
         }
       }
 
-      const { status, image } = await generateBoxscore;
+      const { status, image, message } = await generateBoxscore; // boxscore image status either success or error
       if (status === "success") {
           const imageBuffer = Buffer.from(image)
           const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
@@ -185,6 +185,9 @@ client.on(Events.MessageCreate, async message => {
           } else { // send to same channel in which the state was submitted.
             await message.channel.send({files: [attachment] }); // this is channel where states are posted
           }
+      }
+      if(status === "error") {
+        throw new Error(message + fileName)
       }
     }catch(error){
       await message.channel.send(error.message)
