@@ -152,6 +152,7 @@ client.on(Events.MessageCreate, async message => {
 
       // check that both teams are not the same. 
       if(romData.data.otherGameStats.homeTeam === romData.data.otherGameStats.awayTeam){
+        readingGameStateError.push(fileName)
         throw new Error(`Error: \`${fileName}\` home and away teams are the same.`)
       }
 
@@ -237,7 +238,7 @@ client.on(Events.MessageCreate, async message => {
     googleSheetApiErrors.forEach(file => {
       googleSheetsAppendErrorStringMessage += `${file}\n`;
     })
-      userErrorMessage += `The following ${googleErrorFileCount} game state(s) were not appended to google sheets.\n\`${googleSheetsAppendErrorStringMessage}\`\n\n`
+      userErrorMessage += `The following ${googleErrorFileCount} game state(s) were not appended to google sheets.\n\`${googleSheetsAppendErrorStringMessage}\``
   }
 
   if(readingGameStateError.length > 0){
@@ -246,7 +247,7 @@ client.on(Events.MessageCreate, async message => {
     readingGameStateError.forEach(file => {
       gameParsingErrorStringMessage += `${file}\n`;
     })
-    userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not appended to google sheets.\n\`${gameParsingErrorStringMessage}\`\n\n`
+    userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not appended to google sheets.\n\`${gameParsingErrorStringMessage}\``
   }
 
   [processMessageArray, completeMessageArray].forEach(messageArray  => {
@@ -259,7 +260,7 @@ client.on(Events.MessageCreate, async message => {
   if(userErrorMessage === ""){ // if errors occured
     await message.channel.send('End processing files')
   } else {
-    await message.channel.send('\n\n' + userErrorMessage + '\nEnd processing files')
+    await message.channel.send(`--------------------------\n${userErrorMessage}\nEnd processing files`)
   }
   });
 
