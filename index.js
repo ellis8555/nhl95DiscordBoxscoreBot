@@ -190,7 +190,7 @@ client.on(Events.MessageCreate, async message => {
           }
         } catch (error) {
           googleSheetApiErrors.push(fileName)
-          throw new Error(error.message)
+          throw new Error(`\`${fileName}\` ${error.message}`)
         }
       }
 
