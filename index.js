@@ -22,7 +22,8 @@ const {
   sendResponseToOutputchannel,
   allowDuplicates,
   writeToUniqueIdsFile,
-  writeToGoogleSheets
+  writeToGoogleSheets,
+  sendBoxscore
 } = bot_consts
 
 const __filename = fileURLToPath(import.meta.url);
@@ -96,25 +97,30 @@ client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
   if (message.attachments.size < 1) return;
 
-  const duplicateGameStateFileNames = []; // holds fileNames for states that are duplicates
-  const readingGameStateError = [] // holds errors related to reading in the game file
-  const googleSheetApiErrors = [];  // holds references to any errors during game appends
-
   const gameStates = [...message.attachments.values()].filter(state => {
-    const isGameState = saveStateName.test(state.name)
-    if(!isGameState) return false
+    const isGameState = saveStateName.test(state.name) // exlcude if filename is not game file
+    if(!isGameState) return false 
 
     const fileSize = state.size; // veryify file size is within range of a game state
     if(fileSize < 1000000 || fileSize > 1200000) return false
     
     return true
   })
+
+  // messages to update the user on the state of processing which get deleted
+  const processMessageArray = [];
+  const completeMessageArray = [];
+
+  const duplicateGameStateFileNames = []; // holds fileNames for states that are duplicates
+  const readingGameStateError = [] // holds errors related to reading in the game file
+  const googleSheetApiErrors = [];  // holds references to any errors during game appends
   
     // begin to process the actual files
-
   for (const gameState of gameStates){
     let romData;
-    await message.channel.send(`Processing: ${gameState.name}`)
+    // processing message gets pushed into array to be deleted after all processing
+    const processMessage = await message.channel.send(`Processing: ${gameState.name}`)
+    processMessageArray.push(processMessage);
     const fileName = gameState.name;
     try { // catch all try block
       try { // game parsing try block       
@@ -136,6 +142,14 @@ client.on(Events.MessageCreate, async message => {
         throw new Error(`Error: ${fileName} could not be parsed properly.`)
       }
 
+      // check if game length is 15:00
+      const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
+      const gameLengthInt = parseInt(gameLength.replace(":", ""), 10)
+      if(gameLengthInt < 1500){
+        readingGameStateError.push(fileName)
+        throw new Error(`Error: ${fileName} is short of 15:00.`)
+      }
+
       
       if(writeToUniqueIdsFile){ // write game id's to .csv files when true
         const gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
@@ -148,8 +162,8 @@ client.on(Events.MessageCreate, async message => {
         }
         
         fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`)
-        uniqueGameStateIds.push(gamesUniqueId); // Update the in-memory array
-        uniqueGameStateIds.push(matchup); // Update the in-memory array
+        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
+        uniqueGameStateIds.push(matchup); // Update the in-file array
       }
       
       const data = romData.data; // hand boxscore processing to worker
@@ -169,25 +183,30 @@ client.on(Events.MessageCreate, async message => {
             throw new Error(googleSheetsResponse.message)
           }
         } catch (error) {
-          // don't need to throw an error so boxscore can still be produced in next lines
           googleSheetApiErrors.push(fileName)
+          throw new Error(googleSheetsResponse.message)
         }
       }
 
-      const { status, image, message } = await generateBoxscore; // boxscore image status either success or error
+      // waiting for the worker to send back generated boxscore image 
+      const { status, image, errorMessage } = await generateBoxscore; // boxscore image status either success or error
       if (status === "success") {
           const imageBuffer = Buffer.from(image)
           const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
-          await message.channel.send(`Processed - ${gameState.name} - COMPLETE`)
+          // complete message gets pushed into array to be deleted after all processing
+          const completeMessage = await message.channel.send(`Processed - ${gameState.name} - COMPLETE`)
+          completeMessageArray.push(completeMessage);
 
-          if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
-            await client.channels.cache.get(outputChannelId).send({files: [attachment] });  // this outputs to boxscore channel
-          } else { // send to same channel in which the state was submitted.
-            await message.channel.send({files: [attachment] }); // this is channel where states are posted
+          if(sendBoxscore){ // if false then don't send the image to discord....testing
+            if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
+              await client.channels.cache.get(outputChannelId).send({files: [attachment] });  // this outputs to boxscore channel
+            } else { // send to same channel in which the state was submitted.
+              await message.channel.send({files: [attachment] }); // this is channel where states are posted
+            }
           }
       }
       if(status === "error") {
-        throw new Error(message + fileName)
+        throw new Error(errorMessage + fileName)
       }
     }catch(error){
       await message.channel.send(error.message)
@@ -207,31 +226,37 @@ client.on(Events.MessageCreate, async message => {
     userErrorMessage += `The following ${duplicateFileCount} game state(s) were NOT processed.\nDuplication or home/away did not switch.\n\`${duplicateStringMessage}\``
   }
 
-// display user message games that were not added to google sheets
-if(googleSheetApiErrors.length > 0){
-  const googleErrorFileCount = googleSheetApiErrors.length;
-  let googleSheetsAppendErrorStringMessage = "";
-  googleSheetApiErrors.forEach(file => {
-    googleSheetsAppendErrorStringMessage += `${file}\n`;
-  })
-    userErrorMessage += `The following ${googleErrorFileCount} game state(s) were not appended to google sheets.\n\`${googleSheetsAppendErrorStringMessage}\`\n\n`
-}
+  // display user message games that were not added to google sheets
+  if(googleSheetApiErrors.length > 0){
+    const googleErrorFileCount = googleSheetApiErrors.length;
+    let googleSheetsAppendErrorStringMessage = "";
+    googleSheetApiErrors.forEach(file => {
+      googleSheetsAppendErrorStringMessage += `${file}\n`;
+    })
+      userErrorMessage += `The following ${googleErrorFileCount} game state(s) were not appended to google sheets.\n\`${googleSheetsAppendErrorStringMessage}\`\n\n`
+  }
 
-if(readingGameStateError.length > 0){
-  const gameParsingErrorCount = readingGameStateError.length;
-  let gameParsingErrorStringMessage = "";
-  readingGameStateError.forEach(file => {
-    gameParsingErrorStringMessage += `${file}\n`;
-  })
-  userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not appended to google sheets.\n\`${gameParsingErrorStringMessage}\`\n\n`
-}
+  if(readingGameStateError.length > 0){
+    const gameParsingErrorCount = readingGameStateError.length;
+    let gameParsingErrorStringMessage = "";
+    readingGameStateError.forEach(file => {
+      gameParsingErrorStringMessage += `${file}\n`;
+    })
+    userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not appended to google sheets.\n\`${gameParsingErrorStringMessage}\`\n\n`
+  }
 
-// let user know which events did not occur on which states
-if(userErrorMessage === ""){ // no errors occured
-  await message.channel.send(`\n\nGoogle test sheet tabs appended.\nEnd processing files.`)
-} else { // if errors occured
-  await message.channel.send('\n\n' + userErrorMessage + '\nEnd processing files')
-}
-});
+  [processMessageArray, completeMessageArray].forEach(messageArray  => {
+    for(const message of messageArray ){
+      message.delete()
+    }
+  })
+
+  // let user know which events did not occur on which states
+  if(userErrorMessage === ""){ // no errors occured
+    message.react('✅')
+  } else { // if errors occured
+    await message.channel.send('\n\n' + userErrorMessage + '\nEnd processing files')
+  }
+  });
 
 client.login(token);
