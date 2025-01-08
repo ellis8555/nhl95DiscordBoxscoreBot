@@ -139,7 +139,7 @@ client.on(Events.MessageCreate, async message => {
         romData = await readOgRomBinaryGameState(romArgs)
       } catch (error) {
         readingGameStateError.push(fileName)
-        throw new Error(`Error: ${fileName} could not be parsed properly.`)
+        throw new Error(`Error: \`${fileName}\` could not be parsed properly.`)
       }
 
       // check if game length is 15:00
@@ -147,7 +147,12 @@ client.on(Events.MessageCreate, async message => {
       const gameLengthInt = parseInt(gameLength.replace(":", ""), 10)
       if(gameLengthInt < 1500){
         readingGameStateError.push(fileName)
-        throw new Error(`Error: ${fileName} is short of 15:00.`)
+        throw new Error(`Error: \`${fileName}\` is short of 15:00.`)
+      }
+
+      // check that both teams are not the same. 
+      if(romData.data.otherGameStats.homeTeam === romData.data.otherGameStats.awayTeam){
+        throw new Error(`Error: \`${fileName}\` home and away teams are the same.`)
       }
 
       
@@ -196,7 +201,6 @@ client.on(Events.MessageCreate, async message => {
           // complete message gets pushed into array to be deleted after all processing
           const completeMessage = await message.channel.send(`Processed - ${gameState.name} - COMPLETE`)
           completeMessageArray.push(completeMessage);
-
           if(sendBoxscore){ // if false then don't send the image to discord....testing
             if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
               await client.channels.cache.get(outputChannelId).send({files: [attachment] });  // this outputs to boxscore channel
@@ -209,7 +213,7 @@ client.on(Events.MessageCreate, async message => {
         throw new Error(errorMessage + fileName)
       }
     }catch(error){
-      await message.channel.send(error.message)
+      await message.channel.send(`❌ ${error.message}`)
     }
   }
 
@@ -252,9 +256,9 @@ client.on(Events.MessageCreate, async message => {
   })
 
   // let user know which events did not occur on which states
-  if(userErrorMessage === ""){ // no errors occured
-    message.react('✅')
-  } else { // if errors occured
+  if(userErrorMessage === ""){ // if errors occured
+    await message.channel.send('End processing files')
+  } else {
     await message.channel.send('\n\n' + userErrorMessage + '\nEnd processing files')
   }
   });
