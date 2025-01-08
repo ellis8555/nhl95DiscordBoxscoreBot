@@ -238,7 +238,7 @@ client.on(Events.MessageCreate, async message => {
     googleSheetApiErrors.forEach(file => {
       googleSheetsAppendErrorStringMessage += `${file}\n`;
     })
-      userErrorMessage += `The following ${googleErrorFileCount} game state(s) were not appended to google sheets.\n\`${googleSheetsAppendErrorStringMessage}\``
+      userErrorMessage += `The following ${googleErrorFileCount} game state(s) were not processed.\n\`${googleSheetsAppendErrorStringMessage}\``
   }
 
   if(readingGameStateError.length > 0){
@@ -247,7 +247,7 @@ client.on(Events.MessageCreate, async message => {
     readingGameStateError.forEach(file => {
       gameParsingErrorStringMessage += `${file}\n`;
     })
-    userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not appended to google sheets.\n\`${gameParsingErrorStringMessage}\``
+    userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not processed.\n\`${gameParsingErrorStringMessage}\``
   }
 
   [processMessageArray, completeMessageArray].forEach(messageArray  => {
