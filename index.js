@@ -9,6 +9,8 @@ import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.j
 import createWorker from "./lib/workers/createWorker.js";
 import { teamCodes } from "./lib/game-state-parsing/teamcodes.js";
 import { bot_consts } from "./lib/constants/consts.js";
+// pure files
+import processPure from "./lib/pureLeague/processPure.js";
 
 const {  
   token,
@@ -35,6 +37,9 @@ const saveStateName = saveStatePattern
 const league = leagueName
 const seasonNumber = seasonNum
 
+// pureServer
+const pureServer = process.env.pureServer;
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -47,6 +52,7 @@ let sheets;
 let spreadsheetId;
 let uniqueIdsFilePath;
 let uniqueGameStateIds;
+const guildList = []
 let adminBoxscoreChannelId; // get the channel the bot will be listening in.
 let outputChannelId; // the channel that the boxscores will be sent to
 
@@ -60,9 +66,17 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       .map(id => id.trim())
   }
 
+  client.guilds.cache.map(guild => {
+    const guildName = guild.name;
+    const guildId = guild.id;
+    const guildDetails = {
+      [guildName] : guildId 
+    }
+    guildList.push(guildDetails)
+  })
+
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
-
     const channel = guild.channels.cache.find(channel => channel.name === channelName)
     if(channel){
       adminBoxscoreChannelId = channel.id;
@@ -93,8 +107,19 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
 });
 
 client.on(Events.MessageCreate, async message => {
-  if (message.channel.id !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
   if (message.author.bot) return;
+
+  const getServerName = message.guild.name; // 
+  if(getServerName === pureServer){
+    const pureArgs = {
+      sheets,
+      message
+    }
+    processPure(pureArgs)
+    return; // exit if any error occurs
+  }
+
+  if (message.channel.id !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
   if (message.attachments.size < 1) return;
 
   const gameStates = [...message.attachments.values()].filter(state => {
