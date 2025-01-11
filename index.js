@@ -109,15 +109,24 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
 client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
 
-  const getServerName = message.guild.name; // 
-  if(getServerName === pureServer){
+  const getServerName = message.guild.name;
+
+//////////////////////////////////
+// process pure league score input
+//////////////////////////////////
+
+  if(getServerName === pureServer){ 
     const pureArgs = {
       sheets,
       message
     }
     processPure(pureArgs)
-    return; // exit if any error occurs
+    return;
   }
+
+//////////////////////////////////
+// end processing pure league
+//////////////////////////////////
 
   if (message.channel.id !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
   if (message.attachments.size < 1) return;
