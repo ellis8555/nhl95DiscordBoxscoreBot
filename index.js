@@ -97,7 +97,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
   }
 });
 
-const processQueue = async () => {
+async function processQueue (){
   if(gameStateQueue.length === 0 || processing || isProcessingErrors) {
     return; // If queue is empty or processing a file;
   }
@@ -211,7 +211,7 @@ const processQueue = async () => {
   }
 }
 
-const processErrorsAndSendMessages = async () => {
+async function processErrorsAndSendMessages (){
   isProcessingErrors = true;
 
   try {
