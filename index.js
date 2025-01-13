@@ -103,6 +103,15 @@ async function processQueue (){
   }
 
   processing = true; // processing is occuring
+  const task = gameStateQueue.shift(); // Get the first file in the queue
+
+  // process incoming tasks from pure league
+  if(task.server === pureServer){
+    const { processPureArgs } = task
+    await processPure(processPureArgs)
+    processing = false;
+    return;
+  }
 
   if(!allowDuplicates || writeToUniqueIdsFile){ // this is a check for duplicates. not needed when testing
     uniqueIdsFilePath = path.join(__dirname, "public", uniqueIdsFile)   // open and read .csv file for state duplications
@@ -111,14 +120,13 @@ async function processQueue (){
       .map(id => id.trim())
   }
 
-  const gameState = gameStateQueue.shift(); // Get the first file in the queue
-  const { message, name } = gameState
+  const { message, name } = task
   await message.channel.send(`Processing: ${name}`)
 
   let romData;
   try {
-    const fileName = gameState.name;
-    const gameFileURL = gameState.attachment;
+    const fileName = task.name;
+    const gameFileURL = task.attachment;
     const fetchGameFile = await fetch(gameFileURL);
     const gameFileBuffer = await fetchGameFile.arrayBuffer();
 
@@ -191,7 +199,7 @@ async function processQueue (){
         if(sendResponseToOutputchannel) {
           await client.channels.cache.get(outputChannelId).send({ files: [attachment] });
         } else {
-          await gameState.message.channel.send({ files: [attachment] });
+          await task.message.channel.send({ files: [attachment] });
         }
       }
     }
@@ -203,7 +211,7 @@ async function processQueue (){
     await message.channel.send(`❌ ${error.message}`);
   } finally {
     processing = false;
-    if(gameStateQueue.length > 0){
+    if(gameStateQueue.length > 0 && !isProcessingErrors){
       processQueue()
     } else {
       processErrorsAndSendMessages();
@@ -271,7 +279,10 @@ client.on(Events.MessageCreate, async message => {
       sheets,
       message
     }
-    processPure(pureArgs)
+    gameStateQueue.push({ server: pureServer, processPureArgs: pureArgs });
+    if (gameStateQueue.length > 0 && !processing && !isProcessingErrors) {
+      processQueue();
+    }
     return;
   }
 
@@ -293,7 +304,7 @@ client.on(Events.MessageCreate, async message => {
     })
 
     for (const gameState of gameStates) {
-      gameStateQueue.push({ message, name: gameState.name, attachment: gameState.attachment });
+      gameStateQueue.push({ message, server: getServerName, name: gameState.name, attachment: gameState.attachment });
     }
 
     if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
