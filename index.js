@@ -280,9 +280,9 @@ client.on(Events.MessageCreate, async message => {
       message
     }
     gameStateQueue.push({ server: pureServer, processPureArgs: pureArgs });
-    if (gameStateQueue.length > 0 && !processing && !isProcessingErrors) {
-      processQueue();
-    }
+    if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+      processQueue()
+  }
     return;
   }
 
