@@ -52,7 +52,6 @@ let sheets;
 let spreadsheetId;
 let uniqueIdsFilePath;
 let uniqueGameStateIds;
-const guildList = []
 let adminBoxscoreChannelId; // get the channel the bot will be listening in.
 let outputChannelId; // the channel that the boxscores will be sent to
 
@@ -65,15 +64,6 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       .split(",")
       .map(id => id.trim())
   }
-
-  client.guilds.cache.map(guild => {
-    const guildName = guild.name;
-    const guildId = guild.id;
-    const guildDetails = {
-      [guildName] : guildId 
-    }
-    guildList.push(guildDetails)
-  })
 
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
