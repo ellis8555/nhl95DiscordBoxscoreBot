@@ -55,15 +55,10 @@ let uniqueGameStateIds;
 let adminBoxscoreChannelId; // get the channel the bot will be listening in.
 let outputChannelId; // the channel that the boxscores will be sent to
 
+const gameStateQueue = []; // holds incoming game states to be processed
+
 client.once(Events.ClientReady, () => { // obtain the channel id for the channel that is being listened to
   console.log(`Logged in as ${client.user.tag}!`);
-
-  if(!allowDuplicates || writeToUniqueIdsFile){ // this is a check for duplicates. not needed when testing
-    uniqueIdsFilePath = path.join(__dirname, "public", uniqueIdsFile)   // open and read .csv file for state duplications
-    uniqueGameStateIds = fs.readFileSync(uniqueIdsFilePath, 'utf8')
-      .split(",")
-      .map(id => id.trim())
-  }
 
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
@@ -95,6 +90,94 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
     console.log(`${server} server not found.`)
   }
 });
+
+let processing = false;
+const processQueue = async () => {
+  if(gameStateQueue.length === 0 || processing) {
+    return; // If queue is empty or processing a file;
+  }
+
+  if(!allowDuplicates || writeToUniqueIdsFile){ // this is a check for duplicates. not needed when testing
+    uniqueIdsFilePath = path.join(__dirname, "public", uniqueIdsFile)   // open and read .csv file for state duplications
+    uniqueGameStateIds = fs.readFileSync(uniqueIdsFilePath, 'utf8')
+      .split(",")
+      .map(id => id.trim())
+  }
+
+  processing = true; // processing is occuring
+
+  const gameState = gameStateQueue.shift(); // Get the first file in the queue
+  let romData;
+  
+  try {
+    const fileName = gameState.name;
+    const gameFileURL = gameState.attachment;
+    const fetchGameFile = await fetch(gameFileURL);
+    const gameFileBuffer = await fetchGameFile.arrayBuffer();
+
+    const romArgs = {
+      file: gameFileBuffer,
+      seasonNumber,
+      gameType: "season",
+      leagueName: league,
+      teamsDictCodes: teamCodes
+    };
+    romData = await readOgRomBinaryGameState(romArgs);
+    
+    // Perform checks and processing as before
+    const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
+    const gameLengthInt = parseInt(gameLength.replace(":", ""), 10);
+    if(gameLengthInt < 1500){
+      throw new Error(`Error: \`${fileName}\` is short of 15:00.`);
+    }
+
+      // check that both teams are not the same. 
+      if(romData.data.otherGameStats.homeTeam === romData.data.otherGameStats.awayTeam){
+        readingGameStateError.push(fileName)
+        throw new Error(`Error: \`${fileName}\` home and away teams are the same.`)
+      }
+
+      
+      if(writeToUniqueIdsFile){ // write game id's to .csv files when true
+        const gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
+        const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
+        const matchup = gamesUniqueId.substring(2, 9);
+        const isHomeAwayDuplicated = uniqueGameStateIds.includes(matchup)
+        if(isDuplicate || isHomeAwayDuplicated){
+          duplicateGameStateFileNames.push(fileName)
+        }
+        
+        fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`)
+        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
+        uniqueGameStateIds.push(matchup); // Update the in-file array
+      }
+
+    // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
+    const data = romData.data;
+    const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname });
+
+    const { status, image, errorMessage } = await generateBoxscore;
+    if(status === "success") {
+      const imageBuffer = Buffer.from(image);
+      const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
+      if(sendBoxscore) {
+        if(sendResponseToOutputchannel) {
+          await client.channels.cache.get(outputChannelId).send({ files: [attachment] });
+        } else {
+          await gameState.message.channel.send({ files: [attachment] });
+        }
+      }
+    }
+    if(status === "error") {
+      throw new Error(errorMessage);
+    }
+
+  } catch (error) {
+    await gameState.message.channel.send(`❌ ${error.message}`);
+  } finally {
+    processing = false;
+  }
+}
 
 client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
@@ -131,6 +214,11 @@ client.on(Events.MessageCreate, async message => {
     return true
   })
 
+  for (const gameState of gameStates) {
+    gameStateQueue.push({ message, name: gameState.name, attachment: gameState.attachment });
+  }
+
+
   // messages to update the user on the state of processing which get deleted
   const processMessageArray = [];
   const completeMessageArray = [];
@@ -138,108 +226,9 @@ client.on(Events.MessageCreate, async message => {
   const duplicateGameStateFileNames = []; // holds fileNames for states that are duplicates
   const readingGameStateError = [] // holds errors related to reading in the game file
   const googleSheetApiErrors = [];  // holds references to any errors during game appends
-  
-    // begin to process the actual files
-  for (const gameState of gameStates){
-    let romData;
-    // processing message gets pushed into array to be deleted after all processing
-    const processMessage = await message.channel.send(`Processing: ${gameState.name}`)
-    processMessageArray.push(processMessage);
-    const fileName = gameState.name;
-    try { // catch all try block
-      try { // game parsing try block       
-        const gameFileURL = gameState.attachment
-        const fetchGameFile = await fetch(gameFileURL);
-        const gameFileBuffer = await fetchGameFile.arrayBuffer();
-    
-        // begin reading the game file data
-        const romArgs = {
-          file:gameFileBuffer,
-          seasonNumber,
-          gameType : "season",
-          leagueName : league,
-          teamsDictCodes:teamCodes
-        }
-        romData = await readOgRomBinaryGameState(romArgs)
-      } catch (error) {
-        readingGameStateError.push(fileName)
-        throw new Error(`Error: \`${fileName}\` could not be parsed properly.`)
-      }
 
-      // check if game length is 15:00
-      const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
-      const gameLengthInt = parseInt(gameLength.replace(":", ""), 10)
-      if(gameLengthInt < 1500){
-        readingGameStateError.push(fileName)
-        throw new Error(`Error: \`${fileName}\` is short of 15:00.`)
-      }
-
-      // check that both teams are not the same. 
-      if(romData.data.otherGameStats.homeTeam === romData.data.otherGameStats.awayTeam){
-        readingGameStateError.push(fileName)
-        throw new Error(`Error: \`${fileName}\` home and away teams are the same.`)
-      }
-
-      
-      if(writeToUniqueIdsFile){ // write game id's to .csv files when true
-        const gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
-        const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
-        const matchup = gamesUniqueId.substring(2, 9);
-        const isHomeAwayDuplicated = uniqueGameStateIds.includes(matchup)
-        if(isDuplicate || isHomeAwayDuplicated){
-          duplicateGameStateFileNames.push(fileName)
-          continue;
-        }
-        
-        fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`)
-        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
-        uniqueGameStateIds.push(matchup); // Update the in-file array
-      }
-      
-      const data = romData.data; // hand boxscore processing to worker
-      const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', {data, __dirname})
-
-      if(writeToGoogleSheets){
-        // send game data to google sheets
-        const sheetsArgsObj = {
-          sheets,
-          spreadsheetId,
-          romData
-        }
-        try { // append to google sheets try block
-          const googleSheetsResponse = await appendGoogleSheetsData(sheetsArgsObj);
-          // if error returned throw error
-          if(googleSheetsResponse && googleSheetsResponse.status === 'error'){
-            throw new Error(googleSheetsResponse.message)
-          }
-        } catch (error) {
-          googleSheetApiErrors.push(fileName)
-          throw new Error(`\`${fileName}\` ${error.message}`)
-        }
-      }
-
-      // waiting for the worker to send back generated boxscore image 
-      const { status, image, errorMessage } = await generateBoxscore; // boxscore image status either success or error
-      if (status === "success") {
-          const imageBuffer = Buffer.from(image)
-          const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
-          // complete message gets pushed into array to be deleted after all processing
-          const completeMessage = await message.channel.send(`Processed - ${gameState.name} - COMPLETE`)
-          completeMessageArray.push(completeMessage);
-          if(sendBoxscore){ // if false then don't send the image to discord....testing
-            if(sendResponseToOutputchannel){ // send to a different channel from where the game state was uploaded
-              await client.channels.cache.get(outputChannelId).send({files: [attachment] });  // this outputs to boxscore channel
-            } else { // send to same channel in which the state was submitted.
-              await message.channel.send({files: [attachment] }); // this is channel where states are posted
-            }
-          }
-      }
-      if(status === "error") {
-        throw new Error(errorMessage + fileName)
-      }
-    }catch(error){
-      await message.channel.send(`❌ ${error.message}`)
-    }
+  if(gameStateQueue.length > 0){
+    processQueue()
   }
 
   let userErrorMessage = ""
