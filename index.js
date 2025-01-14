@@ -152,19 +152,21 @@ async function processQueue (){
         throw new Error(`Error: \`${fileName}\` home and away teams are the same.`)
       }
 
-      
+      let gamesUniqueId;
+      let matchup;
       if(writeToUniqueIdsFile){ // if not writing to uniqueId's file then don't need to proceed here
-        const gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
+        gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
         const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
-        const matchup = gamesUniqueId.substring(2, 9);
+        matchup = gamesUniqueId.substring(2, 9);
         const isHomeAwayDuplicated = uniqueGameStateIds.includes(matchup)
-        if(isDuplicate || isHomeAwayDuplicated){
+        if(isDuplicate){
           duplicateGameStateFileNames.push(fileName)
           throw new Error(`Error: \`${fileName}\` appears to be a duplicate.`)
         }
-        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
-        uniqueGameStateIds.push(matchup); // Update the in-file array
-        fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`)
+        if(isHomeAwayDuplicated){
+          duplicateGameStateFileNames.push(fileName)
+          throw new Error(`Error: \`${fileName}\` home/away sequence has previously been submitted.`)
+        }
       }
 
     // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
@@ -187,6 +189,17 @@ async function processQueue (){
       } catch (error) {
         googleSheetApiErrors.push(fileName)
         throw new Error(`\`${fileName}\` ${error.message}`)
+      }
+    }
+
+    // after successful google sheets append
+    if(writeToUniqueIdsFile){
+      try {
+        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
+        uniqueGameStateIds.push(matchup); // Update the in-file array
+        fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`) 
+      } catch (error) {
+        throw new Error("Error occured in trying to write to uniqueId text file.")
       }
     }
 
@@ -230,7 +243,7 @@ async function processErrorsAndSendMessages (){
     if (duplicateGameStateFileNames.length > 0) {
       const duplicateFileCount = duplicateGameStateFileNames.length;
       let duplicateStringMessage = duplicateGameStateFileNames.join("\n");
-      userErrorMessage += `The following ${duplicateFileCount} game state(s) were NOT processed.\nDuplication or home/away did not switch.\n\`${duplicateStringMessage}\`\n`;
+      userErrorMessage += `The following ${duplicateFileCount} game state(s) were NOT processed.\n\n\`${duplicateStringMessage}\`\n`;
     }
 
     if (googleSheetApiErrors.length > 0) {
