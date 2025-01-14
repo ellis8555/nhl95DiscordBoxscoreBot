@@ -162,6 +162,9 @@ async function processQueue (){
           duplicateGameStateFileNames.push(fileName)
           throw new Error(`Error: \`${fileName}\` appears to be a duplicate.`)
         }
+        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
+        uniqueGameStateIds.push(matchup); // Update the in-file array
+        fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`)
       }
 
     // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
@@ -184,17 +187,6 @@ async function processQueue (){
       } catch (error) {
         googleSheetApiErrors.push(fileName)
         throw new Error(`\`${fileName}\` ${error.message}`)
-      }
-    }
-
-    // after google sheets append write to uniqueID's file
-    if(writeToUniqueIdsFile){
-      try {
-        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
-        uniqueGameStateIds.push(matchup); // Update the in-file array
-        fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`)
-      } catch (error) {
-        throw new Error('Error writing to uniqueId\'s file')
       }
     }
 
