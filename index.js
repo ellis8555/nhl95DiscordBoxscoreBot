@@ -153,7 +153,7 @@ async function processQueue (){
       }
 
       
-      if(writeToUniqueIdsFile){ // write game id's to .csv files when true
+      if(writeToUniqueIdsFile){ // if not writing to uniqueId's file then don't need to proceed here
         const gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
         const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
         const matchup = gamesUniqueId.substring(2, 9);
@@ -162,10 +162,6 @@ async function processQueue (){
           duplicateGameStateFileNames.push(fileName)
           throw new Error(`Error: \`${fileName}\` appears to be a duplicate.`)
         }
-        
-        fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`)
-        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
-        uniqueGameStateIds.push(matchup); // Update the in-file array
       }
 
     // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
@@ -191,22 +187,35 @@ async function processQueue (){
       }
     }
 
-    const { status, image, errorMessage } = await generateBoxscore;
-    if(status === "success") {
-      const imageBuffer = Buffer.from(image);
-      const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
-      if(sendBoxscore) {
-        if(sendResponseToOutputchannel) {
-          await client.channels.cache.get(outputChannelId).send({ files: [attachment] });
-        } else {
-          await task.message.channel.send({ files: [attachment] });
-        }
+    // after google sheets append write to uniqueID's file
+    if(writeToUniqueIdsFile){
+      try {
+        uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
+        uniqueGameStateIds.push(matchup); // Update the in-file array
+        fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`)
+      } catch (error) {
+        throw new Error('Error writing to uniqueId\'s file')
       }
     }
-    if(status === "error") {
-      throw new Error(errorMessage);
-    }
+
+    if(sendBoxscore) {
+      const { status, image, errorMessage } = await generateBoxscore;
+      if(status === "success") {
+        const imageBuffer = Buffer.from(image);
+        const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
+          if(sendResponseToOutputchannel) {
+            await client.channels.cache.get(outputChannelId).send({ files: [attachment] });
+          } else {
+            await task.message.channel.send({ files: [attachment] });
+          }
+        }
+        if(status === "error") {
+          throw new Error(errorMessage);
+        }
+      }
+
     await message.channel.send(`Complete: \`${name}\``)
+
   } catch (error) {
     await message.channel.send(`❌ ${error.message}`);
   } finally {
