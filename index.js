@@ -10,6 +10,7 @@ import createWorker from "./lib/workers/createWorker.js";
 import { bot_consts } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
+import { channel } from "node:diagnostics_channel";
 
 const {  
   token,
@@ -59,6 +60,7 @@ const gameStateQueue = []; // holds incoming game states to be processed
 let processing = false; // checks if game state is currently being processed from the queue;
 let isProcessingErrors = false; // checks if bot is performing error message tasks
 
+const userProcessingMessages = []; // holds id of processing/complete messages in order to be cleaned up
 const duplicateGameStateFileNames = []; // holds fileNames for states that are duplicates
 const readingGameStateError = [] // holds errors related to reading in the game file
 const googleSheetApiErrors = [];  // holds references to any errors during game appends
@@ -101,7 +103,6 @@ async function processQueue (){
   if(gameStateQueue.length === 0 || processing || isProcessingErrors) {
     return; // If queue is empty or processing a file;
   }
-
   processing = true; // processing is occuring
   const task = gameStateQueue.shift(); // Get the first file in the queue
 
@@ -121,7 +122,8 @@ async function processQueue (){
   }
 
   const { message, name } = task
-  await message.channel.send(`Processing: ${name}`)
+  const sentProcessingMessage = await message.channel.send(`Processing: ${name}`)
+  userProcessingMessages.push(sentProcessingMessage.id)
 
   let romData;
   try {
@@ -143,6 +145,7 @@ async function processQueue (){
     const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
     const gameLengthInt = parseInt(gameLength.replace(":", ""), 10);
     if(gameLengthInt < 1500){
+      readingGameStateError.push(fileName)
       throw new Error(`Error: \`${fileName}\` is short of 15:00.`);
     }
 
@@ -219,7 +222,8 @@ async function processQueue (){
         }
       }
 
-    await message.channel.send(`Complete: \`${name}\``)
+    const sentCompleteMessage = await message.channel.send(`Complete: \`${name}\``)
+    userProcessingMessages.push(sentCompleteMessage.id)
 
   } catch (error) {
     await message.channel.send(`❌ ${error.message}`);
@@ -228,15 +232,18 @@ async function processQueue (){
     if(gameStateQueue.length > 0 && !isProcessingErrors){
       processQueue()
     } else {
-      processErrorsAndSendMessages();
+      const channelId = task.message.channelId
+      const messageId = message.id;
+      processErrorsAndSendMessages(channelId, messageId);
     }
   }
 }
 
-async function processErrorsAndSendMessages (){
+async function processErrorsAndSendMessages (channelId, messageId){
   isProcessingErrors = true;
 
   try {
+
     let userErrorMessage = "";
 
     // Build error messages
@@ -263,14 +270,25 @@ async function processErrorsAndSendMessages (){
       await client.channels.cache.get(adminBoxscoreChannelId).send(
         `--------------------------\n${userErrorMessage}\nEnd processing files`
       );
+      await cleanUpBotMessages(channelId)
+      await client.channels.cache.get(adminBoxscoreChannelId).send(
+        `----End processing files----`
+      );
     } else {
-      await client.channels.cache.get(adminBoxscoreChannelId).send("----End processing files----");
+      await cleanUpBotMessages(channelId)
+      const channel = client.channels.cache.get(adminBoxscoreChannelId)
+      const message = await channel.messages.fetch(messageId);
+      await message.react('✅')
+      await channel.send("----End processing files----");
     }
 
     // Clear error arrays
+    userProcessingMessages.length = 0;
     duplicateGameStateFileNames.length = 0;
     googleSheetApiErrors.length = 0;
     readingGameStateError.length = 0;
+  } catch {
+    console.log('catch block inside of processErrorsSendMessages needs to be adjusted...')
   } finally {
     isProcessingErrors = false; // Allow new processing to begin
     if (gameStateQueue.length > 0 && !processing) {
@@ -278,6 +296,16 @@ async function processErrorsAndSendMessages (){
     }
   }
 };
+
+async function cleanUpBotMessages(channelId){
+      // begin deleting bot response messages for clean up touch
+      const discordChannel = client.channels.cache.get(channelId);
+
+      for(const messageId of userProcessingMessages){
+          const message = await discordChannel.messages.fetch(messageId);
+          await message.delete();
+      }
+}
 
 client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
