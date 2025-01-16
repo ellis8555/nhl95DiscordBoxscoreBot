@@ -7,10 +7,10 @@ import { AttachmentBuilder, Client, Events, GatewayIntentBits } from 'discord.js
 import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-state.js';
 import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js"
 import createWorker from "./lib/workers/createWorker.js";
+import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
 import { bot_consts } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
-import { channel } from "node:diagnostics_channel";
 
 const {  
   token,
@@ -74,7 +74,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
     if(channel){
       adminBoxscoreChannelId = channel.id;
     } else {
-      console.log("Channel 'admin-boxscores' not found.")
+      console.log(`Channel ${listeningChannel} not found.`)
     }
 
     const outputChannel = guild.channels.cache.find(channel => channel.name === outputChannelName)
@@ -265,17 +265,23 @@ async function processErrorsAndSendMessages (channelId, messageId){
       userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not processed.\n\`${gameParsingErrorStringMessage}\`\n`;
     }
 
+    // arguments required for cleaning up bot messages
+    const cleanUpBotMessagesArgs = {
+      client,
+      channelId,
+      userProcessingMessages
+    }
     // Send error message to the user
     if (userErrorMessage) {
       await client.channels.cache.get(adminBoxscoreChannelId).send(
         `--------------------------\n${userErrorMessage}\nEnd processing files`
       );
-      await cleanUpBotMessages(channelId)
+      await cleanUpBotMessages(cleanUpBotMessagesArgs)
       await client.channels.cache.get(adminBoxscoreChannelId).send(
         `----End processing files----`
       );
     } else {
-      await cleanUpBotMessages(channelId)
+      await cleanUpBotMessages(cleanUpBotMessagesArgs)
       const channel = client.channels.cache.get(adminBoxscoreChannelId)
       const message = await channel.messages.fetch(messageId);
       await message.react('✅')
@@ -296,16 +302,6 @@ async function processErrorsAndSendMessages (channelId, messageId){
     }
   }
 };
-
-async function cleanUpBotMessages(channelId){
-      // begin deleting bot response messages for clean up touch
-      const discordChannel = client.channels.cache.get(channelId);
-
-      for(const messageId of userProcessingMessages){
-          const message = await discordChannel.messages.fetch(messageId);
-          await message.delete();
-      }
-}
 
 client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
