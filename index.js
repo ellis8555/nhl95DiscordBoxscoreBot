@@ -7,7 +7,6 @@ import { AttachmentBuilder, Client, Events, GatewayIntentBits } from 'discord.js
 import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-state.js';
 import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js"
 import createWorker from "./lib/workers/createWorker.js";
-import { teamCodes } from "./lib/game-state-parsing/teamcodes.js";
 import { bot_consts } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
@@ -25,7 +24,8 @@ const {
   allowDuplicates,
   writeToUniqueIdsFile,
   writeToGoogleSheets,
-  sendBoxscore
+  sendBoxscore,
+  teamCodes
 } = bot_consts
 
 const __filename = fileURLToPath(import.meta.url);
