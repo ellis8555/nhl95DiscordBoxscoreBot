@@ -26,7 +26,8 @@ const {
   writeToUniqueIdsFile,
   writeToGoogleSheets,
   sendBoxscore,
-  teamCodes
+  teamCodes,
+  pauseWLeague
 } = bot_consts
 
 const __filename = fileURLToPath(import.meta.url);
@@ -265,6 +266,7 @@ async function processErrorsAndSendMessages (channelId, messageId){
       userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not processed.\n\`${gameParsingErrorStringMessage}\``;
     }
 
+    const channel = client.channels.cache.get(adminBoxscoreChannelId)
     // arguments required for cleaning up bot messages
     const cleanUpBotMessagesArgs = {
       client,
@@ -273,16 +275,15 @@ async function processErrorsAndSendMessages (channelId, messageId){
     }
     // Send error message to the user
     if (userErrorMessage) {
-      await client.channels.cache.get(adminBoxscoreChannelId).send(
+      await channel.send(
         `--------------------------\n${userErrorMessage}\n`
       );
       await cleanUpBotMessages(cleanUpBotMessagesArgs)
-      await client.channels.cache.get(adminBoxscoreChannelId).send(
+      await channel.send(
         `----End processing with issue(s)----`
       );
     } else {
       await cleanUpBotMessages(cleanUpBotMessagesArgs)
-      const channel = client.channels.cache.get(adminBoxscoreChannelId)
       const message = await channel.messages.fetch(messageId);
       await message.react('✅')
     }
@@ -304,13 +305,13 @@ async function processErrorsAndSendMessages (channelId, messageId){
 
 client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
-
+  
   const getServerName = message.guild.name;
-
+  
   //////////////////////////////////
   // process pure league score input
   //////////////////////////////////
-
+  
   if(getServerName === pureServer){ 
     const pureArgs = {
       sheets,
@@ -319,33 +320,39 @@ client.on(Events.MessageCreate, async message => {
     gameStateQueue.push({ server: pureServer, processPureArgs: pureArgs });
     if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
       processQueue()
-  }
+    }
     return;
   }
-
+  
   //////////////////////////////////
   // end processing pure league
   //////////////////////////////////
-
-    if (message.channel.id !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
-    if (message.attachments.size < 1) return;
-
-    const gameStates = [...message.attachments.values()].filter(state => {
-      const isGameState = saveStateName.test(state.name) // exlcude if filename is not game file
-      if(!isGameState) return false 
-
-      const fileSize = state.size; // veryify file size is within range of a game state
-      if(fileSize < 1000000 || fileSize > 1200000) return false
-      
-      return true
-    })
-
-    for (const gameState of gameStates) {
-      gameStateQueue.push({ message, server: getServerName, name: gameState.name, attachment: gameState.attachment });
-    }
-
-    if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
-      processQueue()
+  
+  if (message.channel.id !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
+  if (message.attachments.size < 1) return;
+  // if bot is not on paused for W league then proceed to listen
+  if(!pauseWLeague){
+    
+        const gameStates = [...message.attachments.values()].filter(state => {
+          const isGameState = saveStateName.test(state.name) // exlcude if filename is not game file
+          if(!isGameState) return false 
+    
+          const fileSize = state.size; // veryify file size is within range of a game state
+          if(fileSize < 1000000 || fileSize > 1200000) return false
+          
+          return true
+        })
+    
+        for (const gameState of gameStates) {
+          gameStateQueue.push({ message, server: getServerName, name: gameState.name, attachment: gameState.attachment });
+        }
+    
+        if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+          processQueue()
+      }
+  } else {
+    const channel = client.channels.cache.get(adminBoxscoreChannelId);
+    await channel.send("⏸: BSB is currently on pause. Your state will be processed later.") 
   }
   });
 
