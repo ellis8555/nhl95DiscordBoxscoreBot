@@ -262,7 +262,7 @@ async function processErrorsAndSendMessages (channelId, messageId){
     if (readingGameStateError.length > 0) {
       const gameParsingErrorCount = readingGameStateError.length;
       let gameParsingErrorStringMessage = readingGameStateError.join("\n");
-      userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not processed.\n\`${gameParsingErrorStringMessage}\`\n`;
+      userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not processed.\n\`${gameParsingErrorStringMessage}\``;
     }
 
     // arguments required for cleaning up bot messages
@@ -274,18 +274,17 @@ async function processErrorsAndSendMessages (channelId, messageId){
     // Send error message to the user
     if (userErrorMessage) {
       await client.channels.cache.get(adminBoxscoreChannelId).send(
-        `--------------------------\n${userErrorMessage}\nEnd processing files`
+        `--------------------------\n${userErrorMessage}\n`
       );
       await cleanUpBotMessages(cleanUpBotMessagesArgs)
       await client.channels.cache.get(adminBoxscoreChannelId).send(
-        `----End processing files----`
+        `----End processing with issue(s)----`
       );
     } else {
       await cleanUpBotMessages(cleanUpBotMessagesArgs)
       const channel = client.channels.cache.get(adminBoxscoreChannelId)
       const message = await channel.messages.fetch(messageId);
       await message.react('✅')
-      await channel.send("----End processing files----");
     }
 
     // Clear error arrays
