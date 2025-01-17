@@ -37,7 +37,6 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   saveStateName = new RegExp(updatedConsts.saveStatePattern)
   seasonNumber = updatedConsts.seasonNum
   teamCodes = updatedConsts.teamCodes
-  console.log(teamCodes)
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   outputChannelId = guild.channels.cache.find(channel => channel.name === outputChannelName).id;
