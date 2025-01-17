@@ -28,6 +28,7 @@ let channelName = bot_consts.listeningChannel
 let outputChannelName = bot_consts.outputChannel
 let saveStateName = new RegExp(bot_consts.saveStatePattern)
 let seasonNumber = bot_consts.seasonNum
+let teamCodes = bot_consts.teamCodes
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -35,10 +36,12 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   outputChannelName = updatedConsts.outputChannel
   saveStateName = new RegExp(updatedConsts.saveStatePattern)
   seasonNumber = updatedConsts.seasonNum
-
+  teamCodes = updatedConsts.teamCodes
+  console.log(teamCodes)
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   outputChannelId = guild.channels.cache.find(channel => channel.name === outputChannelName).id;
+
 })
 
 // pureServer
@@ -140,7 +143,7 @@ async function processQueue (){
       seasonNumber,
       gameType: "season",
       leagueName: league,
-      teamsDictCodes: bot_consts.teamCodes
+      teamsDictCodes: teamCodes,
     };
     romData = await readOgRomBinaryGameState(romArgs);
     
