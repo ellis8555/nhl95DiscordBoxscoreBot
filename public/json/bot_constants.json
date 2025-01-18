@@ -13,20 +13,20 @@
     "SET",
     {
       "GET_KEYWORDS": [
-        "SETTINGS",
-        "KEYWORDS",
-        "INPUT CHANNEL",
-        "OUTPUT CHANNEL",
-        "SAVE STATE",
-        "SEASON NUMBER",
-        "TEAM CODES"
+        "GET SETTINGS",
+        "GET KEYWORDS",
+        "GET INPUT CHANNEL",
+        "GET OUTPUT CHANNEL",
+        "GET SAVE STATE",
+        "GET SEASON NUMBER",
+        "GET TEAM CODES"
       ],
       "SET_KEYWORDS": [
-        "INPUT CHANNEL",
-        "OUTPUT CHANNEL",
-        "SAVE STATE",
-        "SEASON NUMBER",
-        "TEAM CODES"
+        "SET INPUT CHANNEL",
+        "SET OUTPUT CHANNEL",
+        "SET SAVE STATE",
+        "SET SEASON NUMBER",
+        "SET TEAM CODES"
       ]
     }
   ],
