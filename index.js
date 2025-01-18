@@ -45,7 +45,8 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   outputChannelId = guild.channels.cache.find(channel => channel.name === outputChannelName).id;
-
+  // listening channels id
+  adminBoxscoreChannelId = guild.channels.cache.find(channel => channel.name === channelName).id;
 })
 
 // w server
@@ -122,7 +123,7 @@ async function processQueue (){
   // process admin tasks W
   if(task.isAdminInstruction){
     const { server, adminMessage, channelId } = task;
-    await parseAdminMessage({server, adminMessage, channelId, client})
+    await parseAdminMessage({server, adminMessage, adminBoxscoreChannelId, client})
     processing = false;
     return;
   }
@@ -333,19 +334,22 @@ client.on(Events.MessageCreate, async message => {
   // check for admin commands
   ////////////////////////////////////
   
-  if(message.author.id === adminIdObject['ultramagnus']){
-    if(message.content){
-      const adminMessage = message.content.split(" ");
-      // check to see if admin is using a keyword to edit settings
-      if(adminKeywords.includes(adminMessage[0])){
-        // used in processQueue to bypass if not admin keyword
-        const isAdminInstruction = true;
-          gameStateQueue.push({isAdminInstruction, server: getServerName, adminMessage, channelId})
-          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
-            processQueue()
-          }
-          return
-    }
+  if(channelId === adminBoxscoreChannelId){
+    if(message.author.id === adminIdObject['ellis']){
+      if(message.content){
+        const adminMessage = message.content.split(" ");
+        // check if in listening channel
+        // check to see if admin is using a keyword to edit settings
+        if(adminKeywords.includes(adminMessage[0])){
+          // used in processQueue to bypass if not admin keyword
+          const isAdminInstruction = true;
+            gameStateQueue.push({isAdminInstruction, server: getServerName, adminMessage, adminBoxscoreChannelId})
+            if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+              processQueue()
+            }
+            return
+      }
+      }
     }
   }
 
