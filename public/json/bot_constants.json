@@ -1,63 +1,90 @@
 {
-    "listeningChannel": "2007-season-saves",
-    "outputChannel": "2007-season-boxscores",
-    "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
-    "pauseWLeague": false,
-    "allowDuplicates": true,
-    "writeToUniqueIdsFile": false,
-    "writeToGoogleSheets": false,
-    "sendBoxscore": false,
-    "sendResponseToOutputchannel": true,
-    "leagueName": "w",
-    "seasonNum": "12",
-    "appendGoogleSheets": {
-        "countRowRange": "H:H",
-        "rawData": {
-            "col_start": "H",
-            "col_end": "BP"
-        },
-        "rawPlayer": {
-            "col_start": "F",
-            "col_end": "U"
-        },
-        "rawPenalty": {
-            "col_start": "G",
-            "col_end": "L"
-        },
-        "rawScoring": {
-            "col_start": "G",
-            "col_end": "N"
-        }
-    },
-    "teamCodes": {
-        "0": "AHC",
-        "1": "AUT",
-        "2": "BAY",
-        "3": "BBM",
-        "4": "BFC",
-        "5": "HAM",
-        "6": "HIG",
-        "7": "HOT",
-        "8": "ING",
-        "9": "IFV",
-        "10": "KVK",
-        "11": "MHT",
-        "12": "MGG",
-        "13": "NBK",
-        "14": "OCW",
-        "15": "PIT",
-        "16": "PRO",
-        "17": "RIC",
-        "18": "SAG",
-        "19": "SOV",
-        "20": "SHS",
-        "21": "SVF",
-        "22": "SUM",
-        "23": "SUN",
-        "24": "TAI",
-        "25": "TEG",
-        "26": "TBP",
-        "27": "VHV",
-        "28": "WDY"
+  "listeningChannel": "2007-season-saves",
+  "outputChannel": "2007-season-boxscores",
+  "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
+  "editPermission": {
+    "ultramagnus": "869668599550332958"
+  },
+  "adminKeywords": [
+    "PAUSE",
+    "RESUME",
+    "GET",
+    "SET",
+    {
+      "GET_KEYWORDS": [
+        "SETTINGS",
+        "KEYWORDS"
+      ],
+      "SET_KEYWORDS": [
+        "LISTENING CHANNEL",
+        "OUTPUT CHANNEL",
+        "SAVE STATE PATTERN",
+        "ALLOW DUPLICATES",
+        "WRITE TO UNIQUE",
+        "WRITE TO GOOGLE SHEETS",
+        "SEND BOXSCORE",
+        "LEAGUE NAME",
+        "SEASON NUMBER",
+        "TEAM CODES"
+      ]
     }
+  ],
+  "pauseWLeague": false,
+  "allowDuplicates": false,
+  "writeToUniqueIdsFile": true,
+  "writeToGoogleSheets": true,
+  "sendBoxscore": true,
+  "sendResponseToOutputchannel": true,
+  "leagueName": "w",
+  "seasonNum": "12",
+  "appendGoogleSheets": {
+    "countRowRange": "H:H",
+    "rawData": {
+      "col_start": "H",
+      "col_end": "BP"
+    },
+    "rawPlayer": {
+      "col_start": "F",
+      "col_end": "U"
+    },
+    "rawPenalty": {
+      "col_start": "G",
+      "col_end": "L"
+    },
+    "rawScoring": {
+      "col_start": "G",
+      "col_end": "N"
+    }
+  },
+  "teamCodes": [
+    "AHC",
+    "AUT",
+    "BAY",
+    "BBM",
+    "BFC",
+    "HAM",
+    "HIG",
+    "HOT",
+    "ING",
+    "IFV",
+    "KVK",
+    "MHT",
+    "MGG",
+    "NBK",
+    "OCW",
+    "PIT",
+    "PRO",
+    "RIC",
+    "SAG",
+    "SOV",
+    "SHS",
+    "SVF",
+    "SUM",
+    "SUN",
+    "TAI",
+    "TEG",
+    "TBP",
+    "VHV",
+    "WDY"
+  ]
 }
