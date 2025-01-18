@@ -8,7 +8,7 @@ import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-
 import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js"
 import createWorker from "./lib/workers/createWorker.js";
 import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
-import { bot_consts } from "./lib/constants/consts.js";
+import { bot_consts, bot_consts_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
 
@@ -16,28 +16,32 @@ const {
   token,
   uniqueIdsFileName,  
   server,
-  listeningChannel, 
-  outputChannel, 
-  saveStatePattern, 
   leagueName,
-  seasonNum,
   sendResponseToOutputchannel,
-  allowDuplicates,
-  writeToUniqueIdsFile,
-  writeToGoogleSheets,
-  sendBoxscore,
-  teamCodes,
-  pauseWLeague
 } = bot_consts
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uniqueIdsFile = uniqueIdsFileName
-const channelName = listeningChannel
-const outputChannelName = outputChannel
-const saveStateName = saveStatePattern
 const league = leagueName
-const seasonNumber = seasonNum
+let channelName = bot_consts.listeningChannel
+let outputChannelName = bot_consts.outputChannel
+let saveStateName = new RegExp(bot_consts.saveStatePattern)
+let seasonNumber = bot_consts.seasonNum
+let teamCodes = bot_consts.teamCodes
+
+// update variables that come from admin within discord channel
+bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
+  channelName = updatedConsts.listeningChannel
+  outputChannelName = updatedConsts.outputChannel
+  saveStateName = new RegExp(updatedConsts.saveStatePattern)
+  seasonNumber = updatedConsts.seasonNum
+  teamCodes = updatedConsts.teamCodes
+  // updates channel in which the boxscores will be posted
+  const guild = client.guilds.cache.find(guild => guild.name === server);
+  outputChannelId = guild.channels.cache.find(channel => channel.name === outputChannelName).id;
+
+})
 
 // pureServer
 const pureServer = process.env.pureServer;
@@ -75,7 +79,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
     if(channel){
       adminBoxscoreChannelId = channel.id;
     } else {
-      console.log(`Channel ${listeningChannel} not found.`)
+      console.log(`Channel ${bot_consts.listeningChannel} not found.`)
     }
 
     const outputChannel = guild.channels.cache.find(channel => channel.name === outputChannelName)
@@ -115,7 +119,7 @@ async function processQueue (){
     return;
   }
 
-  if(!allowDuplicates || writeToUniqueIdsFile){ // this is a check for duplicates. not needed when testing
+  if(!bot_consts.allowDuplicates || bot_consts.writeToUniqueIdsFile){ // this is a check for duplicates. not needed when testing
     uniqueIdsFilePath = path.join(__dirname, "public", uniqueIdsFile)   // open and read .csv file for state duplications
     uniqueGameStateIds = fs.readFileSync(uniqueIdsFilePath, 'utf8')
       .split(",")
@@ -138,7 +142,7 @@ async function processQueue (){
       seasonNumber,
       gameType: "season",
       leagueName: league,
-      teamsDictCodes: teamCodes
+      teamsDictCodes: teamCodes,
     };
     romData = await readOgRomBinaryGameState(romArgs);
     
@@ -158,7 +162,7 @@ async function processQueue (){
 
       let gamesUniqueId;
       let matchup;
-      if(writeToUniqueIdsFile){ // if not writing to uniqueId's file then don't need to proceed here
+      if(bot_consts.writeToUniqueIdsFile){ // if not writing to uniqueId's file then don't need to proceed here
         gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
         const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
         matchup = gamesUniqueId.substring(2, 9);
@@ -177,7 +181,7 @@ async function processQueue (){
     const data = romData.data;
     const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname });
 
-    if(writeToGoogleSheets){
+    if(bot_consts.writeToGoogleSheets){
       // send game data to google sheets
       const sheetsArgsObj = {
         sheets,
@@ -197,7 +201,7 @@ async function processQueue (){
     }
 
     // after successful google sheets append
-    if(writeToUniqueIdsFile){
+    if(bot_consts.writeToUniqueIdsFile){
       try {
         uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
         uniqueGameStateIds.push(matchup); // Update the in-file array
@@ -207,7 +211,7 @@ async function processQueue (){
       }
     }
 
-    if(sendBoxscore) {
+    if(bot_consts.sendBoxscore) {
       const { status, image, errorMessage } = await generateBoxscore;
       if(status === "success") {
         const imageBuffer = Buffer.from(image);
@@ -331,7 +335,7 @@ client.on(Events.MessageCreate, async message => {
   if (message.channel.id !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
   if (message.attachments.size < 1) return;
   // if bot is not on paused for W league then proceed to listen
-  if(!pauseWLeague){
+  if(!bot_consts.pauseWLeague){
     
         const gameStates = [...message.attachments.values()].filter(state => {
           const isGameState = saveStateName.test(state.name) // exlcude if filename is not game file
