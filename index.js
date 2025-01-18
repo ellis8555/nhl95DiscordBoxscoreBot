@@ -11,6 +11,7 @@ import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
 import { bot_consts, bot_consts_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
+import parseAdminMessage from "./lib/index/parseAdminMessage.js";
 
 const {  
   token,
@@ -29,6 +30,8 @@ let outputChannelName = bot_consts.outputChannel
 let saveStateName = new RegExp(bot_consts.saveStatePattern)
 let seasonNumber = bot_consts.seasonNum
 let teamCodes = bot_consts.teamCodes
+let adminIdObject = bot_consts.editPermission
+let adminKeywords = bot_consts.adminKeywords
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -37,11 +40,16 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   saveStateName = new RegExp(updatedConsts.saveStatePattern)
   seasonNumber = updatedConsts.seasonNum
   teamCodes = updatedConsts.teamCodes
+  adminIdObject = updatedConsts.editPermission
+  adminKeywords = updatedConsts.adminKeywords
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   outputChannelId = guild.channels.cache.find(channel => channel.name === outputChannelName).id;
 
 })
+
+// w server
+const w_server = server;
 
 // pureServer
 const pureServer = process.env.pureServer;
@@ -110,6 +118,14 @@ async function processQueue (){
   }
   processing = true; // processing is occuring
   const task = gameStateQueue.shift(); // Get the first file in the queue
+
+  // process admin tasks W
+  if(task.isAdminInstruction){
+    const { server, adminMessage, channelId } = task;
+    await parseAdminMessage({server, adminMessage, channelId, client})
+    processing = false;
+    return;
+  }
 
   // process incoming tasks from pure league
   if(task.server === pureServer){
@@ -311,7 +327,32 @@ client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
   
   const getServerName = message.guild.name;
+  const channelId = message.channel.id;
   
+    ////////////////////////////////////
+  // check for admin commands
+  ////////////////////////////////////
+  
+  if(message.author.id === adminIdObject['ultramagnus']){
+    if(message.content){
+      const adminMessage = message.content.split(" ");
+      // check to see if admin is using a keyword to edit settings
+      if(adminKeywords.includes(adminMessage[0])){
+        // used in processQueue to bypass if not admin keyword
+        const isAdminInstruction = true;
+          gameStateQueue.push({isAdminInstruction, server: getServerName, adminMessage, channelId})
+          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+            processQueue()
+          }
+          return
+    }
+    }
+  }
+
+  ////////////////////////////////////
+  // end check for admin commands
+  ////////////////////////////////////
+
   //////////////////////////////////
   // process pure league score input
   //////////////////////////////////
@@ -331,8 +372,8 @@ client.on(Events.MessageCreate, async message => {
   //////////////////////////////////
   // end processing pure league
   //////////////////////////////////
-  
-  if (message.channel.id !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
+
+  if (channelId !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
   if (message.attachments.size < 1) return;
   // if bot is not on paused for W league then proceed to listen
   if(!bot_consts.pauseWLeague){
