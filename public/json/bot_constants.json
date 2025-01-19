@@ -7,34 +7,34 @@
     "ellis": "678370444302221317"
   },
   "adminKeywords": [
-    "PAUSE",
-    "RESUME",
+    "`PAUSE`",
+    "`RESUME`",
     "GET",
     "SET",
-    {
-      "GET_KEYWORDS": [
-        "GET SETTINGS",
-        "GET KEYWORDS",
-        "GET INPUT CHANNEL",
-        "GET OUTPUT CHANNEL",
-        "GET SAVE STATE",
-        "GET SEASON NUMBER",
-        "GET TEAM CODES"
-      ],
-      "SET_KEYWORDS": [
-        "SET INPUT CHANNEL",
-        "SET OUTPUT CHANNEL",
-        "SET SAVE STATE",
-        "SET SEASON NUMBER",
-        "SET TEAM CODES"
-      ]
-    }
+    " ",
+    "---The following are to look at current settings---",
+    " ",
+    "`GET SETTINGS` - displays various settings",
+    "`GET KEYWORDS` - lists available admin commands",
+    "`GET INPUT CHANNEL` - channel BSB is listening in",
+    "`GET OUTPUT CHANNEL` - channel boxscores are set to",
+    "`GET SAVE STATE` - current save state that is accepted for parsing",
+    "`GET SEASON NUMBER`",
+    "`GET TEAM CODES` - list of codes that needs to match the .py script", 
+    " ",
+    "---The following will set settings on the server---",
+    " ",
+    "`SET INPUT CHANNEL`",
+    "`SET OUTPUT CHANNEL`",
+    "`SET SAVE STATE`",
+    "`SET SEASON NUMBER`",
+    "`SET TEAM CODES`"
   ],
   "pauseWLeague": false,
-  "allowDuplicates": true,
-  "writeToUniqueIdsFile": false,
-  "writeToGoogleSheets": false,
-  "sendBoxscore": false,
+  "allowDuplicates": false,
+  "writeToUniqueIdsFile": true,
+  "writeToGoogleSheets": true,
+  "sendBoxscore": true,
   "sendResponseToOutputchannel": true,
   "leagueName": "w",
   "seasonNum": "12",
