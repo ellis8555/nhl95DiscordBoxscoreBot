@@ -122,8 +122,8 @@ async function processQueue (){
 
   // process admin tasks W
   if(task.isAdminInstruction){
-    const { server, adminMessage, channelId } = task;
-    await parseAdminMessage({server, adminMessage, adminBoxscoreChannelId, client})
+    const { server, adminMessage, csvFile } = task;
+    await parseAdminMessage({server, adminMessage, adminBoxscoreChannelId, client, csvFile})
     processing = false;
     return;
   }
@@ -343,7 +343,23 @@ client.on(Events.MessageCreate, async message => {
         if(adminKeywords.includes(adminMessage[0])){
           // used in processQueue to bypass if not admin keyword
           const isAdminInstruction = true;
-            gameStateQueue.push({isAdminInstruction, server: getServerName, adminMessage, adminBoxscoreChannelId})
+          // check if admin is dropping in .csv files required for game state parsing
+          const csvFile = {};
+          if(message.attachments){
+            const csvFileNames = [
+              process.env.goalieAttributes,
+              process.env.skaterAttributes,
+              process.env.teamPositionCounts
+            ]
+            const attachedFileName = message.attachments.first().name;
+            if(csvFileNames.includes(attachedFileName)){
+              csvFile.url = message.attachments.first().url;
+              csvFile.fileName = message.attachments.first().name;
+            } else {
+              return;
+            }
+          }
+            gameStateQueue.push({isAdminInstruction, server: getServerName, adminMessage, adminBoxscoreChannelId, csvFile})
             if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
               processQueue()
             }
