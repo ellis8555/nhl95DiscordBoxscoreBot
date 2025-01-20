@@ -345,7 +345,7 @@ client.on(Events.MessageCreate, async message => {
           const isAdminInstruction = true;
           // check if admin is dropping in .csv files required for game state parsing
           const csvFile = {};
-          if(message.attachments){
+          if(message.attachments.first()){
             const csvFileNames = [
               process.env.goalieAttributes,
               process.env.skaterAttributes,
