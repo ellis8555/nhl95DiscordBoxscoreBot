@@ -25,32 +25,33 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uniqueIdsFile = uniqueIdsFileName
 const league = leagueName
-let channelName = bot_consts.listeningChannel
-let outputChannelName = bot_consts.outputChannel
+let adminsListeningChannelName = bot_consts.adminsListeningChannel
+let saveStatesListeningChannelName = bot_consts.saveStatesListeningChannel
+let boxscoreOutputChannelName = bot_consts.boxscoreOutputChannel
 let saveStateName = new RegExp(bot_consts.saveStatePattern)
 let seasonNumber = bot_consts.seasonNum
 let teamCodes = bot_consts.teamCodes
 let adminIdObject = bot_consts.editPermission
-let adminKeywords = bot_consts.adminKeywords
+let adminCommands = bot_consts.adminCommands
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
-  channelName = updatedConsts.listeningChannel
-  outputChannelName = updatedConsts.outputChannel
+  saveStatesListeningChannelName = updatedConsts.saveStatesListeningChannel
+  boxscoreOutputChannelName = updatedConsts.boxscoreOutputChannel
+  adminsListeningChannelName = updatedConsts.adminsListeningChannel
   saveStateName = new RegExp(updatedConsts.saveStatePattern)
   seasonNumber = updatedConsts.seasonNum
   teamCodes = updatedConsts.teamCodes
   adminIdObject = updatedConsts.editPermission
-  adminKeywords = updatedConsts.adminKeywords
+  adminCommands = updatedConsts.adminCommands
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
-  outputChannelId = guild.channels.cache.find(channel => channel.name === outputChannelName).id;
-  // listening channels id
-  adminBoxscoreChannelId = guild.channels.cache.find(channel => channel.name === channelName).id;
+  boxscoreOutputChannelId = guild.channels.cache.find(channel => channel.name === boxscoreOutputChannelName).id;
+  // admins commands channel id
+  adminsListeningChannelId = guild.channels.cache.find(channel => channel.name === adminsListeningChannelName).id
+  // save states listening channels id
+  saveStatesChannelId = guild.channels.cache.find(channel => channel.name === saveStatesListeningChannelName).id;
 })
-
-// w server
-const w_server = server;
 
 // pureServer
 const pureServer = process.env.pureServer;
@@ -67,8 +68,9 @@ let sheets;
 let spreadsheetId;
 let uniqueIdsFilePath;
 let uniqueGameStateIds;
-let adminBoxscoreChannelId; // get the channel the bot will be listening in.
-let outputChannelId; // the channel that the boxscores will be sent to
+let adminsListeningChannelId; // channel that listens for admin commands
+let saveStatesChannelId; // get the channel the bot will be listening in.
+let boxscoreOutputChannelId; // the channel that the boxscores will be sent to
 
 const gameStateQueue = []; // holds incoming game states to be processed
 let processing = false; // checks if game state is currently being processed from the queue;
@@ -84,18 +86,27 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
 
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
-    const channel = guild.channels.cache.find(channel => channel.name === channelName)
-    if(channel){
-      adminBoxscoreChannelId = channel.id;
+        // channel listening for admin commands
+        const adminCommandsListeningChannel = guild.channels.cache.find(channel => channel.name === adminsListeningChannelName)
+        if(adminCommandsListeningChannel){
+          adminsListeningChannelId = adminCommandsListeningChannel.id;
+        } else {
+          console.log(`Channel adminsListeningChannelName not found.`)
+        }
+    // channel listening for save states
+    const saveStatesChannel = guild.channels.cache.find(channel => channel.name === saveStatesListeningChannelName)
+    if(saveStatesChannel){
+      saveStatesChannelId = saveStatesChannel.id;
     } else {
-      console.log(`Channel ${bot_consts.listeningChannel} not found.`)
+      console.log(`Channel saveStatesListeningChannel not found.`)
     }
 
-    const outputChannel = guild.channels.cache.find(channel => channel.name === outputChannelName)
-    if(outputChannel){
-      outputChannelId = outputChannel.id;
+    // channel for outputting the boxscores
+    const boxscoreOutputChannel = guild.channels.cache.find(channel => channel.name === boxscoreOutputChannelName)
+    if(boxscoreOutputChannel){
+      boxscoreOutputChannelId = boxscoreOutputChannel.id;
     } else {
-      console.log(`Channel '${outputChannelName}' not found.`)
+      console.log(`Channel boxscoreOutputChannelName' not found.`)
     }
 
     // begin connections to google sheets
@@ -123,7 +134,7 @@ async function processQueue (){
   // process admin tasks W
   if(task.isAdminInstruction){
     const { server, adminMessage, csvFile } = task;
-    await parseAdminMessage({server, adminMessage, adminBoxscoreChannelId, client, csvFile})
+    await parseAdminMessage({server, adminMessage, adminsListeningChannelId, client, csvFile})
     processing = false;
     return;
   }
@@ -234,7 +245,7 @@ async function processQueue (){
         const imageBuffer = Buffer.from(image);
         const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
           if(sendResponseToOutputchannel) {
-            await client.channels.cache.get(outputChannelId).send({ files: [attachment] });
+            await client.channels.cache.get(boxscoreOutputChannelId).send({ files: [attachment] });
           } else {
             await task.message.channel.send({ files: [attachment] });
           }
@@ -287,7 +298,7 @@ async function processErrorsAndSendMessages (channelId, messageId){
       userErrorMessage += `The following ${gameParsingErrorCount} game state(s) were not processed.\n\`${gameParsingErrorStringMessage}\``;
     }
 
-    const channel = client.channels.cache.get(adminBoxscoreChannelId)
+    const channel = client.channels.cache.get(saveStatesChannelId)
     // arguments required for cleaning up bot messages
     const cleanUpBotMessagesArgs = {
       client,
@@ -334,13 +345,13 @@ client.on(Events.MessageCreate, async message => {
   // check for admin commands
   ////////////////////////////////////
   
-  if(channelId === adminBoxscoreChannelId){
+  if(channelId === adminsListeningChannelId){
     if(message.author.id === adminIdObject['ultramagnus'] || message.author.id === adminIdObject['ellis']){
       if(message.content){
         const adminMessage = message.content.split(" ");
         // check if in listening channel
         // check to see if admin is using a keyword to edit settings
-        if(adminKeywords.includes(adminMessage[0])){
+        if(adminCommands.includes(adminMessage[0])){
           // used in processQueue to bypass if not admin keyword
           const isAdminInstruction = true;
           // check if admin is dropping in .csv files required for game state parsing
@@ -359,7 +370,7 @@ client.on(Events.MessageCreate, async message => {
               return;
             }
           }
-            gameStateQueue.push({isAdminInstruction, server: getServerName, adminMessage, adminBoxscoreChannelId, csvFile})
+            gameStateQueue.push({isAdminInstruction, server: getServerName, adminMessage, adminsListeningChannelId, csvFile})
             if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
               processQueue()
             }
@@ -393,7 +404,7 @@ client.on(Events.MessageCreate, async message => {
   // end processing pure league
   //////////////////////////////////
 
-  if (channelId !== adminBoxscoreChannelId) return; // channel id obtained in Clientready event
+  if (channelId !== saveStatesChannelId) return; // channel id obtained in Clientready event
   if (message.attachments.size < 1) return;
   // if bot is not on paused for W league then proceed to listen
   if(!bot_consts.pauseWLeague){
@@ -416,7 +427,7 @@ client.on(Events.MessageCreate, async message => {
           processQueue()
       }
   } else {
-    const channel = client.channels.cache.get(adminBoxscoreChannelId);
+    const channel = client.channels.cache.get(saveStatesChannelId);
     await channel.send("⏸: BSB is currently on pause. Your state will be processed later.") 
   }
   });
