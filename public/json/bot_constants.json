@@ -28,7 +28,8 @@
     "SET OUTPUT CHANNEL",
     "SET SAVE STATE",
     "SET SEASON NUMBER",
-    "SET TEAM CODES"
+    "SET TEAM CODES",
+    "SET ROM CSV"
   ],
   "pauseWLeague": false,
   "allowDuplicates": false,
