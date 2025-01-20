@@ -335,7 +335,7 @@ client.on(Events.MessageCreate, async message => {
   ////////////////////////////////////
   
   if(channelId === adminBoxscoreChannelId){
-    if(message.author.id === adminIdObject['ultramagnus']){
+    if(message.author.id === adminIdObject['ultramagnus'] || message.author.id === adminIdObject['ellis']){
       if(message.content){
         const adminMessage = message.content.split(" ");
         // check if in listening channel
