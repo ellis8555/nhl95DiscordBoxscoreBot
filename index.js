@@ -367,9 +367,16 @@ client.on(Events.MessageCreate, async message => {
               csvFile.url = message.attachments.first().url;
               csvFile.fileName = message.attachments.first().name;
             } else {
+              // return if file is not accepted
               return;
             }
+          } else {
+            const adminChannel = client.channels.cache.get(adminsListeningChannelId);
+            await adminChannel.send("In order to upload a csv file a file needs to dropped in the channel with proper command as the text.")
+            // return if not file provided
+            return
           }
+            
             gameStateQueue.push({isAdminInstruction, server: getServerName, adminMessage, adminsListeningChannelId, csvFile})
             if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
               processQueue()
