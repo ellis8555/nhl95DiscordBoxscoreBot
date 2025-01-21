@@ -1,0 +1,94 @@
+{
+    "adminsListeningChannel": "q-admin",
+    "saveStatesListeningChannel": "1995-season-saves",
+    "boxscoreOutputChannel": "1995-season-boxscores",
+    "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
+    "editPermission": {
+      "ultramagnus": "869668599550332958",
+      "ellis": "678370444302221317"
+    },
+    "adminCommands": [
+      "PAUSE",
+      "RESUME",
+      "GET",
+      "SET",
+      " ",
+      "---The following are to look at current settings---",
+      " ",
+      "GET SETTINGS",
+      "GET COMMANDS",
+      "GET SEASON NUMBER",
+      "GET TEAM CODES",
+      " ",
+      "---The following will set settings on the server---",
+      " ",
+      "SET DUPLICATES",
+      "SET SHEETS",
+      "SET BOXSCORE",
+      "SET ADMIN CHANNEL",
+      "SET STATE CHANNEL",
+      "SET BOXSCORE CHANNEL",
+      "SET SAVE STATE",
+      "SET SEASON NUMBER",
+      "SET TEAM CODES",
+      "SET ROM CSV"
+    ],
+    "pauseWLeague": false,
+    "allowDuplicates": true,
+    "writeToUniqueIdsFile": false,
+    "writeToGoogleSheets": false,
+    "sendBoxscore": false,
+    "sendResponseToOutputchannel": true,
+    "leagueName": "w",
+    "seasonNum": "12",
+    "appendGoogleSheets": {
+      "countRowRange": "H:H",
+      "rawData": {
+        "col_start": "H",
+        "col_end": "BP"
+      },
+      "rawPlayer": {
+        "col_start": "F",
+        "col_end": "U"
+      },
+      "rawPenalty": {
+        "col_start": "G",
+        "col_end": "L"
+      },
+      "rawScoring": {
+        "col_start": "G",
+        "col_end": "N"
+      }
+    },
+    "teamCodes": [
+      "AHC",
+      "AUT",
+      "BAY",
+      "BBM",
+      "BFC",
+      "HAM",
+      "HIG",
+      "HOT",
+      "ING",
+      "IFV",
+      "KVK",
+      "MHT",
+      "MGG",
+      "NBK",
+      "OCW",
+      "PIT",
+      "PRO",
+      "RIC",
+      "SAG",
+      "SOV",
+      "SHS",
+      "SVF",
+      "SUM",
+      "SUN",
+      "TAI",
+      "TEG",
+      "TBP",
+      "VHV",
+      "WDY"
+    ]
+  }
