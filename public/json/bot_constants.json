@@ -2,7 +2,7 @@
   "adminsListeningChannel": "admin-boxscores",
   "saveStatesListeningChannel": "2007-season-saves",
   "boxscoreOutputChannel": "2007-season-boxscores",
-  "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
+  "saveStatePattern": "^W12PO.*\\.state\\d{1,3}$",
   "editPermission": {
     "ultramagnus": "869668599550332958",
     "ellis": "678370444302221317"
@@ -34,10 +34,10 @@
     "SET ROM CSV"
   ],
   "pauseWLeague": false,
-  "allowDuplicates": false,
-  "writeToUniqueIdsFile": true,
-  "writeToGoogleSheets": true,
-  "sendBoxscore": true,
+  "allowDuplicates": true,
+  "writeToUniqueIdsFile": false,
+  "writeToGoogleSheets": false,
+  "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
   "leagueName": "w",
   "seasonNum": "12",
