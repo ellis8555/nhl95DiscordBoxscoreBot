@@ -1,88 +1,88 @@
 {
-    "adminsListeningChannel": "q-admin",
-    "saveStatesListeningChannel": "1995-season-saves",
-    "boxscoreOutputChannel": "1995-season-boxscores",
-    "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
-    "editPermission": {
-      "ceydan": "315151409190535168",
-      "ellis": "678370444302221317"
+  "adminsListeningChannel": "q-admin",
+  "saveStatesListeningChannel": "1995-season-saves",
+  "boxscoreOutputChannel": "1995-season-boxscores",
+  "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
+  "editPermission": {
+    "ceydan": "315151409190535168",
+    "ellis": "678370444302221317"
+  },
+  "adminCommands": [
+    "PAUSE",
+    "RESUME",
+    "GET",
+    "SET",
+    "GET SETTINGS",
+    "GET COMMANDS",
+    "GET SEASON NUMBER",
+    "GET TEAM CODES",
+    "SET DUPLICATES",
+    "SET SHEETS",
+    "SET BOXSCORE",
+    "SET ADMIN CHANNEL",
+    "SET STATE CHANNEL",
+    "SET BOXSCORE CHANNEL",
+    "SET SAVE STATE",
+    "SET SEASON NUMBER",
+    "SET TEAM CODES",
+    "SET ROM CSV"
+  ],
+  "pauseQLeague": false,
+  "allowDuplicates": false,
+  "writeToUniqueIdsFile": false,
+  "writeToGoogleSheets": false,
+  "sendBoxscore": false,
+  "q_sendResponseToOutputchannel": true,
+  "q_leagueName": "w",
+  "q_seasonNum": "12",
+  "appendGoogleSheets": {
+    "countRowRange": "H:H",
+    "rawData": {
+      "col_start": "H",
+      "col_end": "BP"
     },
-    "adminCommands": [
-      "PAUSE",
-      "RESUME",
-      "GET",
-      "SET",
-      "GET SETTINGS",
-      "GET COMMANDS",
-      "GET SEASON NUMBER",
-      "GET TEAM CODES",
-      "SET DUPLICATES",
-      "SET SHEETS",
-      "SET BOXSCORE",
-      "SET ADMIN CHANNEL",
-      "SET STATE CHANNEL",
-      "SET BOXSCORE CHANNEL",
-      "SET SAVE STATE",
-      "SET SEASON NUMBER",
-      "SET TEAM CODES",
-      "SET ROM CSV"
-    ],
-    "pauseQLeague": false,
-    "allowDuplicates": false,
-    "writeToUniqueIdsFile": true,
-    "writeToGoogleSheets": false,
-    "sendBoxscore": false,
-    "q_sendResponseToOutputchannel": true,
-    "q_leagueName": "w",
-    "q_seasonNum": "12",
-    "appendGoogleSheets": {
-      "countRowRange": "H:H",
-      "rawData": {
-        "col_start": "H",
-        "col_end": "BP"
-      },
-      "rawPlayer": {
-        "col_start": "F",
-        "col_end": "U"
-      },
-      "rawPenalty": {
-        "col_start": "G",
-        "col_end": "L"
-      },
-      "rawScoring": {
-        "col_start": "G",
-        "col_end": "N"
-      }
+    "rawPlayer": {
+      "col_start": "F",
+      "col_end": "U"
     },
-    "teamCodes": [
-      "AHC",
-      "AUT",
-      "BAY",
-      "BBM",
-      "BFC",
-      "HAM",
-      "HIG",
-      "HOT",
-      "ING",
-      "IFV",
-      "KVK",
-      "MHT",
-      "MGG",
-      "NBK",
-      "OCW",
-      "PIT",
-      "PRO",
-      "RIC",
-      "SAG",
-      "SOV",
-      "SHS",
-      "SVF",
-      "SUM",
-      "SUN",
-      "TAI",
-      "TEG",
-      "TBP",
-      "VHV",
-      "WDY"
-    ]
-  }
+    "rawPenalty": {
+      "col_start": "G",
+      "col_end": "L"
+    },
+    "rawScoring": {
+      "col_start": "G",
+      "col_end": "N"
+    }
+  },
+  "teamCodes": [
+    "AHC",
+    "AUT",
+    "BAY",
+    "BBM",
+    "BFC",
+    "HAM",
+    "HIG",
+    "HOT",
+    "ING",
+    "IFV",
+    "KVK",
+    "MHT",
+    "MGG",
+    "NBK",
+    "OCW",
+    "PIT",
+    "PRO",
+    "RIC",
+    "SAG",
+    "SOV",
+    "SHS",
+    "SVF",
+    "SUM",
+    "SUN",
+    "TAI",
+    "TEG",
+    "TBP",
+    "VHV",
+    "WDY"
+  ]
+}

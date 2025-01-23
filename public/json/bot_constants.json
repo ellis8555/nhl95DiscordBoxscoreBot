@@ -31,7 +31,7 @@
   "allowDuplicates": true,
   "writeToUniqueIdsFile": false,
   "writeToGoogleSheets": false,
-  "sendBoxscore": true,
+  "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
   "leagueName": "w",
   "seasonNum": "12",
