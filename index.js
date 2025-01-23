@@ -533,7 +533,7 @@ async function processErrorsAndSendMessages (){
     }
     let q_userErrorMessage = "";
 
-    // Build error messages for W league
+    // Build error messages for Q league
     if (q_duplicateGameStateFileNames.length > 0) {
       const duplicateFileCount = q_duplicateGameStateFileNames.length;
       let duplicateStringMessage = q_duplicateGameStateFileNames.join("\n");
