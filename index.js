@@ -38,6 +38,7 @@ let seasonNumber = bot_consts.seasonNum
 let teamCodes = bot_consts.teamCodes
 let adminIdObject = bot_consts.editPermission
 let adminCommands = bot_consts.adminCommands
+let pauseWLeague = bot_consts.pauseWLeague
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -49,6 +50,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   teamCodes = updatedConsts.teamCodes
   adminIdObject = updatedConsts.editPermission
   adminCommands = updatedConsts.adminCommands
+  pauseWLeague = updatedConsts.pauseWLeague
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   boxscoreOutputChannelId = guild.channels.cache.find(channel => channel.name === boxscoreOutputChannelName).id;
@@ -78,6 +80,7 @@ let q_seasonNumber = q_bot_consts.q_seasonNum
 let q_teamCodes = q_bot_consts.teamCodes
 let q_adminIdObject = q_bot_consts.editPermission
 let q_adminCommands = q_bot_consts.adminCommands
+let q_pauseQLeague = q_bot_consts.pauseQLeague
 
 // update variables that come from admin within discord channel
 q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) => {
@@ -89,6 +92,7 @@ q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) =>
   q_teamCodes = updatedConsts.teamCodes
   q_adminIdObject = updatedConsts.editPermission
   q_adminCommands = updatedConsts.adminCommands
+  q_pauseQLeague = updatedConsts.pauseQLeague
   // updates channel in which the boxscores will be posted
   const q_guild = client.guilds.cache.find(guild => guild.name === q_server);
   q_boxscoreOutputChannelId = q_guild.channels.cache.find(channel => channel.name === q_boxscoreOutputChannelName).id;
@@ -644,12 +648,12 @@ client.on(Events.MessageCreate, async message => {
   //////////////////////////////////
   // end processing pure league
   //////////////////////////////////
-
-
+  
+  
   ////////////////////////////////////
   // W league processing
   ////////////////////////////////////
-
+  
   if(getServerName === w_server){
     // check for W league admin commands
 
@@ -693,8 +697,7 @@ client.on(Events.MessageCreate, async message => {
     if (channelId !== saveStatesChannelId) return; // channel id obtained in Clientready event
     if (message.attachments.size < 1) return;
     // if bot is not on paused for W league then proceed to listen
-    if(!bot_consts.pauseWLeague){
-      
+    if(!pauseWLeague){
           const gameStates = [...message.attachments.values()].filter(state => {
             const isGameState = saveStateName.test(state.name) // exlcude if filename is not game file
             if(!isGameState) return false 
@@ -768,7 +771,7 @@ client.on(Events.MessageCreate, async message => {
     if (channelId !== q_saveStatesChannelId) return; // channel id obtained in Clientready event
     if (message.attachments.size < 1) return;
     // if bot is not on paused for W league then proceed to listen
-    if(!q_bot_consts.pauseQLeague){
+    if(!q_pauseQLeague){
       
           const gameStates = [...message.attachments.values()].filter(state => {
             const isGameState = q_saveStateName.test(state.name) // exlcude if filename is not game file
