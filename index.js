@@ -268,7 +268,7 @@ async function processQueue (){
         .map(id => id.trim())
     }
   
-    const { message, name } = task
+    const { message, name, spreadsheetId } = task
     const sentProcessingMessage = await message.channel.send(`Processing: ${name}`)
     userProcessingMessages.push(sentProcessingMessage.id)
   
@@ -327,7 +327,7 @@ async function processQueue (){
         // send game data to google sheets
         const sheetsArgsObj = {
           sheets,
-          w_spreadsheetId,
+          spreadsheetId,
           romData
         }
         try { // append to google sheets try block
@@ -394,7 +394,7 @@ async function processQueue (){
         .map(id => id.trim())
     }
   
-    const { message, name } = task
+    const { message, name, spreadsheetId } = task
     const sentProcessingMessage = await message.channel.send(`Processing: ${name}`)
     q_userProcessingMessages.push(sentProcessingMessage.id)
     let romData;
@@ -451,7 +451,7 @@ async function processQueue (){
         // send game data to google sheets
         const sheetsArgsObj = {
           sheets,
-          q_spreadsheetId,
+          spreadsheetId,
           romData
         }
         try { // append to google sheets try block
@@ -709,7 +709,7 @@ client.on(Events.MessageCreate, async message => {
           })
       
           for (const gameState of gameStates) {
-            gameStateQueue.push({ message, server: getServerName, name: gameState.name, attachment: gameState.attachment });
+            gameStateQueue.push({ message, server: getServerName, spreadsheetId, name: gameState.name, attachment: gameState.attachment });
           }
       
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
@@ -784,7 +784,7 @@ client.on(Events.MessageCreate, async message => {
           })
       
           for (const gameState of gameStates) {
-            gameStateQueue.push({ message, server: getServerName, name: gameState.name, attachment: gameState.attachment });
+            gameStateQueue.push({ message, server: getServerName, spreadsheetId, name: gameState.name, attachment: gameState.attachment });
           }
       
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
