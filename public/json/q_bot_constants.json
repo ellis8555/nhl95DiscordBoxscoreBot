@@ -33,8 +33,8 @@
   "writeToGoogleSheets": false,
   "sendBoxscore": false,
   "q_sendResponseToOutputchannel": true,
-  "q_leagueName": "w",
-  "q_seasonNum": "12",
+  "q_leagueName": "q",
+  "q_seasonNum": "95",
   "appendGoogleSheets": {
     "countRowRange": "H:H",
     "rawData": {
@@ -55,34 +55,6 @@
     }
   },
   "teamCodes": [
-    "AHC",
-    "AUT",
-    "BAY",
-    "BBM",
-    "BFC",
-    "HAM",
-    "HIG",
-    "HOT",
-    "ING",
-    "IFV",
-    "KVK",
-    "MHT",
-    "MGG",
-    "NBK",
-    "OCW",
-    "PIT",
-    "PRO",
-    "RIC",
-    "SAG",
-    "SOV",
-    "SHS",
-    "SVF",
-    "SUM",
-    "SUN",
-    "TAI",
-    "TEG",
-    "TBP",
-    "VHV",
-    "WDY"
+    "BRW", "CHI", "COR", "DWB", "GRA", "HSW", "MON", "NCJ", "SUP", "QQB", "THC", "VFM"
   ]
 }
