@@ -393,7 +393,7 @@ async function processQueue (){
         .split(",")
         .map(id => id.trim())
     }
-  
+
     const { message, name, spreadsheetId } = task
     const sentProcessingMessage = await message.channel.send(`Processing: ${name}`)
     q_userProcessingMessages.push(sentProcessingMessage.id)
@@ -430,16 +430,24 @@ async function processQueue (){
         let matchup;
         if(q_bot_consts.writeToUniqueIdsFile){ // if not writing to uniqueId's file then don't need to proceed here
           gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
-          const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
+          // const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
+          // if(isDuplicate){
+          //   q_duplicateGameStateFileNames.push(fileName)
+          //   throw new Error(`Error: \`${fileName}\` appears to be a duplicate.`)
+          // }
+          // checks against schedule.
           matchup = gamesUniqueId.substring(2, 9);
-          const isHomeAwayDuplicated = uniqueGameStateIds.includes(matchup)
-          if(isDuplicate){
+          const matchupArray = [];
+          uniqueGameStateIds.forEach(match => {
+            if(match === matchup){
+              matchupArray.push(match)
+            }
+          })
+          // matchup array length is total games divided by 2 as these represent home and away series which totals total games.
+          const isScheduleComplete = matchupArray.length >=2 ? true : false;
+          if(isScheduleComplete){
             q_duplicateGameStateFileNames.push(fileName)
-            throw new Error(`Error: \`${fileName}\` appears to be a duplicate.`)
-          }
-          if(isHomeAwayDuplicated){
-            q_duplicateGameStateFileNames.push(fileName)
-            throw new Error(`Error: \`${fileName}\` home/away sequence has previously been submitted.`)
+            throw new Error(`Error: \`${fileName}\` home/away sequence has been met for the schedule.`)
           }
         }
   
