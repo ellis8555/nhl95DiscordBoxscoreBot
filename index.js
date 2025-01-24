@@ -707,6 +707,13 @@ client.on(Events.MessageCreate, async message => {
             
             return true
           })
+
+          // sort game states by state number in order to have correct sheets and boxscore orders perserved
+          gameStates.sort((a,b) => {
+            const aState = parseInt(a.name.match(/state(\d{1,3})/)[1])
+            const bState = parseInt(b.name.match(/state(\d{1,3})/)[1])
+            return aState - bState
+          })
       
           for (const gameState of gameStates) {
             gameStateQueue.push({ message, server: getServerName, spreadsheetId, name: gameState.name, attachment: gameState.attachment });
@@ -781,6 +788,13 @@ client.on(Events.MessageCreate, async message => {
             if(fileSize < 1000000 || fileSize > 1200000) return false
             
             return true
+          })
+
+          // sort game states by state number in order to have correct sheets and boxscore orders perserved
+          gameStates.sort((a,b) => {
+            const aState = parseInt(a.name.match(/state(\d{1,3})/)[1])
+            const bState = parseInt(b.name.match(/state(\d{1,3})/)[1])
+            return aState - bState
           })
       
           for (const gameState of gameStates) {
