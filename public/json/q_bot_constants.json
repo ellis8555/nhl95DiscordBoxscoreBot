@@ -25,7 +25,7 @@
     "SET BOXSCORE CHANNEL",
     "SET SAVE STATE",
     "SET SEASON NUMBER",
-    "SET TEAM CODES",
+    "SET TEAMCODES",
     "SET ROM CSV",
     "HELP SET CHANNELS",
     "HELP SET SAVE STATE",
@@ -58,5 +58,19 @@
       "col_start": "G",
       "col_end": "N"
     }
-  }
+  },
+  "teamCodes": [
+    "BRW",
+    "CHI",
+    "COR",
+    "DWB",
+    "GRA",
+    "HSW",
+    "MON",
+    "NCJ",
+    "SUP",
+    "QQB",
+    "THC",
+    "VFM"
+  ]
 }
