@@ -12,6 +12,7 @@
     "RESUME",
     "GET",
     "SET",
+    "HELP",
     "GET SETTINGS",
     "GET COMMANDS",
     "GET SEASON NUMBER",
@@ -25,9 +26,13 @@
     "SET SAVE STATE",
     "SET SEASON NUMBER",
     "SET TEAM CODES",
-    "SET ROM CSV"
+    "SET ROM CSV",
+    "HELP SET CHANNELS",
+    "HELP SET SAVE STATE",
+    "HELP SET TEAM CODES",
+    "HELP SET ROM CSV"
   ],
-  "pauseQLeague": false,
+  "pauseQLeague": true,
   "allowDuplicates": false,
   "writeToUniqueIdsFile": false,
   "writeToGoogleSheets": false,
@@ -53,8 +58,5 @@
       "col_start": "G",
       "col_end": "N"
     }
-  },
-  "teamCodes": [
-    "BRW", "CHI", "COR", "DWB", "GRA", "HSW", "MON", "NCJ", "SUP", "QQB", "THC", "VFM"
-  ]
+  }
 }
