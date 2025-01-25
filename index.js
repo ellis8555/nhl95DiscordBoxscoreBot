@@ -321,7 +321,8 @@ async function processQueue (){
   
       // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
       const data = romData.data;
-      const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname });
+      const league = leagueName
+      const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname, league });
   
       if(bot_consts.writeToGoogleSheets){
         // send game data to google sheets
@@ -430,11 +431,11 @@ async function processQueue (){
         let matchup;
         if(q_bot_consts.writeToUniqueIdsFile){ // if not writing to uniqueId's file then don't need to proceed here
           gamesUniqueId = romData.data.otherGameStats.uniqueGameId // begin duplication and schedule checks
-          // const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
-          // if(isDuplicate){
-          //   q_duplicateGameStateFileNames.push(fileName)
-          //   throw new Error(`Error: \`${fileName}\` appears to be a duplicate.`)
-          // }
+          const isDuplicate = uniqueGameStateIds.includes(gamesUniqueId)
+          if(isDuplicate){
+            q_duplicateGameStateFileNames.push(fileName)
+            throw new Error(`Error: \`${fileName}\` appears to be a duplicate.`)
+          }
           // checks against schedule.
           matchup = gamesUniqueId.substring(2, 9);
           const matchupArray = [];
@@ -453,7 +454,8 @@ async function processQueue (){
   
       // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
       const data = romData.data;
-      const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname });
+      const league = q_league;
+      const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname, league });
 
       if(q_bot_consts.writeToGoogleSheets){
         // send game data to google sheets
