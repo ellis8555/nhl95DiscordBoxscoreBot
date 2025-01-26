@@ -2,7 +2,7 @@
   "adminsListeningChannel": "q-admin",
   "saveStatesListeningChannel": "1995-season-saves",
   "boxscoreOutputChannel": "1995-season-boxscores",
-  "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
+  "saveStatePattern": "^1995.*\\.state\\d{1,3}$",
   "editPermission": {
     "ultramagnus": "869668599550332958",
     "ellis": "678370444302221317"
@@ -32,11 +32,11 @@
     "HELP SET TEAM CODES",
     "HELP SET ROM CSV"
   ],
-  "pauseQLeague": true,
+  "pauseQLeague": false,
   "allowDuplicates": false,
   "writeToUniqueIdsFile": false,
   "writeToGoogleSheets": false,
-  "sendBoxscore": false,
+  "sendBoxscore": true,
   "q_sendResponseToOutputchannel": true,
   "q_leagueName": "q",
   "q_seasonNum": "95",
