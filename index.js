@@ -29,7 +29,6 @@ const {
 } = bot_consts
 
 const uniqueIdsFile = uniqueIdsFileName
-const league = leagueName
 let adminsListeningChannelName = bot_consts.adminsListeningChannel
 let saveStatesListeningChannelName = bot_consts.saveStatesListeningChannel
 let boxscoreOutputChannelName = bot_consts.boxscoreOutputChannel
@@ -271,23 +270,22 @@ async function processQueue (){
     const { message, name, spreadsheetId } = task
     const sentProcessingMessage = await message.channel.send(`Processing: ${name}`)
     userProcessingMessages.push(sentProcessingMessage.id)
-  
+
     let romData;
     try {
       const fileName = task.name;
       const gameFileURL = task.attachment;
       const fetchGameFile = await fetch(gameFileURL);
       const gameFileBuffer = await fetchGameFile.arrayBuffer();
-  
+
       const romArgs = {
         file: gameFileBuffer,
         seasonNumber,
         gameType: "season",
-        leagueName: league,
+        leagueName,
         teamsDictCodes: teamCodes,
       };
       romData = await readOgRomBinaryGameState(romArgs);
-      
       // Perform checks and processing as before
       const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
       const gameLengthInt = parseInt(gameLength.replace(":", ""), 10);
