@@ -12,6 +12,7 @@ import { bot_consts, q_bot_consts, bot_consts_update_emitter, q_bot_consts_updat
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
 import parseAdminMessage from "./lib/index/parseAdminMessage.js";
+import mentionRemainingOpponents from "./lib/index/mentionRemainingOpponents.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,6 +75,7 @@ const q_league = q_leagueName
 let q_adminsListeningChannelName = q_bot_consts.adminsListeningChannel
 let q_saveStatesListeningChannelName = q_bot_consts.saveStatesListeningChannel
 let q_boxscoreOutputChannelName = q_bot_consts.boxscoreOutputChannel
+let q_seasonGamesChannel = q_bot_consts.seasonGamesChannel
 let q_saveStateName = new RegExp(q_bot_consts.saveStatePattern)
 let q_seasonNumber = q_bot_consts.q_seasonNum
 let q_teamCodes = q_bot_consts.teamCodes
@@ -86,6 +88,7 @@ q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) =>
   q_saveStatesListeningChannelName = updatedConsts.saveStatesListeningChannel
   q_boxscoreOutputChannelName = updatedConsts.boxscoreOutputChannel
   q_adminsListeningChannelName = updatedConsts.adminsListeningChannel
+  q_seasonGamesChannel = updatedConsts.seasonGamesChannel
   q_saveStateName = new RegExp(updatedConsts.saveStatePattern)
   q_seasonNumber = updatedConsts.q_seasonNum
   q_teamCodes = updatedConsts.teamCodes
@@ -99,6 +102,8 @@ q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) =>
   q_adminsListeningChannelId = q_guild.channels.cache.find(channel => channel.name === q_adminsListeningChannelName).id
   // save states listening channels id
   q_saveStatesChannelId = q_guild.channels.cache.find(channel => channel.name === q_saveStatesListeningChannelName).id;
+  // season games listening channels id
+  q_seasonGamesChannelId = q_guild.channels.cache.find(channel => channel.name === q_seasonGamesChannel).id;
 })
 
 // w server
@@ -131,6 +136,7 @@ let boxscoreOutputChannelId; // the channel that the boxscores will be sent to
 let q_boxscoreOutputChannelId;
 let q_adminsListeningChannelId;
 let q_saveStatesChannelId
+let q_seasonGamesChannelId;
 
 const gameStateQueue = []; // holds incoming game states to be processed
 let processing = false; // checks if game state is currently being processed from the queue;
@@ -208,6 +214,14 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       } else {
         console.log(`Channel q_boxscoreOutputChannelName' not found.`)
       }
+
+      // channel for outputting remaining opponents
+      const q_remaining_opponents_output_channel = q_guild.channels.cache.find(channel => channel.name === q_seasonGamesChannel)
+      if(q_remaining_opponents_output_channel){
+        q_seasonGamesChannelId = q_remaining_opponents_output_channel.id;
+      } else {
+        console.log(`Channel q_seasonGamesChannelId' not found.`)
+      }
     } else {
       console.log(`${q_server} can't be found.`)
     }
@@ -234,6 +248,28 @@ async function processQueue (){
   }
   processing = true; // processing is occuring
   const task = gameStateQueue.shift(); // Get the first file in the queue
+
+  // process remaining opponents W and Q
+  if(task.isOpponentRequest){
+    const { server, client, coachId } = task;
+    if(server === q_server){
+      const { q_seasonGamesChannelId } = task
+      // get q constants
+      const qFilePath = path.join(process.cwd(), "public", "json", "q_bot_constants.json")
+      const readQFile = fs.readFileSync(qFilePath, "utf-8")
+      const q_bot_consts = JSON.parse(readQFile);
+
+      // get gamesplayed data from unique id's file
+      const qUniqueIdsFilePath = path.join(process.cwd(), "public", "qUniqueIds.csv")
+      const uniqueIdsFile = fs.readFileSync(qUniqueIdsFilePath, "utf-8");
+      
+      const { teamCodes, coaches } = q_bot_consts;
+
+      await mentionRemainingOpponents(q_seasonGamesChannelId, {client, coachId, teamCodes, coaches, uniqueIdsFile})
+    }
+    processing = false;
+    return;
+  }
 
   // process admin tasks W and Q
   if(task.isAdminInstruction){
@@ -744,45 +780,57 @@ client.on(Events.MessageCreate, async message => {
   ////////////////////////////////////
 
   if(getServerName === q_server){
-        // check for Q league admin commands
 
-        if(channelId === q_adminsListeningChannelId){
-          if(message.author.id === q_adminIdObject['ceydan'] || message.author.id === q_adminIdObject['ellis']){
-            if(message.content){
-              const adminMessage = message.content.split(" ");
-              // check if in listening channel
-              // check to see if admin is using a keyword to edit settings
-              if(q_adminCommands.includes(adminMessage[0])){
-                // used in processQueue to bypass if not admin keyword
-                const isAdminInstruction = true;
-                // check if admin is dropping in .csv files required for game state parsing
-                const csvFile = {};
-                if(message.attachments.first()){
-                  const csvFileNames = [
-                    process.env.goalieAttributes,
-                    process.env.skaterAttributes,
-                    process.env.teamPositionCounts
-                  ]
-                  const attachedFileName = message.attachments.first().name;
-                  if(csvFileNames.includes(attachedFileName)){
-                    csvFile.url = message.attachments.first().url;
-                    csvFile.fileName = message.attachments.first().name;
-                  } else {
-                    // return if file is not accepted
-                    return;
-                  }
-                }         
-                  gameStateQueue.push({isAdminInstruction, server: getServerName, client, adminMessage, q_adminsListeningChannelId, csvFile})
-                  if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
-                    processQueue()
-                  }
-                  return
-            }
-            }
-          }
+    // check for Q league admin commands
+    if(channelId === q_adminsListeningChannelId){
+      if(message.author.id === q_adminIdObject['ceydan'] || message.author.id === q_adminIdObject['ellis']){
+        if(message.content){
+          const adminMessage = message.content.split(" ");
+          // check if in listening channel
+          // check to see if admin is using a keyword to edit settings
+          if(q_adminCommands.includes(adminMessage[0])){
+            // used in processQueue to bypass if not admin keyword
+            const isAdminInstruction = true;
+            // check if admin is dropping in .csv files required for game state parsing
+            const csvFile = {};
+            if(message.attachments.first()){
+              const csvFileNames = [
+                process.env.goalieAttributes,
+                process.env.skaterAttributes,
+                process.env.teamPositionCounts
+              ]
+              const attachedFileName = message.attachments.first().name;
+              if(csvFileNames.includes(attachedFileName)){
+                csvFile.url = message.attachments.first().url;
+                csvFile.fileName = message.attachments.first().name;
+              } else {
+                // return if file is not accepted
+                return;
+              }
+            }         
+              gameStateQueue.push({isAdminInstruction, server: getServerName, client, adminMessage, q_adminsListeningChannelId, csvFile})
+              if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+                processQueue()
+              }
+              return
         }
+        }
+      }
+    }
 
-          // begin processing Q league saved states
+    // check for Q league opponents remaining
+    if(channelId === q_seasonGamesChannelId){
+      if(message.content === "Season Games"){
+          const coachId = message.author.id
+          const isOpponentRequest = true
+          gameStateQueue.push({isOpponentRequest, server: getServerName, client, coachId, q_seasonGamesChannelId})
+          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+            processQueue()
+          }
+      }
+    }
+
+     // begin processing Q league saved states
     if (channelId !== q_saveStatesChannelId) return; // channel id obtained in Clientready event
     if (message.attachments.size < 1) return;
     // if bot is not on paused for W league then proceed to listen
