@@ -2,6 +2,7 @@
   "adminsListeningChannel": "q-admin",
   "saveStatesListeningChannel": "1995-season-saves",
   "boxscoreOutputChannel": "1995-season-boxscores",
+  "seasonGamesChannel": "season_games",
   "saveStatePattern": "^1995.*\\.state\\d{1,3}$",
   "editPermission": {
     "ultramagnus": "869668599550332958",
@@ -34,7 +35,7 @@
   ],
   "pauseQLeague": false,
   "allowDuplicates": false,
-  "writeToUniqueIdsFile": false,
+  "writeToUniqueIdsFile": true,
   "writeToGoogleSheets": false,
   "sendBoxscore": true,
   "q_sendResponseToOutputchannel": true,
@@ -72,5 +73,67 @@
     "QQB",
     "THC",
     "VFM"
+  ],
+  "coaches" : [
+    {
+      "id": "932744327191490651",
+      "user": "GMDS",
+      "team": "GRA"
+    },
+    {
+      "id": "315151409190535168",
+      "user": "Ceydan",
+      "team": "COR"
+    },
+    {
+      "id": "628241421781958684",
+      "user": "Chalky",
+      "team": "VFM"
+    },
+    {
+      "id": "692039117499793469",
+      "user": "autobahn",
+      "team": "QQB"
+    },
+    {
+      "id": "874999566200635393",
+      "user": "Pink_Elephants",
+      "team": "NCJ"
+    },
+    {
+      "id": "694688440440193186",
+      "user": "shawnbell_",
+      "team": "SUP"
+    },
+    {
+      "id": "378336323875897344",
+      "user": "niuhuskie224",
+      "team": "CHI"
+    },
+    {
+      "id": "144973906070077440",
+      "user": "segathon",
+      "team": "DWB"
+    },
+    {
+      "id": "582240735793774618",
+      "user": "Puss",
+      "team": "THC"
+    },
+    {
+      "id": "869668599550332958",
+      "user": "ultramagnus",
+      "team": "BRW"
+    },
+    {
+      "id": "694697891733831761",
+      "user": "wolf_of_highland",
+      "team": "HSW"
+    },
+    {
+      "id": "1211045587483623484",
+      "user": "Krav",
+      "team": "MON"
+    }
   ]
 }
