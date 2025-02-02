@@ -13,6 +13,7 @@ import { bot_consts, q_bot_consts, bot_consts_update_emitter, q_bot_consts_updat
 import processPure from "./lib/pureLeague/processPure.js";
 import parseAdminMessage from "./lib/index/parseAdminMessage.js";
 import mentionRemainingOpponents from "./lib/index/mentionRemainingOpponents.js";
+import displayRemainingOpponents from "./lib/index/displayRemainingOpponents.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -249,8 +250,8 @@ async function processQueue (){
   processing = true; // processing is occuring
   const task = gameStateQueue.shift(); // Get the first file in the queue
 
-  // process remaining opponents W and Q
-  if(task.isOpponentRequest){
+  // @ mention remaining opponents W and Q
+  if(task.isMentionOpponentRequest){
     const { server, client, coachId } = task;
     if(server === q_server){
       const { q_seasonGamesChannelId } = task
@@ -266,6 +267,28 @@ async function processQueue (){
       const { teamCodes, coaches } = q_bot_consts;
 
       await mentionRemainingOpponents(q_seasonGamesChannelId, {client, coachId, teamCodes, coaches, uniqueIdsFile})
+    }
+    processing = false;
+    return;
+  }
+
+  // display remaining opponents W and Q
+  if(task.isOpponentRequest){
+    const { server, client, teamAbbreviation } = task;
+    if(server === q_server){
+      const { q_seasonGamesChannelId } = task
+      // get q constants
+      const qFilePath = path.join(process.cwd(), "public", "json", "q_bot_constants.json")
+      const readQFile = fs.readFileSync(qFilePath, "utf-8")
+      const q_bot_consts = JSON.parse(readQFile);
+
+      // get gamesplayed data from unique id's file
+      const qUniqueIdsFilePath = path.join(process.cwd(), "public", "qUniqueIds.csv")
+      const uniqueIdsFile = fs.readFileSync(qUniqueIdsFilePath, "utf-8");
+      
+      const { teamCodes, coaches } = q_bot_consts;
+
+      await displayRemainingOpponents(q_seasonGamesChannelId, {client, teamAbbreviation, teamCodes, coaches, uniqueIdsFile})
     }
     processing = false;
     return;
@@ -818,15 +841,28 @@ client.on(Events.MessageCreate, async message => {
       }
     }
 
-    // check for Q league opponents remaining
+    // call for either season games or get remaining opponents list
     if(channelId === q_seasonGamesChannelId){
+      // @ mention remaining opponents
       if(message.content === "Season Games"){
           const coachId = message.author.id
-          const isOpponentRequest = true
-          gameStateQueue.push({isOpponentRequest, server: getServerName, client, coachId, q_seasonGamesChannelId})
+          const isMentionOpponentRequest = true
+          gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, q_seasonGamesChannelId})
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
             processQueue()
           }
+          return
+      }
+      // display remaining opponent logos
+      const teamPattern = /^[A-Z]{3}$/
+      if(teamPattern.test(message.content)){
+          const isOpponentRequest = true
+          const teamAbbreviation = message.content
+          gameStateQueue.push({isOpponentRequest, server: getServerName, client, teamAbbreviation, q_seasonGamesChannelId})
+          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+            processQueue()
+          }
+          return
       }
     }
 
