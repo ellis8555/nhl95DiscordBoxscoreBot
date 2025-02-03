@@ -252,7 +252,7 @@ async function processQueue (){
 
   // @ mention remaining opponents W and Q
   if(task.isMentionOpponentRequest){
-    const { server, client, coachId } = task;
+    const { server, client, coachId, userMessage } = task;
     if(server === q_server){
       const { q_seasonGamesChannelId } = task
       // get q constants
@@ -266,7 +266,7 @@ async function processQueue (){
       
       const { teamCodes, coaches } = q_bot_consts;
 
-      await mentionRemainingOpponents(q_seasonGamesChannelId, {client, coachId, teamCodes, coaches, uniqueIdsFile})
+      await mentionRemainingOpponents(q_seasonGamesChannelId, {client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
     }
     processing = false;
     return;
@@ -844,10 +844,12 @@ client.on(Events.MessageCreate, async message => {
     // call for either season games or get remaining opponents list
     if(channelId === q_seasonGamesChannelId){
       // @ mention remaining opponents
-      if(message.content === "Season Games"){
+      const seasonGamesPattern = /^Season Games( ([1-9]|1[0-2])[APap][Mm])?$/
+      if(seasonGamesPattern.test(message.content)){
           const coachId = message.author.id
+          const userMessage = message.content
           const isMentionOpponentRequest = true
-          gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, q_seasonGamesChannelId})
+          gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, userMessage, q_seasonGamesChannelId})
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
             processQueue()
           }
