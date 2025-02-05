@@ -19,7 +19,9 @@
     "standings": {
       "manager_col": "C",
       "manager_col_start": "C5",
-      "streak_col": "Q"
+      "streak_col": "Q",
+      "managersNameRowStart": "5",
+      "managersRowPostValue": "REMAINING SCHEDULE"
     }
   },
   "teamCodesList": [
