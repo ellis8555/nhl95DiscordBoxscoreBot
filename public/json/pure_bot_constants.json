@@ -2,7 +2,8 @@
   "listeningChannel": "pure-scores",
   "pureLeagueScoreExpression": "^\\s*(?:EDIT\\s+)?[a-zA-Z]{3}\\s+(\\d+)\\s*-\\s+[a-zA-Z]{3}\\s+(\\d+)\\s*$",
   "editPermission": {
-    "ticklepuss": "582240735793774618"
+    "ticklepuss": "582240735793774618",
+    "ellis": "678370444302221317"
   },
   "writeToGoogleSheets": true,
   "currentSeason": "9",
@@ -16,12 +17,10 @@
       "col_start_away": "M",
       "col_end_away": "N"
     },
-    "standings": {
+    "rawStandings": {
+      "raw_standings_col_start": "A",
       "manager_col": "C",
-      "manager_col_start": "C5",
-      "streak_col": "Q",
-      "managersNameRowStart": "5",
-      "managersRowPostValue": "REMAINING SCHEDULE"
+      "streak_col": "I"
     }
   },
   "teamCodesList": [
@@ -57,64 +56,56 @@
       "id": "694688440440193186",
       "user": "shawnbell_",
       "team": "NYI",
-      "sheetsUser": "ShawnBell",
-      "streak": "-"
+      "sheetsUser": "ShawnBell"
     },
     {
       "id": "144973906070077440",
       "user": "segathon",
       "team": "PIT",
-      "sheetsUser": "Segathon",
-      "streak": "-"
+      "sheetsUser": "Segathon"
     },
     {
       "id": "582240735793774618",
       "user": "Puss",
       "team": "MTL",
-      "sheetsUser": "Puss",
-      "streak": "-"
+      "sheetsUser": "Puss"
+
     },
     {
       "id": "1211045587483623484",
       "user": "Krav",
       "team": "VAN",
-      "sheetsUser": "Krav",
-      "streak": "-"
+      "sheetsUser": "Krav"
     },
     {
       "id": "874726051790594051",
       "user": "Nips",
       "team": "SJS",
-      "sheetsUser": "Nips",
-      "streak": "-"
+      "sheetsUser": "Nips"
     },
     {
       "id": "1009697012737921055",
       "user": "MNYoda",
       "team": "PHL",
-      "sheetsUser": "MNYoda",
-      "streak": "-"
+      "sheetsUser": "MNYoda"
     },
     {
       "id": "802225742523531325",
       "user": "Nathan",
       "team": "WPG",
-      "sheetsUser": "Nathan",
-      "streak": "-"
+      "sheetsUser": "Nathan"
     },
     {
       "id": "1042251245609549824",
       "user": "MarylandMike",
       "team": "FLA",
-      "sheetsUser": "MarylandMike",
-      "streak": "-"
+      "sheetsUser": "MarylandMike"
     },
     {
       "id": "373576219129806859",
       "user": "MikeVick",
       "team": "LAK",
-      "sheetsUser": "MikeVick",
-      "streak": "-"
+      "sheetsUser": "MikeVick"
     }
   ]
 }
