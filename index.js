@@ -844,7 +844,7 @@ client.on(Events.MessageCreate, async message => {
     // call for either season games or get remaining opponents list
     if(channelId === q_seasonGamesChannelId){
       // @ mention remaining opponents
-      const seasonGamesPattern = /^Season Games( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
+      const seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
       if(seasonGamesPattern.test(message.content)){
           const coachId = message.author.id
           const userMessage = message.content
