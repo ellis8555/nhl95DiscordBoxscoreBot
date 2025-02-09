@@ -3,6 +3,7 @@
   "saveStatesListeningChannel": "1995-season-saves",
   "boxscoreOutputChannel": "1995-season-boxscores",
   "seasonGamesChannel": "season_games",
+  "q_games_vs_opponents": 4,
   "saveStatePattern": "^1995.*\\.state\\d{1,3}$",
   "editPermission": {
     "ultramagnus": "869668599550332958",
