@@ -24,7 +24,7 @@
     "SET STATE CHANNEL",
     "SET BOXSCORE CHANNEL",
     "SET SAVE STATE",
-    "SET SEASON NUMBER",
+    "SET SEASON",
     "SET TEAMCODES",
     "SET ROM CSV",
     "HELP SET CHANNELS",
@@ -39,7 +39,7 @@
   "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
   "leagueName": "w",
-  "seasonNum": "12",
+  "seasonNum": "13",
   "appendGoogleSheets": {
     "countRowRange": "H:H",
     "rawData": {
@@ -69,8 +69,8 @@
     "HIG",
     "HOT",
     "ING",
-    "IFV",
     "KVK",
+    "MHA",
     "MHT",
     "MGG",
     "NBK",
