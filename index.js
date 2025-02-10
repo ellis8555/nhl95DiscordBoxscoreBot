@@ -34,6 +34,7 @@ const uniqueIdsFile = uniqueIdsFileName
 let adminsListeningChannelName = bot_consts.adminsListeningChannel
 let saveStatesListeningChannelName = bot_consts.saveStatesListeningChannel
 let boxscoreOutputChannelName = bot_consts.boxscoreOutputChannel
+let seasonGamesChannel = bot_consts.seasonGamesChannel
 let saveStateName = new RegExp(bot_consts.saveStatePattern)
 let seasonNumber = bot_consts.seasonNum
 let teamCodes = bot_consts.teamCodes
@@ -46,6 +47,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   saveStatesListeningChannelName = updatedConsts.saveStatesListeningChannel
   boxscoreOutputChannelName = updatedConsts.boxscoreOutputChannel
   adminsListeningChannelName = updatedConsts.adminsListeningChannel
+  seasonGamesChannel = updatedConsts.seasonGamesChannel
   saveStateName = new RegExp(updatedConsts.saveStatePattern)
   seasonNumber = updatedConsts.seasonNum
   teamCodes = updatedConsts.teamCodes
@@ -59,6 +61,8 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   adminsListeningChannelId = guild.channels.cache.find(channel => channel.name === adminsListeningChannelName).id
   // save states listening channels id
   saveStatesChannelId = guild.channels.cache.find(channel => channel.name === saveStatesListeningChannelName).id;
+    // season games listening channels id
+  seasonGamesChannelId = guild.channels.cache.find(channel => channel.name === seasonGamesChannel).id;
 })
 
 ////////////////
@@ -133,6 +137,7 @@ let uniqueGameStateIds;
 let adminsListeningChannelId; // channel that listens for admin commands
 let saveStatesChannelId; // get the channel the bot will be listening in.
 let boxscoreOutputChannelId; // the channel that the boxscores will be sent to
+let seasonGamesChannelId;
 
 let q_boxscoreOutputChannelId;
 let q_adminsListeningChannelId;
@@ -183,6 +188,14 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       boxscoreOutputChannelId = boxscoreOutputChannel.id;
     } else {
       console.log(`Channel boxscoreOutputChannelName' not found.`)
+    }
+
+    // channel for outputting remaining opponents
+    const w_remaining_opponents_output_channel = guild.channels.cache.find(channel => channel.name === seasonGamesChannel)
+    if(w_remaining_opponents_output_channel){
+      seasonGamesChannelId = w_remaining_opponents_output_channel.id;
+    } else {
+      console.log(`Channel seasonGamesChannelId' not found.`)
     }
   } else {
     console.log(`${server} can't be found.`)
@@ -253,6 +266,21 @@ async function processQueue (){
   // @ mention remaining opponents W and Q
   if(task.isMentionOpponentRequest){
     const { server, client, coachId, userMessage } = task;
+    if(server === w_server){
+      const { seasonGamesChannelId } = task
+      // get q constants
+      const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
+      const readWFile = fs.readFileSync(wFilePath, "utf-8")
+      const w_bot_consts = JSON.parse(readWFile);
+
+      // get gamesplayed data from unique id's file
+      const wUniqueIdsFilePath = path.join(process.cwd(), "public", "wUniqueIds.csv")
+      const uniqueIdsFile = fs.readFileSync(wUniqueIdsFilePath, "utf-8");
+      
+      const { teamCodes, coaches } = w_bot_consts;
+      await mentionRemainingOpponents(seasonGamesChannelId, {client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
+    }
+
     if(server === q_server){
       const { q_seasonGamesChannelId } = task
       // get q constants
@@ -275,6 +303,21 @@ async function processQueue (){
   // display remaining opponents W and Q
   if(task.isOpponentRequest){
     const { server, client, teamAbbreviation } = task;
+    if(server === w_server){
+      const { seasonGamesChannelId } = task
+      // get q constants
+      const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
+      const readWFile = fs.readFileSync(wFilePath, "utf-8")
+      const bot_consts = JSON.parse(readWFile);
+
+      // get gamesplayed data from unique id's file
+      const wUniqueIdsFilePath = path.join(process.cwd(), "public", "wUniqueIds.csv")
+      const uniqueIdsFile = fs.readFileSync(wUniqueIdsFilePath, "utf-8");
+      
+      const { teamCodes, coaches } = bot_consts;
+
+      await displayRemainingOpponents(seasonGamesChannelId, {server, client, teamAbbreviation, teamCodes, coaches, uniqueIdsFile})
+    }
     if(server === q_server){
       const { q_seasonGamesChannelId } = task
       // get q constants
@@ -288,7 +331,7 @@ async function processQueue (){
       
       const { teamCodes, coaches } = q_bot_consts;
 
-      await displayRemainingOpponents(q_seasonGamesChannelId, {client, teamAbbreviation, teamCodes, coaches, uniqueIdsFile})
+      await displayRemainingOpponents(q_seasonGamesChannelId, {server, client, teamAbbreviation, teamCodes, coaches, uniqueIdsFile})
     }
     processing = false;
     return;
@@ -757,6 +800,33 @@ client.on(Events.MessageCreate, async message => {
               return
         }
         }
+      }
+    }
+
+    // call for either season games or get remaining opponents list
+    if(channelId === seasonGamesChannelId){
+      // @ mention remaining opponents
+      const seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
+      if(seasonGamesPattern.test(message.content)){
+          const coachId = message.author.id
+          const userMessage = message.content
+          const isMentionOpponentRequest = true
+          gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, userMessage, seasonGamesChannelId})
+          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+            processQueue()
+          }
+          return
+      }
+      // display remaining opponent logos
+      const teamPattern = /^[A-Z]{3}$/
+      if(teamPattern.test(message.content)){
+          const isOpponentRequest = true
+          const teamAbbreviation = message.content
+          gameStateQueue.push({isOpponentRequest, server: getServerName, client, teamAbbreviation, seasonGamesChannelId})
+          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+            processQueue()
+          }
+          return
       }
     }
 
