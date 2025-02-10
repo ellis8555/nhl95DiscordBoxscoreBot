@@ -2,6 +2,8 @@
   "adminsListeningChannel": "admin-boxscores",
   "saveStatesListeningChannel": "2007-season-saves",
   "boxscoreOutputChannel": "2007-season-boxscores",
+  "seasonGamesChannel": "season-games",
+  "w_games_vs_opponents": 2,
   "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
   "editPermission": {
     "ultramagnus": "869668599550332958",
@@ -194,7 +196,7 @@
     {
       "id": "1009697012737921055",
       "user": "MNYoda",
-      "team": "OCC"
+      "team": "OCW"
     },
     {
       "id": "874726051790594051",
