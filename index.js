@@ -278,7 +278,7 @@ async function processQueue (){
       const uniqueIdsFile = fs.readFileSync(wUniqueIdsFilePath, "utf-8");
       
       const { teamCodes, coaches } = w_bot_consts;
-      await mentionRemainingOpponents(seasonGamesChannelId, {client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
+      await mentionRemainingOpponents(seasonGamesChannelId, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
     }
 
     if(server === q_server){
@@ -294,7 +294,7 @@ async function processQueue (){
       
       const { teamCodes, coaches } = q_bot_consts;
 
-      await mentionRemainingOpponents(q_seasonGamesChannelId, {client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
+      await mentionRemainingOpponents(q_seasonGamesChannelId, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
     }
     processing = false;
     return;
