@@ -89,5 +89,152 @@
     "TBP",
     "VHV",
     "WDY"
+  ],
+  "coaches" : [
+    {
+      "id": "932744327191490651",
+      "user": "GMDS",
+      "team": "HAM"
+    },
+    {
+      "id": "315151409190535168",
+      "user": "Ceydan",
+      "team": "HOT"
+    },
+    {
+      "id": "628241421781958684",
+      "user": "Chalky",
+      "team": "SVF"
+    },
+    {
+      "id": "692039117499793469",
+      "user": "autobahn",
+      "team": "AUT"
+    },
+    {
+      "id": "874999566200635393",
+      "user": "Pink_Elephants",
+      "team": "SUM"
+    },
+    {
+      "id": "694688440440193186",
+      "user": "shawnbell_",
+      "team": "TBP"
+    },
+    {
+      "id": "378336323875897344",
+      "user": "niuhuskie224",
+      "team": "SOV"
+    },
+    {
+      "id": "144973906070077440",
+      "user": "Segathon",
+      "team": "MHT"
+    },
+    {
+      "id": "582240735793774618",
+      "user": "Puss",
+      "team": "TEG"
+    },
+    {
+      "id": "869668599550332958",
+      "user": "ultramagnus",
+      "team": "VHV"
+    },
+    {
+      "id": "694697891733831761",
+      "user": "wolf_of_highland",
+      "team": "HIG"
+    },
+    {
+      "id": "1211045587483623484",
+      "user": "Krav",
+      "team": "BFC"
+    },
+    {
+      "id": "904808850681638923",
+      "user": "Lloyd10xmas",
+      "team": "PRO"
+    },
+    {
+      "id": "241253413722128385",
+      "user": "Jer_33",
+      "team": "BAY"
+    },
+    {
+      "id": "733156682456105062",
+      "user": "Philly Chris",
+      "team": "BBM"
+    },
+    {
+      "id": "939897819681161296",
+      "user": "Don Don",
+      "team": "ING"
+    },
+    {
+      "id": "1049531278531252224",
+      "user": "Red",
+      "team": "MHA"
+    },
+    {
+      "id": "918583918838546443",
+      "user": "MattyA",
+      "team": "KVK"
+    },
+    {
+      "id": "691684263698890878",
+      "user": "Gaelicgopher",
+      "team": "MGG"
+    },
+    {
+      "id": "897864347764789290",
+      "user": "Unholy Grail",
+      "team": "NBK"
+    },
+    {
+      "id": "1009697012737921055",
+      "user": "MNYoda",
+      "team": "OCC"
+    },
+    {
+      "id": "874726051790594051",
+      "user": "Adolf Oliver Nipples",
+      "team": "PIT"
+    },
+    {
+      "id": "691747327261671534",
+      "user": "BClinton",
+      "team": "RIC"
+    },
+    {
+      "id": "174615392461783040",
+      "user": "Jeelock",
+      "team": "SAG"
+    },
+    {
+      "id": "1042251245609549824",
+      "user": "Marylandmike",
+      "team": "SHS"
+    },
+    {
+      "id": "691754174165155941",
+      "user": "MCline",
+      "team": "SUN"
+    },
+    {
+      "id": "204681486484373505",
+      "user": "NewJerseyKiller",
+      "team": "WDY"
+    },
+    {
+      "id": "678370444302221317",
+      "user": "Ellis",
+      "team": "AHC"
+    },
+    {
+      "id": "802225742523531325",
+      "user": "NathanMB",
+      "team": "TAI"
+    }
   ]
 }
