@@ -4,7 +4,7 @@
   "boxscoreOutputChannel": "2007-season-boxscores",
   "seasonGamesChannel": "season-games",
   "w_games_vs_opponents": 2,
-  "saveStatePattern": "^W12.*\\.state\\d{1,3}$",
+  "saveStatePattern": "^W13.*\\.state\\d{1,3}$",
   "editPermission": {
     "ultramagnus": "869668599550332958",
     "ellis": "678370444302221317"
@@ -92,7 +92,7 @@
     "VHV",
     "WDY"
   ],
-  "coaches" : [
+  "coaches": [
     {
       "id": "932744327191490651",
       "user": "GMDS",
