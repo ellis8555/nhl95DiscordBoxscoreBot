@@ -96,147 +96,176 @@
     {
       "id": "932744327191490651",
       "user": "GMDS",
-      "team": "HAM"
+      "team": "HAM",
+      "emojiId": "943898587786539130"
     },
     {
       "id": "315151409190535168",
       "user": "Ceydan",
-      "team": "HOT"
+      "team": "HOT",
+      "emojiId": "990611697343541318"
     },
     {
       "id": "628241421781958684",
       "user": "Chalky",
-      "team": "SVF"
+      "team": "SVF",
+      "emojiId": "923579320251842580"
     },
     {
       "id": "692039117499793469",
       "user": "autobahn",
-      "team": "AUT"
+      "team": "AUT",
+      "emojiId": "1040258542629826691"
     },
     {
       "id": "874999566200635393",
       "user": "Pink_Elephants",
-      "team": "SUM"
+      "team": "SUM",
+      "emojiId": "878394564468170812"
     },
     {
       "id": "694688440440193186",
       "user": "shawnbell_",
-      "team": "TBP"
+      "team": "TBP",
+      "emojiId": "890999482970435665"
     },
     {
       "id": "378336323875897344",
       "user": "niuhuskie224",
-      "team": "SOV"
+      "team": "SOV",
+      "emojiId": "943899301971628062"
     },
     {
       "id": "144973906070077440",
       "user": "Segathon",
-      "team": "MHT"
+      "team": "MHT",
+      "emojiId": "918212056094740510"
     },
     {
       "id": "582240735793774618",
       "user": "Puss",
-      "team": "TEG"
+      "team": "TEG",
+      "emojiId": "918653529953034240"
     },
     {
       "id": "869668599550332958",
       "user": "ultramagnus",
-      "team": "VHV"
+      "team": "VHV",
+      "emojiId": "1303127943098138725"
     },
     {
       "id": "694697891733831761",
       "user": "wolf_of_highland",
-      "team": "HIG"
+      "team": "HIG",
+      "emojiId": "897245384601108490"
     },
     {
       "id": "1211045587483623484",
       "user": "Krav",
-      "team": "BFC"
+      "team": "BFC",
+      "emojiId": "1302374329627054195"
     },
     {
       "id": "904808850681638923",
       "user": "Lloyd10xmas",
-      "team": "PRO"
+      "team": "PRO",
+      "emojiId": "918148694820405308"
     },
     {
       "id": "241253413722128385",
       "user": "Jer_33",
-      "team": "BAY"
+      "team": "BAY",
+      "emojiId": "1039716048510922802"
     },
     {
       "id": "733156682456105062",
       "user": "Philly Chris",
-      "team": "BBM"
+      "team": "BBM",
+      "emojiId": "1301994452570603520"
     },
     {
       "id": "939897819681161296",
       "user": "Don Don",
-      "team": "ING"
+      "team": "ING",
+      "emojiId": "1301994681206444085"
     },
     {
       "id": "1049531278531252224",
       "user": "Red",
-      "team": "MHA"
+      "team": "MHA",
+      "emojiId": "1080585792654672033"
     },
     {
       "id": "918583918838546443",
       "user": "MattyA",
-      "team": "KVK"
+      "team": "KVK",
+      "emojiId": "1134590069261471755"
     },
     {
       "id": "691684263698890878",
       "user": "Gaelicgopher",
-      "team": "MGG"
+      "team": "MGG",
+      "emojiId": "897245448522313738"
     },
     {
       "id": "897864347764789290",
       "user": "Unholy Grail",
-      "team": "NBK"
+      "team": "NBK",
+      "emojiId": "996400156272496641"
     },
     {
       "id": "1009697012737921055",
       "user": "MNYoda",
-      "team": "OCW"
+      "team": "OCW",
+      "emojiId": "1030175920536948868"
     },
     {
       "id": "874726051790594051",
       "user": "Adolf Oliver Nipples",
-      "team": "PIT"
+      "team": "PIT",
+      "emojiId": "878396735028863007"
     },
     {
       "id": "691747327261671534",
       "user": "BClinton",
-      "team": "RIC"
+      "team": "RIC",
+      "emojiId": "878393337009283134"
     },
     {
       "id": "174615392461783040",
       "user": "Jeelock",
-      "team": "SAG"
+      "team": "SAG",
+      "emojiId": "996936838675701850"
     },
     {
       "id": "1042251245609549824",
       "user": "Marylandmike",
-      "team": "SHS"
+      "team": "SHS",
+      "emojiId": "1249551823161786388"
     },
     {
       "id": "691754174165155941",
       "user": "MCline",
-      "team": "SUN"
+      "team": "SUN",
+      "emojiId": "878395106892341288"
     },
     {
       "id": "204681486484373505",
       "user": "NewJerseyKiller",
-      "team": "WDY"
+      "team": "WDY",
+      "emojiId": "1300956776652345356"
     },
     {
       "id": "678370444302221317",
       "user": "Ellis",
-      "team": "AHC"
+      "team": "AHC",
+      "emojiId": "897245476703830037"
     },
     {
       "id": "802225742523531325",
       "user": "NathanMB",
-      "team": "TAI"
+      "team": "TAI",
+      "emojiId": "890999468743348224"
     }
   ]
 }
