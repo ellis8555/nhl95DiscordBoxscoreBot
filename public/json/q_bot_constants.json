@@ -75,66 +75,90 @@
     "THC",
     "VFM"
   ],
-  "coaches" : [
+  "coaches": [
     {
       "id": "932744327191490651",
       "user": "GMDS",
-      "team": "GRA"
+      "team": "GRA",
+      "emojiId": "1016356957583581264",
+      "emojiName": "GRA"
     },
     {
       "id": "315151409190535168",
       "user": "Ceydan",
-      "team": "COR"
+      "team": "COR",
+      "emojiId": "1212248465740931072",
+      "emojiName": "COR"
     },
     {
       "id": "628241421781958684",
       "user": "Chalky",
-      "team": "VFM"
+      "team": "VFM",
+      "emojiId": "1139978273695215617",
+      "emojiName": "VFM"
     },
     {
       "id": "692039117499793469",
       "user": "autobahn",
-      "team": "QQB"
+      "team": "QQB",
+      "emojiId": "1074145118942150817",
+      "emojiName": "QQB"
     },
     {
       "id": "874999566200635393",
       "user": "Pink_Elephants",
-      "team": "NCJ"
+      "team": "NCJ",
+      "emojiId": "1016356982476771369",
+      "emojiName": "NJC"
     },
     {
       "id": "694688440440193186",
       "user": "shawnbell_",
-      "team": "SUP"
+      "team": "SUP",
+      "emojiId": "1331989802194698350",
+      "emojiName": "SUP"
     },
     {
       "id": "378336323875897344",
       "user": "niuhuskie224",
-      "team": "CHI"
+      "team": "CHI",
+      "emojiId": "1241852336326836304",
+      "emojiName": "CHI"
     },
     {
       "id": "144973906070077440",
       "user": "segathon",
-      "team": "DWB"
+      "team": "DWB",
+      "emojiId": "1245838245183357041",
+      "emojiName": "DWN"
     },
     {
       "id": "582240735793774618",
       "user": "Puss",
-      "team": "THC"
+      "team": "THC",
+      "emojiId": "1116386661908095040",
+      "emojiName": "THC"
     },
     {
       "id": "869668599550332958",
       "user": "ultramagnus",
-      "team": "BRW"
+      "team": "BRW",
+      "emojiId": "1016356903510618162",
+      "emojiName": "BRW"
     },
     {
       "id": "694697891733831761",
       "user": "wolf_of_highland",
-      "team": "HSW"
+      "team": "HSW",
+      "emojiId": "972282080568422410",
+      "emojiName": "HSW"
     },
     {
       "id": "1211045587483623484",
       "user": "Krav",
-      "team": "MON"
+      "team": "MON",
+      "emojiId": "1236098564204138516",
+      "emojiName": "JUN"
     }
   ]
 }
