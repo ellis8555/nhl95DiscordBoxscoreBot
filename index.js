@@ -817,7 +817,7 @@ client.on(Events.MessageCreate, async message => {
       const messageId = message.id
 
       const jeelockObject = coaches.find(coachObject => coachObject.team === 'SAG')
-      if(coachId === jeelockObject.id){
+      if(jeelockObject && coachId === jeelockObject.id){
         seasonGamesPattern = /^[Ss]eason [Gg]ames([\s]([\S])*)*$/
       } else {
         seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
