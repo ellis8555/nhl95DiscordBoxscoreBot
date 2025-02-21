@@ -28,6 +28,7 @@ const {
   server,
   leagueName,
   sendResponseToOutputchannel,
+  coaches
 } = bot_consts
 
 const uniqueIdsFile = uniqueIdsFileName
@@ -271,7 +272,7 @@ async function processQueue (){
   if(task.isMentionOpponentRequest){
     const { server, client, coachId, userMessage } = task;
     if(server === w_server){
-      const { seasonGamesChannelId } = task
+      const { seasonGamesChannelId, messageId } = task
       // get q constants
       const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
       const readWFile = fs.readFileSync(wFilePath, "utf-8")
@@ -282,7 +283,7 @@ async function processQueue (){
       const uniqueIdsFile = fs.readFileSync(wUniqueIdsFilePath, "utf-8");
       
       const { teamCodes, coaches } = w_bot_consts;
-      await mentionRemainingOpponents(seasonGamesChannelId, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
+      await mentionRemainingOpponents(seasonGamesChannelId, {server, client, coachId, teamCodes, messageId, userMessage, coaches, uniqueIdsFile})
     }
 
     if(server === q_server){
@@ -810,12 +811,21 @@ client.on(Events.MessageCreate, async message => {
     // call for either season games or get remaining opponents list
     if(channelId === seasonGamesChannelId){
       // @ mention remaining opponents
-      const seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
+      // check if mention request is jeelock
+      let seasonGamesPattern
+      const coachId = message.author.id
+      const messageId = message.id
+
+      const jeelockObject = coaches.find(coachObject => coachObject.team === 'SAG')
+      if(coachId === jeelockObject.id){
+        seasonGamesPattern = /^[Ss]eason [Gg]ames([\s]([\S])*)*$/
+      } else {
+        seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
+      }
       if(seasonGamesPattern.test(message.content)){
-          const coachId = message.author.id
           const userMessage = message.content
           const isMentionOpponentRequest = true
-          gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, userMessage, seasonGamesChannelId})
+          gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, messageId, userMessage, seasonGamesChannelId})
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
             processQueue()
           }
