@@ -890,7 +890,7 @@ client.on(Events.MessageCreate, async message => {
 
     // check for Q league admin commands
     if(channelId === q_adminsListeningChannelId){
-      if(message.author.id === q_adminIdObject['ceydan'] || message.author.id === q_adminIdObject['ellis']){
+      if(message.author.id === q_adminIdObject['ultramagnus'] || message.author.id === q_adminIdObject['ellis']){
         if(message.content){
           const adminMessage = message.content.split(" ");
           // check if in listening channel
