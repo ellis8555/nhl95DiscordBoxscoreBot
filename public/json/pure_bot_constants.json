@@ -1,6 +1,7 @@
 {
+  "adminsListeningChannel": "admin",
   "listeningChannel": "pure-scores",
-  "seasonGamesListeningChannel": "season-games",
+  "seasonGamesChannel": "season-games",
   "pureLeagueScoreExpression": "^\\s*(?:EDIT\\s+)?[a-zA-Z]{3}\\s+(\\d+)\\s*-\\s+[a-zA-Z]{3}\\s+(\\d+)\\s*$",
   "editPermission": {
     "ticklepuss": "582240735793774618",
@@ -24,6 +25,7 @@
       "streak_col": "I"
     }
   },
+  "adminCommands": [],
   "teamCodesList": [
     "ANA",
     "BOS",
