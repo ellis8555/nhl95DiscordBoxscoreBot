@@ -1,5 +1,6 @@
 {
   "listeningChannel": "pure-scores",
+  "seasonGamesListeningChannel": "season-games",
   "pureLeagueScoreExpression": "^\\s*(?:EDIT\\s+)?[a-zA-Z]{3}\\s+(\\d+)\\s*-\\s+[a-zA-Z]{3}\\s+(\\d+)\\s*$",
   "editPermission": {
     "ticklepuss": "582240735793774618",
