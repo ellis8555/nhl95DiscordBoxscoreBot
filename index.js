@@ -8,12 +8,13 @@ import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-
 import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js"
 import createWorker from "./lib/workers/createWorker.js";
 import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
-import { bot_consts, q_bot_consts, bot_consts_update_emitter, q_bot_consts_update_emitter } from "./lib/constants/consts.js";
+import { bot_consts, q_bot_consts, pure_consts, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
 import parseAdminMessage from "./lib/index/parseAdminMessage.js";
 import mentionRemainingOpponents from "./lib/index/mentionRemainingOpponents.js";
 import displayRemainingOpponents from "./lib/index/displayRemainingOpponents.js";
+import { todo } from "node:test";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -115,6 +116,24 @@ q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) =>
     q_seasonGamesChannelId = q_guild.channels.cache.find(channel => channel.name === q_seasonGamesChannel).id;
   }
 })
+
+///////////////////
+// Pure league vars
+///////////////////
+
+const {  
+  p_uniqueIdsFileName,
+} = pure_consts
+
+const p_uniqueIdsFile = p_uniqueIdsFileName
+let p_adminsListeningChannelName = pure_consts.adminsListeningChannel
+let p_seasonGamesChannel = pure_consts.seasonGamesChannel
+let p_seasonNumber = pure_consts.currentSeason
+let p_teamCodes = pure_consts.teamCodesList
+let p_adminIdObject = pure_consts.editPermission
+let p_adminCommands = pure_consts.adminCommands
+
+TODO: // carry on adding pure league event emitter updates
 
 // w server
 const w_server = process.env.server
