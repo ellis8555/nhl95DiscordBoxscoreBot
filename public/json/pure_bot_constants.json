@@ -9,6 +9,7 @@
   },
   "writeToGoogleSheets": true,
   "currentSeason": "9",
+  "p_games_vs_opponents": 2,
   "appendGoogleSheets": {
     "countRowRange": "A2:L",
     "rawSchedule": {
