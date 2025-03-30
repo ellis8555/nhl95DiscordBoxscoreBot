@@ -14,7 +14,6 @@ import processPure from "./lib/pureLeague/processPure.js";
 import parseAdminMessage from "./lib/index/parseAdminMessage.js";
 import mentionRemainingOpponents from "./lib/index/mentionRemainingOpponents.js";
 import displayRemainingOpponents from "./lib/index/displayRemainingOpponents.js";
-import { todo } from "node:test";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -128,12 +127,32 @@ const {
 const p_uniqueIdsFile = p_uniqueIdsFileName
 let p_adminsListeningChannelName = pure_consts.adminsListeningChannel
 let p_seasonGamesChannel = pure_consts.seasonGamesChannel
+let p_submitScoresChannel = pure_consts.listeningChannel
 let p_seasonNumber = pure_consts.currentSeason
 let p_teamCodes = pure_consts.teamCodesList
 let p_adminIdObject = pure_consts.editPermission
 let p_adminCommands = pure_consts.adminCommands
 
-TODO: // carry on adding pure league event emitter updates
+// update variables that come from admin within discord channel
+p_bot_consts_update_emitter.on("p_bot_consts_update_emitter", (updatedConsts) => {
+  p_adminsListeningChannelName = updatedConsts.adminsListeningChannel
+  p_seasonGamesChannel = updatedConsts.seasonGamesChannel
+  p_seasonNumber = updatedConsts.currentSeason
+  p_teamCodes = updatedConsts.teamCodesList
+  p_adminIdObject = updatedConsts.editPermission
+  p_adminCommands = updatedConsts.adminCommands
+  p_submitScoresChannel = updatedConsts.listeningChannel
+  // updates channel in which the boxscores will be posted
+  const p_guild = client.guilds.cache.find(guild => guild.name === pureServer);
+  if(p_guild){
+    // admins commands channel id
+    p_adminsListeningChannelId = p_guild.channels.cache.find(channel => channel.name === p_adminsListeningChannelName).id
+    // season games listening channels id
+    p_seasonGamesChannelId = p_guild.channels.cache.find(channel => channel.name === p_seasonGamesChannel).id;
+    // submit scores listening channel id
+    p_submitScoresChannelId = p_guild.channels.cache.find(channel => channel.name === p_submitScoresChannel).id;
+  }
+})
 
 // w server
 const w_server = process.env.server
@@ -154,19 +173,23 @@ const client = new Client({
 
 let sheets;
 let spreadsheetId
-let w_spreadsheetId;
-let q_spreadsheetId;
-let uniqueIdsFilePath;
-let uniqueGameStateIds;
-let adminsListeningChannelId; // channel that listens for admin commands
-let saveStatesChannelId; // get the channel the bot will be listening in.
-let boxscoreOutputChannelId; // the channel that the boxscores will be sent to
-let seasonGamesChannelId;
+let w_spreadsheetId
+let q_spreadsheetId
+let uniqueIdsFilePath
+let uniqueGameStateIds
+let adminsListeningChannelId // channel that listens for admin commands
+let saveStatesChannelId // get the channel the bot will be listening in.
+let boxscoreOutputChannelId // the channel that the boxscores will be sent to
+let seasonGamesChannelId
 
-let q_boxscoreOutputChannelId;
-let q_adminsListeningChannelId;
+let q_boxscoreOutputChannelId
+let q_adminsListeningChannelId
 let q_saveStatesChannelId
-let q_seasonGamesChannelId;
+let q_seasonGamesChannelId
+
+let p_adminsListeningChannelId
+let p_seasonGamesChannelId
+let p_submitScoresChannelId
 
 const gameStateQueue = []; // holds incoming game states to be processed
 let processing = false; // checks if game state is currently being processed from the queue;
