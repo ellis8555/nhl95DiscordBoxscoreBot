@@ -287,7 +287,27 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       console.log(`${q_server} can't be found.`)
     }
 
+  // get P server
+  const p_guild = client.guilds.cache.find(guild => guild.name === pureServer);
+  if(p_guild){
+      // channel listening for save states
+      const p_submitScoresListeningChannel = p_guild.channels.cache.find(channel => channel.name === p_submitScoresChannel)
+      if(p_submitScoresListeningChannel){
+        p_submitScoresChannelId = p_submitScoresListeningChannel.id;
+      } else {
+        console.log(`Channel q_saveStatesListeningChannel not found.`)
+      }
 
+      // channel for outputting remaining opponents
+      const p_remaining_opponents_output_channel = p_guild.channels.cache.find(channel => channel.name === p_seasonGamesChannel)
+      if(p_remaining_opponents_output_channel){
+        p_seasonGamesChannelId = p_remaining_opponents_output_channel.id;
+      } else {
+        console.log(`Channel q_seasonGamesChannelId' not found.`)
+      }
+    } else {
+      console.log(`${pureServer} can't be found.`)
+    }
 
   if(guild || q_guild){
         // begin connections to google sheets
@@ -310,7 +330,7 @@ async function processQueue (){
   processing = true; // processing is occuring
   const task = gameStateQueue.shift(); // Get the first file in the queue
 
-  // @ mention remaining opponents W and Q
+  // @ mention remaining opponents W, Q and Pure leagues
   if(task.isMentionOpponentRequest){
     const { server, client, coachId, userMessage } = task;
     if(server === w_server){
@@ -344,7 +364,6 @@ async function processQueue (){
       await mentionRemainingOpponents(q_seasonGamesChannelId, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
     }
 
-    TODO:
     if(server === pureServer){
       const { p_seasonGamesChannelId } = task
       // get q constants
@@ -356,7 +375,7 @@ async function processQueue (){
       const p_uniqueIdsFilePath = path.join(process.cwd(), "public", "pUniqueIds.csv")
       const uniqueIdsFile = fs.readFileSync(p_uniqueIdsFilePath, "utf-8")
 
-      const { teamCodes, coaches } = p_bot_consts
+      const { teamCodesList: teamCodes, coaches } = p_bot_consts
       await mentionRemainingOpponents(p_seasonGamesChannelId, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
     }
 
@@ -792,7 +811,6 @@ client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
   const getServerName = message.guild.name;
   const channelId = message.channel.id; 
-
   // set vars for W league
   if(getServerName === w_server){
     spreadsheetId = w_spreadsheetId;
@@ -808,7 +826,6 @@ client.on(Events.MessageCreate, async message => {
   //////////////////////////////////
   
   if(getServerName === pureServer){ 
-
     // pure league score submissions block
     if(channelId === p_submitScoresChannelId){
       const pureArgs = {
@@ -821,24 +838,22 @@ client.on(Events.MessageCreate, async message => {
       }
       return;
     }
-  }
-TODO:   // season games listening block
-    if(channelId === p_seasonGamesChannelId){
-
-      const coachId = message.author.id
-
-      seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
-
-      if(seasonGamesPattern.test(message.content)){
-        const userMessage = message.content
-        const isMentionOpponentRequest = true
-        gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, userMessage, p_seasonGamesChannelId})
-        if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
-          processQueue()
-        }
-        return;
-    }
-
+    // season games listening block
+     if(channelId === p_seasonGamesChannelId){
+       const coachId = message.author.id
+ 
+       const seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
+ 
+       if(seasonGamesPattern.test(message.content)){
+         const userMessage = message.content
+         const isMentionOpponentRequest = true
+         gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, userMessage, p_seasonGamesChannelId})
+         if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+           processQueue()
+         }
+         return;
+     }
+   }
   }
   
   //////////////////////////////////
