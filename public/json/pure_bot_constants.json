@@ -1,15 +1,15 @@
 {
+  "currentSeason": "9",
+  "seasonGamesChannel": "s11-games",
+  "p_games_vs_opponents": 2,
   "adminsListeningChannel": "admin",
   "listeningChannel": "pure-scores",
-  "seasonGamesChannel": "season-games",
+  "writeToGoogleSheets": true,
   "pureLeagueScoreExpression": "^\\s*(?:EDIT\\s+)?[a-zA-Z]{3}\\s+(\\d+)\\s*-\\s+[a-zA-Z]{3}\\s+(\\d+)\\s*$",
   "editPermission": {
     "ticklepuss": "582240735793774618",
     "ellis": "678370444302221317"
   },
-  "writeToGoogleSheets": true,
-  "currentSeason": "9",
-  "p_games_vs_opponents": 2,
   "appendGoogleSheets": {
     "countRowRange": "A2:L",
     "rawSchedule": {
