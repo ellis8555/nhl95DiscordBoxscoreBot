@@ -93,208 +93,238 @@
     "WDY"
   ],
 "coaches": [
-    {
-      "id": "932744327191490651",
-      "user": "GMDS",
-      "team": "HAM",
-      "emojiId": "943898587786539130",
-      "emojiName": "HAM"
-    },
-    {
-      "id": "315151409190535168",
-      "user": "Ceydan",
-      "team": "HOT",
-      "emojiId": "990611697343541318",
-      "emojiName": "HOT"
-    },
-    {
-      "id": "628241421781958684",
-      "user": "Chalky",
-      "team": "SVF",
-      "emojiId": "923579320251842580",
-      "emojiName": "SVF"
-    },
-    {
-      "id": "692039117499793469",
-      "user": "autobahn",
-      "team": "AUT",
-      "emojiId": "1040258542629826691",
-      "emojiName": "AUT"
-    },
-    {
-      "id": "874999566200635393",
-      "user": "Pink_Elephants",
-      "team": "SUM",
-      "emojiId": "878394564468170812",
-      "emojiName": "SUM"
-    },
-    {
-      "id": "694688440440193186",
-      "user": "shawnbell_",
-      "team": "TBP",
-      "emojiId": "890999482970435665",
-      "emojiName": "TBP"
-    },
-    {
-      "id": "378336323875897344",
-      "user": "niuhuskie224",
-      "team": "SOV",
-      "emojiId": "943899301971628062",
-      "emojiName": "SOV"
-    },
-    {
-      "id": "144973906070077440",
-      "user": "Segathon",
-      "team": "MHT",
-      "emojiId": "918212056094740510",
-      "emojiName": "MHT"
-    },
-    {
-      "id": "582240735793774618",
-      "user": "Puss",
-      "team": "TEG",
-      "emojiId": "918653529953034240",
-      "emojiName": "THT"
-    },
-    {
-      "id": "869668599550332958",
-      "user": "ultramagnus",
-      "team": "VHV",
-      "emojiId": "1303127943098138725",
-      "emojiName": "VHV"
-    },
-    {
-      "id": "694697891733831761",
-      "user": "wolf_of_highland",
-      "team": "HIG",
-      "emojiId": "897245384601108490",
-      "emojiName": "HIG"
-    },
-    {
-      "id": "1211045587483623484",
-      "user": "Krav",
-      "team": "BFC",
-      "emojiId": "1302374329627054195",
-      "emojiName": "BFC"
-    },
-    {
-      "id": "904808850681638923",
-      "user": "Lloyd10xmas",
-      "team": "PRO",
-      "emojiId": "918148694820405308",
-      "emojiName": "PRO"
-    },
-    {
-      "id": "241253413722128385",
-      "user": "Jer_33",
-      "team": "BAY",
-      "emojiId": "1039716048510922802",
-      "emojiName": "BAY"
-    },
-    {
-      "id": "733156682456105062",
-      "user": "Philly Chris",
-      "team": "BBM",
-      "emojiId": "1301994452570603520",
-      "emojiName": "BBM"
-    },
-    {
-      "id": "939897819681161296",
-      "user": "Don Don",
-      "team": "ING",
-      "emojiId": "1301994681206444085",
-      "emojiName": "ING"
-    },
-    {
-      "id": "1049531278531252224",
-      "user": "Red",
-      "team": "MHA",
-      "emojiId": "1347389671059095604",
-      "emojiName": "MHA"
-    },
-    {
-      "id": "918583918838546443",
-      "user": "MattyA",
-      "team": "KVK",
-      "emojiId": "1134590069261471755",
-      "emojiName": "KVK"
-    },
-    {
-      "id": "691684263698890878",
-      "user": "Gaelicgopher",
-      "team": "MGG",
-      "emojiId": "897245448522313738",
-      "emojiName": "MGG"
-    },
-    {
-      "id": "897864347764789290",
-      "user": "Unholy Grail",
-      "team": "NBK",
-      "emojiId": "996400156272496641",
-      "emojiName": "NBK"
-    },
-    {
-      "id": "1009697012737921055",
-      "user": "MNYoda",
-      "team": "OCW",
-      "emojiId": "1030175920536948868",
-      "emojiName": "OCW"
-    },
-    {
-      "id": "874726051790594051",
-      "user": "Adolf Oliver Nipples",
-      "team": "PIT",
-      "emojiId": "878396735028863007",
-      "emojiName": "PIT"
-    },
-    {
-      "id": "691747327261671534",
-      "user": "BClinton",
-      "team": "RIC",
-      "emojiId": "878393337009283134",
-      "emojiName": "RIC"
-    },
-    {
-      "id": "174615392461783040",
-      "user": "Jeelock",
-      "team": "SAG",
-      "emojiId": "996936838675701850",
-      "emojiName": "SAG"
-    },
-    {
-      "id": "1042251245609549824",
-      "user": "Marylandmike",
-      "team": "SHS",
-      "emojiId": "1249551823161786388",
-      "emojiName": "SHS"
-    },
-    {
-      "id": "691754174165155941",
-      "user": "MCline",
-      "team": "SUN",
-      "emojiId": "878395106892341288",
-      "emojiName": "SUN"
-    },
-    {
-      "id": "204681486484373505",
-      "user": "NewJerseyKiller",
-      "team": "WDY",
-      "emojiId": "1300956776652345356",
-      "emojiName": "WDY"
-    },
-    {
-      "id": "678370444302221317",
-      "user": "Ellis",
-      "team": "AHC",
-      "emojiId": "897245476703830037",
-      "emojiName": "AHC"
-    },
-    {
-      "id": "802225742523531325",
-      "user": "NathanMB",
-      "team": "TAI",
-      "emojiId": "890999468743348224",
-      "emojiName": "TAI"
-    }
-  ]
+  {
+    "id": "932744327191490651",
+    "user": "GMDS",
+    "team": "HAM",
+    "emojiId": "943898587786539130",
+    "emojiName": "HAM",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "315151409190535168",
+    "user": "Ceydan",
+    "team": "HOT",
+    "emojiId": "990611697343541318",
+    "emojiName": "HOT",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "628241421781958684",
+    "user": "Chalky",
+    "team": "SVF",
+    "emojiId": "923579320251842580",
+    "emojiName": "SVF",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "692039117499793469",
+    "user": "autobahn",
+    "team": "AUT",
+    "emojiId": "1040258542629826691",
+    "emojiName": "AUT",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "874999566200635393",
+    "user": "Pink_Elephants",
+    "team": "SUM",
+    "emojiId": "878394564468170812",
+    "emojiName": "SUM",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "694688440440193186",
+    "user": "shawnbell_",
+    "team": "TBP",
+    "emojiId": "890999482970435665",
+    "emojiName": "TBP",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "378336323875897344",
+    "user": "niuhuskie224",
+    "team": "SOV",
+    "emojiId": "943899301971628062",
+    "emojiName": "SOV",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "144973906070077440",
+    "user": "Segathon",
+    "team": "MHT",
+    "emojiId": "918212056094740510",
+    "emojiName": "MHT",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "582240735793774618",
+    "user": "Puss",
+    "team": "TEG",
+    "emojiId": "918653529953034240",
+    "emojiName": "THT",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "869668599550332958",
+    "user": "ultramagnus",
+    "team": "VHV",
+    "emojiId": "1303127943098138725",
+    "emojiName": "VHV",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "694697891733831761",
+    "user": "wolf_of_highland",
+    "team": "HIG",
+    "emojiId": "897245384601108490",
+    "emojiName": "HIG",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "1211045587483623484",
+    "user": "Krav",
+    "team": "BFC",
+    "emojiId": "1302374329627054195",
+    "emojiName": "BFC",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "904808850681638923",
+    "user": "Lloyd10xmas",
+    "team": "PRO",
+    "emojiId": "918148694820405308",
+    "emojiName": "PRO",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "241253413722128385",
+    "user": "Jer_33",
+    "team": "BAY",
+    "emojiId": "1039716048510922802",
+    "emojiName": "BAY",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "733156682456105062",
+    "user": "Philly Chris",
+    "team": "BBM",
+    "emojiId": "1301994452570603520",
+    "emojiName": "BBM",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "939897819681161296",
+    "user": "Don Don",
+    "team": "ING",
+    "emojiId": "1301994681206444085",
+    "emojiName": "ING",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "1049531278531252224",
+    "user": "Red",
+    "team": "MHA",
+    "emojiId": "1347389671059095604",
+    "emojiName": "MHA",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "918583918838546443",
+    "user": "MattyA",
+    "team": "KVK",
+    "emojiId": "1134590069261471755",
+    "emojiName": "KVK",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "691684263698890878",
+    "user": "Gaelicgopher",
+    "team": "MGG",
+    "emojiId": "897245448522313738",
+    "emojiName": "MGG",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "897864347764789290",
+    "user": "Unholy Grail",
+    "team": "NBK",
+    "emojiId": "996400156272496641",
+    "emojiName": "NBK",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "1009697012737921055",
+    "user": "MNYoda",
+    "team": "OCW",
+    "emojiId": "1030175920536948868",
+    "emojiName": "OCW",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "874726051790594051",
+    "user": "Adolf Oliver Nipples",
+    "team": "PIT",
+    "emojiId": "878396735028863007",
+    "emojiName": "PIT",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "691747327261671534",
+    "user": "BClinton",
+    "team": "RIC",
+    "emojiId": "878393337009283134",
+    "emojiName": "RIC",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "174615392461783040",
+    "user": "Jeelock",
+    "team": "SAG",
+    "emojiId": "996936838675701850",
+    "emojiName": "SAG",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "1042251245609549824",
+    "user": "Marylandmike",
+    "team": "SHS",
+    "emojiId": "1249551823161786388",
+    "emojiName": "SHS",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "691754174165155941",
+    "user": "MCline",
+    "team": "SUN",
+    "emojiId": "878395106892341288",
+    "emojiName": "SUN",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "204681486484373505",
+    "user": "NewJerseyKiller",
+    "team": "WDY",
+    "emojiId": "1300956776652345356",
+    "emojiName": "WDY",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "678370444302221317",
+    "user": "Ellis",
+    "team": "AHC",
+    "emojiId": "897245476703830037",
+    "emojiName": "AHC",
+    "skipBeingMentioned": false
+  },
+  {
+    "id": "802225742523531325",
+    "user": "NathanMB",
+    "team": "TAI",
+    "emojiId": "890999468743348224",
+    "emojiName": "TAI",
+    "skipBeingMentioned": false
+  }
+]
+
 }
