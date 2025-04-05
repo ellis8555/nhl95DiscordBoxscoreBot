@@ -335,7 +335,7 @@ async function processQueue (){
     const { server, client, coachId, userMessage } = task;
     if(server === w_server){
       const { seasonGamesChannelId, messageId } = task
-      // get q constants
+      // get w constants
       const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
       const readWFile = fs.readFileSync(wFilePath, "utf-8")
       const w_bot_consts = JSON.parse(readWFile);
@@ -381,6 +381,35 @@ async function processQueue (){
 
     processing = false;
     return;
+  }
+
+  // each player can set opting out of being mentioned during season games call
+  if(task.isOptOutOfBeingMentioned){
+    const { server, coachId, messageContent} = task;
+
+    if(server === w_server){
+      // get w constants
+      const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
+      const readWFile = fs.readFileSync(wFilePath, "utf-8")
+      const w_bot_consts = JSON.parse(readWFile);
+      const { coaches } = w_bot_consts;
+
+      const coachToEdit = coaches.find(coach => coach.id === coachId)
+      if(coachToEdit){
+        if(/^fuck off$/i.test(messageContent)){
+          coachToEdit.skipBeingMentioned = true
+        }
+        if(/^fuck on$/i.test(messageContent)){
+          coachToEdit.skipBeingMentioned = false
+        }
+      }
+      
+      const updated_w_consts = JSON.stringify(w_bot_consts, null, 2)
+      fs.writeFileSync(wFilePath, updated_w_consts)
+
+    }
+    processing = false
+    return
   }
 
   // display remaining opponents W and Q
@@ -931,8 +960,20 @@ client.on(Events.MessageCreate, async message => {
       const teamPattern = /^[A-Z]{3}$/
       if(teamPattern.test(message.content)){
           const isOpponentRequest = true
-          const teamAbbreviation = message.content
-          gameStateQueue.push({isOpponentRequest, server: getServerName, client, teamAbbreviation, seasonGamesChannelId})
+          gameStateQueue.push({isOpponentRequest, server: getServerName, client, teamAbbreviation, message})
+          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+            processQueue()
+          }
+          return
+      }
+      // opt out of being mentioned in season games calls
+      const optOutOfBeingMentioned = /^fuck off$/i
+      const optBackInOfBeingMentioned = /^fuck on$/i
+      if(optOutOfBeingMentioned.test(message.content) || optBackInOfBeingMentioned.test(message.content)){
+          const isOptOutOfBeingMentioned = true
+          const coachId = message.author.id
+          const messageContent = message.content
+          gameStateQueue.push({isOptOutOfBeingMentioned, server: getServerName, client, coachId, messageContent})
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
             processQueue()
           }
