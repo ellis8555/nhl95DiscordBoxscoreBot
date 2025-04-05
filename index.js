@@ -385,7 +385,7 @@ async function processQueue (){
 
   // each player can set opting out of being mentioned during season games call
   if(task.isOptOutOfBeingMentioned){
-    const { server, coachId, messageContent} = task;
+    const { server, client, coachId, messageContent, seasonGamesChannelId} = task;
 
     if(server === w_server){
       // get w constants
@@ -395,6 +395,7 @@ async function processQueue (){
       const { coaches } = w_bot_consts;
 
       const coachToEdit = coaches.find(coach => coach.id === coachId)
+      let currentMentionStatus
       if(coachToEdit){
         if(/^fuck off$/i.test(messageContent)){
           coachToEdit.skipBeingMentioned = true
@@ -406,6 +407,11 @@ async function processQueue (){
       
       const updated_w_consts = JSON.stringify(w_bot_consts, null, 2)
       fs.writeFileSync(wFilePath, updated_w_consts)
+
+      const channel = await client.channels.fetch(seasonGamesChannelId)
+      const coachName = coachToEdit.user
+      const userMessageSent = coachToEdit.skipBeingMentioned === true ? `${coachName} being alerted off` : `${coachName} will be alerted`
+      await channel.send(userMessageSent)
 
     }
     processing = false
@@ -960,7 +966,8 @@ client.on(Events.MessageCreate, async message => {
       const teamPattern = /^[A-Z]{3}$/
       if(teamPattern.test(message.content)){
           const isOpponentRequest = true
-          gameStateQueue.push({isOpponentRequest, server: getServerName, client, teamAbbreviation, message})
+          const teamAbbreviation = message.content
+          gameStateQueue.push({isOpponentRequest, server: getServerName, client, teamAbbreviation, message, seasonGamesChannelId})
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
             processQueue()
           }
@@ -973,7 +980,7 @@ client.on(Events.MessageCreate, async message => {
           const isOptOutOfBeingMentioned = true
           const coachId = message.author.id
           const messageContent = message.content
-          gameStateQueue.push({isOptOutOfBeingMentioned, server: getServerName, client, coachId, messageContent})
+          gameStateQueue.push({isOptOutOfBeingMentioned, server: getServerName, client, coachId, messageContent, seasonGamesChannelId})
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
             processQueue()
           }
