@@ -388,7 +388,7 @@ async function processQueue (){
     const { server, client, coachId, messageContent, seasonGamesChannelId} = task;
 
     if(server === w_server){
-      // get w constants
+      // set w league players mention status
       const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
       const readWFile = fs.readFileSync(wFilePath, "utf-8")
       const w_bot_consts = JSON.parse(readWFile);
@@ -403,9 +403,49 @@ async function processQueue (){
           w_coachToEdit.skipBeingMentioned = false
         }
       }
-      
+      // set q league players mention status
+      const qFilePath = path.join(process.cwd(), "public", "json", "q_bot_constants.json")
+      const readQFile = fs.readFileSync(qFilePath, "utf-8")
+      const q_bot_consts = JSON.parse(readQFile);
+      const { coaches: q_coaches } = q_bot_consts;
+
+      const q_coachToEdit = q_coaches.find(coach => coach.id === coachId)
+      if(q_coachToEdit){
+        if(/^fuck off$/i.test(messageContent)){
+          q_coachToEdit.skipBeingMentioned = true
+        }
+        if(/^fuck on$/i.test(messageContent)){
+          q_coachToEdit.skipBeingMentioned = false
+        }
+      }
+      // set pure league players mention status
+      const pFilePath = path.join(process.cwd(), "public", "json", "pure_bot_constants.json")
+      const readPFile = fs.readFileSync(pFilePath, "utf-8")
+      const p_bot_consts = JSON.parse(readPFile);
+      const { coaches: p_coaches } = p_bot_consts;
+
+      const p_coachToEdit = p_coaches.find(coach => coach.id === coachId)
+      if(p_coachToEdit){
+        if(/^fuck off$/i.test(messageContent)){
+          p_coachToEdit.skipBeingMentioned = true
+        }
+        if(/^fuck on$/i.test(messageContent)){
+          p_coachToEdit.skipBeingMentioned = false
+        }
+      }
+
+      // update the settings in each leagues json file
+      // w league
       const updated_w_consts = JSON.stringify(w_bot_consts, null, 2)
       fs.writeFileSync(wFilePath, updated_w_consts)
+      // q league
+      const updated_q_consts = JSON.stringify(q_bot_consts, null, 2)
+      fs.writeFileSync(qFilePath, updated_q_consts)
+      // pure league
+      const updated_p_consts = JSON.stringify(p_bot_consts, null, 2)
+      fs.writeFileSync(pFilePath, updated_p_consts)
+
+      // alert user of there being mentioned status
 
       const channel = await client.channels.fetch(seasonGamesChannelId)
       const coachName = w_coachToEdit.user
