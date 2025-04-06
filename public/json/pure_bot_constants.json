@@ -55,14 +55,15 @@
     "WAS",
     "WPG"
   ],
-  "coaches": [
+"coaches": [
   {
     "id": "694688440440193186",
     "user": "shawnbell_",
     "team": "NYI",
     "sheetsUser": "ShawnBell",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   },
   {
     "id": "144973906070077440",
@@ -70,7 +71,8 @@
     "team": "PIT",
     "sheetsUser": "Segathon",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   },
   {
     "id": "582240735793774618",
@@ -78,7 +80,8 @@
     "team": "MTL",
     "sheetsUser": "Puss",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   },
   {
     "id": "1211045587483623484",
@@ -86,7 +89,8 @@
     "team": "VAN",
     "sheetsUser": "Krav",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   },
   {
     "id": "874726051790594051",
@@ -94,7 +98,8 @@
     "team": "SJS",
     "sheetsUser": "Nips",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   },
   {
     "id": "1009697012737921055",
@@ -102,7 +107,8 @@
     "team": "PHL",
     "sheetsUser": "MNYoda",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   },
   {
     "id": "802225742523531325",
@@ -110,7 +116,8 @@
     "team": "WPG",
     "sheetsUser": "Nathan",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   },
   {
     "id": "1042251245609549824",
@@ -118,7 +125,8 @@
     "team": "FLA",
     "sheetsUser": "MarylandMike",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   },
   {
     "id": "373576219129806859",
@@ -126,7 +134,8 @@
     "team": "LAK",
     "sheetsUser": "MikeVick",
     "emojiName": "",
-    "emojiId": ""
+    "emojiId": "",
+    "skipBeingMentioned": false
   }
 ]
 }
