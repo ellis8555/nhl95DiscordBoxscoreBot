@@ -392,16 +392,15 @@ async function processQueue (){
       const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
       const readWFile = fs.readFileSync(wFilePath, "utf-8")
       const w_bot_consts = JSON.parse(readWFile);
-      const { coaches } = w_bot_consts;
+      const { coaches: w_coaches } = w_bot_consts;
 
-      const coachToEdit = coaches.find(coach => coach.id === coachId)
-      let currentMentionStatus
-      if(coachToEdit){
+      const w_coachToEdit = w_coaches.find(coach => coach.id === coachId)
+      if(w_coachToEdit){
         if(/^fuck off$/i.test(messageContent)){
-          coachToEdit.skipBeingMentioned = true
+          w_coachToEdit.skipBeingMentioned = true
         }
         if(/^fuck on$/i.test(messageContent)){
-          coachToEdit.skipBeingMentioned = false
+          w_coachToEdit.skipBeingMentioned = false
         }
       }
       
@@ -409,8 +408,8 @@ async function processQueue (){
       fs.writeFileSync(wFilePath, updated_w_consts)
 
       const channel = await client.channels.fetch(seasonGamesChannelId)
-      const coachName = coachToEdit.user
-      const userMessageSent = coachToEdit.skipBeingMentioned === true ? `${coachName} being alerted off` : `${coachName} will be alerted`
+      const coachName = w_coachToEdit.user
+      const userMessageSent = w_coachToEdit.skipBeingMentioned === true ? `${coachName} being alerted off` : `${coachName} will be alerted`
       await channel.send(userMessageSent)
 
     }
