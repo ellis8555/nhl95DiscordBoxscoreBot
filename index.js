@@ -133,7 +133,6 @@ let p_adminIdObject = pure_consts.editPermission
 
 // update variables that come from admin within discord channel
 p_bot_consts_update_emitter.on("p_bot_consts_update_emitter", (updatedConsts) => {
-  p_adminsListeningChannelName = updatedConsts.adminsListeningChannel
   p_seasonGamesChannel = updatedConsts.seasonGamesChannel
   p_seasonNumber = updatedConsts.currentSeason
   p_teamCodes = updatedConsts.teamCodesList
