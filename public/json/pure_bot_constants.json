@@ -2,7 +2,6 @@
   "currentSeason": "9",
   "seasonGamesChannel": "s11-games",
   "p_games_vs_opponents": 2,
-  "adminsListeningChannel": "admin",
   "listeningChannel": "pure-scores",
   "writeToGoogleSheets": true,
   "pureLeagueScoreExpression": "^\\s*(?:EDIT\\s+)?[a-zA-Z]{3}\\s+(\\d+)\\s*-\\s+[a-zA-Z]{3}\\s+(\\d+)\\s*$",
@@ -26,7 +25,6 @@
       "streak_col": "I"
     }
   },
-  "adminCommands": [],
   "teamCodesList": [
     "ANA",
     "BOS",
