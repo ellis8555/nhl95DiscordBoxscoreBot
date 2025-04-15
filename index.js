@@ -137,7 +137,6 @@ p_bot_consts_update_emitter.on("p_bot_consts_update_emitter", (updatedConsts) =>
   p_seasonNumber = updatedConsts.currentSeason
   p_teamCodes = updatedConsts.teamCodesList
   p_adminIdObject = updatedConsts.editPermission
-  p_adminCommands = updatedConsts.adminCommands
   p_submitScoresChannel = updatedConsts.listeningChannel
   // updates channel in which the boxscores will be posted
   const p_guild = client.guilds.cache.find(guild => guild.name === pureServer);
@@ -182,7 +181,6 @@ let q_adminsListeningChannelId
 let q_saveStatesChannelId
 let q_seasonGamesChannelId
 
-let p_adminsListeningChannelId
 let p_seasonGamesChannelId
 let p_submitScoresChannelId
 
