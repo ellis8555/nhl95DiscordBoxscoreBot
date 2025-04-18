@@ -16,6 +16,7 @@
     "SET",
     "HELP",
     "GET SETTINGS",
+    "GET COACHES",
     "GET COMMANDS",
     "GET SEASON NUMBER",
     "GET TEAMCODES",
