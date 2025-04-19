@@ -3,7 +3,7 @@
   "seasonGamesChannel": "s11-games",
   "p_games_vs_opponents": 2,
   "listeningChannel": "pure-scores",
-  "writeToGoogleSheets": true,
+  "writeToGoogleSheets": false,
   "pureLeagueScoreExpression": "^\\s*(?:EDIT\\s+)?[a-zA-Z]{3}\\s+(\\d+)\\s*-\\s+[a-zA-Z]{3}\\s+(\\d+)\\s*$",
   "editPermission": {
     "ticklepuss": "582240735793774618",
@@ -25,7 +25,8 @@
       "streak_col": "I"
     },
     "bsbSettings": {
-      "channelsRange": "A4:B6",
+      "bsbSheetName": "BSB Settings",
+      "channelsRange": "A4:B7",
       "coachesRange": "A10:D22"
     }
   },
@@ -62,10 +63,10 @@
       "id": "694688440440193186",
       "user": "shawnbell_",
       "team": "NYI",
-      "sheetsUser": "Shawnbell",
+      "sheetsUser": "ShawnBell",
       "emojiName": "",
       "emojiId": "",
-      "skipBeingMentioned": false
+      "skipBeingMentioned": true
     },
     {
       "id": "144973906070077440",
