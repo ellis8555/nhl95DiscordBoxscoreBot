@@ -23,6 +23,10 @@
       "raw_standings_col_start": "A",
       "manager_col": "C",
       "streak_col": "I"
+    },
+    "bsbSettings": {
+      "channelsRange": "A4:B6",
+      "coachesRange": "A10:D22"
     }
   },
   "teamCodesList": [
@@ -58,7 +62,7 @@
       "id": "694688440440193186",
       "user": "shawnbell_",
       "team": "NYI",
-      "sheetsUser": "ShawnBell",
+      "sheetsUser": "Shawnbell",
       "emojiName": "",
       "emojiId": "",
       "skipBeingMentioned": false
