@@ -3,7 +3,7 @@
   "seasonGamesChannel": "s11-games",
   "p_games_vs_opponents": 2,
   "listeningChannel": "pure-scores",
-  "writeToGoogleSheets": false,
+  "writeToGoogleSheets": true,
   "pureLeagueScoreExpression": "^\\s*(?:EDIT\\s+)?[a-zA-Z]{3}\\s+(\\d+)\\s*-\\s+[a-zA-Z]{3}\\s+(\\d+)\\s*$",
   "editPermission": {
     "ticklepuss": "582240735793774618",
@@ -26,8 +26,9 @@
     },
     "bsbSettings": {
       "bsbSheetName": "BSB Settings",
-      "channelsRange": "A4:B7",
-      "coachesRange": "A10:D22"
+      "channelsRange": "A5:B9",
+      "coachesStartRange": "A13",
+      "coachesEndRange": "B8"
     }
   },
   "teamCodesList": [
