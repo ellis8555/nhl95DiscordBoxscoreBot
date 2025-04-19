@@ -11,6 +11,7 @@ import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
 import { bot_consts, q_bot_consts, pure_consts, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
+import setPureSettings from "./lib/pureLeague/setPureSettings.js"
 import parseAdminMessage from "./lib/index/parseAdminMessage.js";
 import mentionRemainingOpponents from "./lib/index/mentionRemainingOpponents.js";
 import displayRemainingOpponents from "./lib/index/displayRemainingOpponents.js";
@@ -505,9 +506,16 @@ async function processQueue (){
   // process incoming tasks from pure league
   if(task.server === pureServer){
     const { processPureArgs } = task
-    await processPure(processPureArgs)
-    processing = false;
-    return;
+    // test for admin message changing league settings such as coaches or season number
+    const userMessage = processPureArgs.message.content
+    if(userMessage === 'NEW SETTINGS'){
+      setPureSettings(processPureArgs)
+      processing = false;
+    } else {
+      // process a score entry
+      await processPure(processPureArgs)
+      processing = false;
+    }
   }
 
   // process game state from W league
