@@ -15,6 +15,7 @@ import setPureSettings from "./lib/pureLeague/setPureSettings.js"
 import parseAdminMessage from "./lib/index/parseAdminMessage.js";
 import mentionRemainingOpponents from "./lib/index/mentionRemainingOpponents.js";
 import displayRemainingOpponents from "./lib/index/displayRemainingOpponents.js";
+import showRemainingGames from "./lib/index/showRemainingGames.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,6 +44,7 @@ let teamCodes = bot_consts.teamCodes
 let adminIdObject = bot_consts.editPermission
 let adminCommands = bot_consts.adminCommands
 let pauseWLeague = bot_consts.pauseWLeague
+let w_games_vs_opponents = bot_consts.w_games_vs_opponents
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -56,6 +58,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   adminIdObject = updatedConsts.editPermission
   adminCommands = updatedConsts.adminCommands
   pauseWLeague = updatedConsts.pauseWLeague
+  w_games_vs_opponents = updatedConsts.w_games_vs_opponents
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
@@ -498,6 +501,18 @@ async function processQueue (){
     if(server === q_server){
       const { q_adminsListeningChannelId } = task
       await parseAdminMessage(q_adminsListeningChannelId, {server, adminMessage,  client, csvFile, sheets})
+    }
+    processing = false;
+    return;
+  }
+
+  // show remaining games when 20 games or less remain
+  if(task.isShowEndOfScheduleRequest){
+    const { server, client, coachId, messageContent } = task;
+    if(server === w_server){
+      const { seasonGamesChannelId } = task
+      const leagueName = "W"
+      await showRemainingGames(seasonGamesChannelId, {client, coachId, leagueName, messageContent})
     }
     processing = false;
     return;
@@ -1025,6 +1040,19 @@ client.on(Events.MessageCreate, async message => {
             processQueue()
           }
           return
+      }
+      // display remaining matches when season is down to 20 games
+      
+      const showGamesPattern = /^SHOW GAMES$/
+      if(showGamesPattern.test(message.content)){
+        const isShowEndOfScheduleRequest = true
+        const coachId = message.author.id
+        const messageContent = message.content
+        gameStateQueue.push({isShowEndOfScheduleRequest, server: getServerName, client, coachId, messageContent, seasonGamesChannelId})
+        if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+          processQueue()
+        }
+        return
       }
     }
 
