@@ -33,7 +33,8 @@
     "HELP SET CHANNELS",
     "HELP SET SAVE STATE",
     "HELP SET TEAM CODES",
-    "HELP SET ROM CSV"
+    "HELP SET ROM CSV",
+    "UPDATE"
   ],
   "pauseWLeague": false,
   "allowDuplicates": true,
@@ -60,6 +61,14 @@
     "rawScoring": {
       "col_start": "G",
       "col_end": "N"
+    },
+    "bsbSettings": {
+      "bsbSheetName": "BSB Settings",
+      "romTeamOrderList": "A7",
+      "channelsRange": "A10:B15",
+      "coachesStartRange": "A19",
+      "coachesEndColumn": "E",
+      "coachesEndRange": "B14"
     }
   },
   "teamCodes": [
@@ -95,6 +104,62 @@
   ],
   "coaches": [
     {
+      "id": "694688440440193186",
+      "user": "shawnbell_",
+      "team": "TBP",
+      "emojiId": "890999482970435665",
+      "emojiName": "TBP",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "144973906070077440",
+      "user": "segathon",
+      "team": "MHT",
+      "emojiId": "918212056094740510",
+      "emojiName": "MHT",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "582240735793774618",
+      "user": "Puss",
+      "team": "TEG",
+      "emojiId": "918653529953034240",
+      "emojiName": "THT",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "1211045587483623484",
+      "user": "Krav",
+      "team": "BFC",
+      "emojiId": "1302374329627054195",
+      "emojiName": "BFC",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "874726051790594051",
+      "user": "Adolf Oliver Nipples",
+      "team": "PIT",
+      "emojiId": "878396735028863007",
+      "emojiName": "PIT",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "1009697012737921055",
+      "user": "MNYoda",
+      "team": "OCW",
+      "emojiId": "1030175920536948868",
+      "emojiName": "OCW",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "802225742523531325",
+      "user": "Nathan",
+      "team": "TAI",
+      "emojiId": "890999468743348224",
+      "emojiName": "TAI",
+      "skipBeingMentioned": false
+    },
+    {
       "id": "932744327191490651",
       "user": "GMDS",
       "team": "HAM",
@@ -106,7 +171,7 @@
       "id": "315151409190535168",
       "user": "Ceydan",
       "team": "HOT",
-      "emojiId": "990611697343541318",
+      "emojiId": "1212248465740931072",
       "emojiName": "HOT",
       "skipBeingMentioned": false
     },
@@ -135,35 +200,11 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "694688440440193186",
-      "user": "shawnbell_",
-      "team": "TBP",
-      "emojiId": "890999482970435665",
-      "emojiName": "TBP",
-      "skipBeingMentioned": false
-    },
-    {
       "id": "378336323875897344",
       "user": "niuhuskie224",
       "team": "SOV",
       "emojiId": "943899301971628062",
       "emojiName": "SOV",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "144973906070077440",
-      "user": "Segathon",
-      "team": "MHT",
-      "emojiId": "918212056094740510",
-      "emojiName": "MHT",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "582240735793774618",
-      "user": "Puss",
-      "team": "TEG",
-      "emojiId": "918653529953034240",
-      "emojiName": "THT",
       "skipBeingMentioned": false
     },
     {
@@ -180,14 +221,6 @@
       "team": "HIG",
       "emojiId": "897245384601108490",
       "emojiName": "HIG",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "1211045587483623484",
-      "user": "Krav",
-      "team": "BFC",
-      "emojiId": "1302374329627054195",
-      "emojiName": "BFC",
       "skipBeingMentioned": false
     },
     {
@@ -255,22 +288,6 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "1009697012737921055",
-      "user": "MNYoda",
-      "team": "OCW",
-      "emojiId": "1030175920536948868",
-      "emojiName": "OCW",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "874726051790594051",
-      "user": "Adolf Oliver Nipples",
-      "team": "PIT",
-      "emojiId": "878396735028863007",
-      "emojiName": "PIT",
-      "skipBeingMentioned": false
-    },
-    {
       "id": "691747327261671534",
       "user": "BClinton",
       "team": "RIC",
@@ -316,14 +333,6 @@
       "team": "AHC",
       "emojiId": "897245476703830037",
       "emojiName": "AHC",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "802225742523531325",
-      "user": "NathanMB",
-      "team": "TAI",
-      "emojiId": "890999468743348224",
-      "emojiName": "TAI",
       "skipBeingMentioned": false
     }
   ]
