@@ -28,6 +28,7 @@
       "bsbSheetName": "BSB Settings",
       "channelsRange": "A5:B9",
       "coachesStartRange": "A13",
+      "coachesEndColumn": "D",
       "coachesEndRange": "B8"
     }
   },
