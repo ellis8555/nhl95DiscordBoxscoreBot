@@ -490,14 +490,14 @@ async function processQueue (){
 
   // process admin tasks W and Q
   if(task.isAdminInstruction){
-    const { server, adminMessage, client, csvFile } = task;
+    const { server, adminMessage, client, csvFile, sheets } = task;
     if(server === w_server){
       const { adminsListeningChannelId } = task
-      await parseAdminMessage(adminsListeningChannelId, {server, adminMessage, client, csvFile})
+      await parseAdminMessage(adminsListeningChannelId, {server, adminMessage, client, csvFile, sheets})
     }
     if(server === q_server){
       const { q_adminsListeningChannelId } = task
-      await parseAdminMessage(q_adminsListeningChannelId, {server, adminMessage,  client, csvFile})
+      await parseAdminMessage(q_adminsListeningChannelId, {server, adminMessage,  client, csvFile, sheets})
     }
     processing = false;
     return;
@@ -969,7 +969,7 @@ client.on(Events.MessageCreate, async message => {
                 return;
               }
             }           
-              gameStateQueue.push({isAdminInstruction, server: getServerName, client, adminMessage, adminsListeningChannelId, csvFile})
+              gameStateQueue.push({isAdminInstruction, server: getServerName, client, adminMessage, adminsListeningChannelId, csvFile, sheets})
               if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
                 processQueue()
               }
@@ -1099,7 +1099,7 @@ client.on(Events.MessageCreate, async message => {
                 return;
               }
             }         
-              gameStateQueue.push({isAdminInstruction, server: getServerName, client, adminMessage, q_adminsListeningChannelId, csvFile})
+              gameStateQueue.push({isAdminInstruction, server: getServerName, client, adminMessage, q_adminsListeningChannelId, csvFile, sheets})
               if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
                 processQueue()
               }
