@@ -30,7 +30,7 @@ const {
   server,
   leagueName,
   sendResponseToOutputchannel,
-  coaches
+  coaches,
 } = bot_consts
 
 const uniqueIdsFile = uniqueIdsFileName
@@ -45,6 +45,7 @@ let adminIdObject = bot_consts.editPermission
 let adminCommands = bot_consts.adminCommands
 let pauseWLeague = bot_consts.pauseWLeague
 let w_games_vs_opponents = bot_consts.w_games_vs_opponents
+let excludeCoaches = bot_consts.excludeCoaches
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -59,6 +60,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   adminCommands = updatedConsts.adminCommands
   pauseWLeague = updatedConsts.pauseWLeague
   w_games_vs_opponents = updatedConsts.w_games_vs_opponents
+  excludeCoaches = updatedConsts.excludeCoaches
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
