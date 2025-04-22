@@ -3,47 +3,20 @@
   "saveStatesListeningChannel": "2007-season-saves",
   "boxscoreOutputChannel": "2007-season-boxscores",
   "seasonGamesChannel": "season-games",
+  "leagueName": "w",
+  "seasonNum": "13",
   "w_games_vs_opponents": 2,
   "saveStatePattern": "^W13.*\\.state\\d{1,3}$",
-  "editPermission": {
-    "ultramagnus": "869668599550332958",
-    "ellis": "678370444302221317"
-  },
-  "adminCommands": [
-    "PAUSE",
-    "RESUME",
-    "GET",
-    "SET",
-    "HELP",
-    "GET SETTINGS",
-    "GET COACHES",
-    "GET COMMANDS",
-    "GET SEASON NUMBER",
-    "GET TEAMCODES",
-    "SET DUPLICATES",
-    "SET SHEETS",
-    "SET BOXSCORE",
-    "SET ADMIN CHANNEL",
-    "SET STATE CHANNEL",
-    "SET BOXSCORE CHANNEL",
-    "SET SAVE STATE",
-    "SET SEASON",
-    "SET TEAMCODES",
-    "SET ROM CSV",
-    "HELP SET CHANNELS",
-    "HELP SET SAVE STATE",
-    "HELP SET TEAM CODES",
-    "HELP SET ROM CSV",
-    "UPDATE"
-  ],
   "pauseWLeague": false,
   "allowDuplicates": true,
   "writeToUniqueIdsFile": false,
   "writeToGoogleSheets": false,
   "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
-  "leagueName": "w",
-  "seasonNum": "13",
+  "editPermission": {
+    "ultramagnus": "869668599550332958",
+    "ellis": "678370444302221317"
+  },
   "appendGoogleSheets": {
     "countRowRange": "H:H",
     "rawData": {
@@ -65,10 +38,10 @@
     "bsbSettings": {
       "bsbSheetName": "BSB Settings",
       "romTeamOrderList": "A7",
-      "channelsRange": "A10:B15",
-      "coachesStartRange": "A19",
+      "channelsRange": "A9:B20",
+      "coachesStartRange": "A25",
       "coachesEndColumn": "E",
-      "coachesEndRange": "B14"
+      "coachesEndRange": "B9"
     }
   },
   "teamCodes": [
@@ -335,5 +308,35 @@
       "emojiName": "AHC",
       "skipBeingMentioned": false
     }
+  ],
+  "excludeCoaches": [
+    "KVK", "SUN", "MGG"
+  ],
+  "adminCommands": [
+    "PAUSE",
+    "RESUME",
+    "GET",
+    "SET",
+    "HELP",
+    "GET SETTINGS",
+    "GET COACHES",
+    "GET COMMANDS",
+    "GET SEASON NUMBER",
+    "GET TEAMCODES",
+    "SET DUPLICATES",
+    "SET SHEETS",
+    "SET BOXSCORE",
+    "SET ADMIN CHANNEL",
+    "SET STATE CHANNEL",
+    "SET BOXSCORE CHANNEL",
+    "SET SAVE STATE",
+    "SET SEASON",
+    "SET TEAMCODES",
+    "SET ROM CSV",
+    "HELP SET CHANNELS",
+    "HELP SET SAVE STATE",
+    "HELP SET TEAM CODES",
+    "HELP SET ROM CSV",
+    "UPDATE"
   ]
 }
