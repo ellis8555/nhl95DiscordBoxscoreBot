@@ -8,9 +8,9 @@
   "w_games_vs_opponents": 2,
   "saveStatePattern": "^W13.*\\.state\\d{1,3}$",
   "pauseWLeague": false,
-  "allowDuplicates": true,
-  "writeToUniqueIdsFile": false,
-  "writeToGoogleSheets": false,
+  "allowDuplicates": false,
+  "writeToUniqueIdsFile": true,
+  "writeToGoogleSheets": true,
   "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
   "editPermission": {
@@ -37,7 +37,7 @@
     },
     "bsbSettings": {
       "bsbSheetName": "BSB Settings",
-      "romTeamOrderList": "A7",
+      "romTeamOrderList": "A6",
       "channelsRange": "A9:B20",
       "coachesStartRange": "A25",
       "coachesEndColumn": "E",
@@ -310,7 +310,9 @@
     }
   ],
   "excludeCoaches": [
-    "KVK", "SUN", "MGG"
+    "KVK",
+    "SUN",
+    "MGG"
   ],
   "adminCommands": [
     "PAUSE",
