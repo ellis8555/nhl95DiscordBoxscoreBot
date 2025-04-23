@@ -38,8 +38,8 @@
     "bsbSettings": {
       "bsbSheetName": "BSB Settings",
       "romTeamOrderList": "A6",
-      "channelsRange": "A9:B20",
-      "coachesStartRange": "A25",
+      "channelsRange": "A9:B21",
+      "coachesStartRange": "A26",
       "coachesEndColumn": "E",
       "coachesEndRange": "B9"
     }
