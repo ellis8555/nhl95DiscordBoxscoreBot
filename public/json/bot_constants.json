@@ -8,9 +8,9 @@
   "w_games_vs_opponents": 2,
   "saveStatePattern": "^W13.*\\.state\\d{1,3}$",
   "pauseWLeague": false,
-  "allowDuplicates": false,
+  "allowDuplicates": true,
   "writeToUniqueIdsFile": true,
-  "writeToGoogleSheets": true,
+  "writeToGoogleSheets": false,
   "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
   "editPermission": {
@@ -340,5 +340,10 @@
     "HELP SET TEAM CODES",
     "HELP SET ROM CSV",
     "UPDATE"
+  ],
+  "remainingGames": [
+    "SHS/TAI",
+    "SUM/VHV",
+    "AHC/TAI"
   ]
 }

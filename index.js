@@ -46,6 +46,7 @@ let adminCommands = bot_consts.adminCommands
 let pauseWLeague = bot_consts.pauseWLeague
 let w_games_vs_opponents = bot_consts.w_games_vs_opponents
 let excludeCoaches = bot_consts.excludeCoaches
+let remainingGames = bot_consts.remainingGames
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -61,6 +62,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   pauseWLeague = updatedConsts.pauseWLeague
   w_games_vs_opponents = updatedConsts.w_games_vs_opponents
   excludeCoaches = updatedConsts.excludeCoaches
+  remainingGames = updatedConsts.remainingGames
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
@@ -624,6 +626,22 @@ async function processQueue (){
           uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
           uniqueGameStateIds.push(matchup); // Update the in-file array
           fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`) 
+          // update array that contains remaining matchups when season coming to an end
+          // only do this if the array contains season ending matchups count < 20 or so
+          const filePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
+          const file = fs.readFileSync(filePath, "utf-8")
+          const wConstsData = JSON.parse(file)
+          const { remainingGames } = wConstsData
+          if(remainingGames.length > 0){
+            const homeTeam = romData.data.otherGameStats.homeTeam
+            const awayTeam = romData.data.otherGameStats.awayTeam
+            const matchup = `${homeTeam}/${awayTeam}`
+            const getMatchupFromRemainingGames = remainingGames.indexOf(matchup)
+            if(getMatchupFromRemainingGames !== -1){
+              remainingGames.splice(getMatchupFromRemainingGames, 1)
+              fs.writeFileSync(filePath, JSON.stringify(wConstsData, null, 2), "utf-8")
+            }
+          }
         } catch (error) {
           throw new Error("Error occured in trying to write to uniqueId text file.")
         }
