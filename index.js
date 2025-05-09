@@ -528,7 +528,9 @@ async function processQueue (){
     // test for admin message changing league settings such as coaches or season number
     const userMessage = processPureArgs.message.content
     if(userMessage === 'UPDATE SETTINGS'){
-      setPureSettings(processPureArgs)
+      if(message.author.id === p_adminIdObject['ticklepuss']){
+        setPureSettings(processPureArgs)
+      }
       processing = false;
     } else {
       // process a score entry
