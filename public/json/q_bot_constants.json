@@ -216,5 +216,6 @@
       "emojiName": "AHC",
       "skipBeingMentioned": false
     }
-  ]
+  ],
+  "excludeCoaches": []
 }
