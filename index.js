@@ -98,6 +98,7 @@ let q_teamCodes = q_bot_consts.teamCodes
 let q_adminIdObject = q_bot_consts.editPermission
 let q_adminCommands = q_bot_consts.adminCommands
 let q_pauseQLeague = q_bot_consts.pauseQLeague
+let q_excludeCoaches = q_bot_consts.excludeCoaches
 
 // update variables that come from admin within discord channel
 q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) => {
@@ -111,6 +112,7 @@ q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) =>
   q_adminIdObject = updatedConsts.editPermission
   q_adminCommands = updatedConsts.adminCommands
   q_pauseQLeague = updatedConsts.pauseQLeague
+  q_excludeCoaches = updatedConsts.excludeCoaches
   // updates channel in which the boxscores will be posted
   const q_guild = client.guilds.cache.find(guild => guild.name === q_server);
   if(q_guild){
@@ -138,6 +140,7 @@ let p_submitScoresChannel = pure_consts.listeningChannel
 let p_seasonNumber = pure_consts.currentSeason
 let p_teamCodes = pure_consts.teamCodesList
 let p_adminIdObject = pure_consts.editPermission
+let p_excludeCoaches = pure_consts.excludeCoaches
 
 // update variables that come from admin within discord channel
 p_bot_consts_update_emitter.on("p_bot_consts_update_emitter", (updatedConsts) => {
@@ -146,6 +149,7 @@ p_bot_consts_update_emitter.on("p_bot_consts_update_emitter", (updatedConsts) =>
   p_teamCodes = updatedConsts.teamCodesList
   p_adminIdObject = updatedConsts.editPermission
   p_submitScoresChannel = updatedConsts.listeningChannel
+  p_excludeCoaches = updatedConsts.excludeCoaches
   // updates channel in which the boxscores will be posted
   const p_guild = client.guilds.cache.find(guild => guild.name === pureServer);
   if(p_guild){
@@ -346,7 +350,7 @@ async function processQueue (){
       const uniqueIdsFile = fs.readFileSync(wUniqueIdsFilePath, "utf-8");
       
       const { teamCodes, coaches } = w_bot_consts;
-      await mentionRemainingOpponents(seasonGamesChannelId, {server, client, coachId, teamCodes, messageId, userMessage, coaches, uniqueIdsFile})
+      await mentionRemainingOpponents(seasonGamesChannelId, excludeCoaches, {server, client, coachId, teamCodes, messageId, userMessage, coaches, excludeCoaches, uniqueIdsFile})
     }
 
     if(server === q_server){
@@ -362,7 +366,7 @@ async function processQueue (){
       
       const { teamCodes, coaches } = q_bot_consts;
 
-      await mentionRemainingOpponents(q_seasonGamesChannelId, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
+      await mentionRemainingOpponents(q_seasonGamesChannelId, q_excludeCoaches, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
     }
 
     if(server === pureServer){
@@ -377,7 +381,7 @@ async function processQueue (){
       const uniqueIdsFile = fs.readFileSync(p_uniqueIdsFilePath, "utf-8")
 
       const { teamCodesList: teamCodes, coaches } = p_bot_consts
-      await mentionRemainingOpponents(p_seasonGamesChannelId, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
+      await mentionRemainingOpponents(p_seasonGamesChannelId, p_excludeCoaches, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
     }
 
     processing = false;
@@ -474,7 +478,7 @@ async function processQueue (){
       
       const { teamCodes, coaches } = bot_consts;
 
-      await displayRemainingOpponents(seasonGamesChannelId, {server, client, teamAbbreviation, teamCodes, coaches, uniqueIdsFile})
+      await displayRemainingOpponents(seasonGamesChannelId, excludeCoaches, {server, client, teamAbbreviation, teamCodes, coaches, uniqueIdsFile})
     }
     if(server === q_server){
       const { q_seasonGamesChannelId } = task
@@ -489,7 +493,7 @@ async function processQueue (){
       
       const { teamCodes, coaches } = q_bot_consts;
 
-      await displayRemainingOpponents(q_seasonGamesChannelId, {server, client, teamAbbreviation, teamCodes, coaches, uniqueIdsFile})
+      await displayRemainingOpponents(q_seasonGamesChannelId, q_excludeCoaches, {server, client, teamAbbreviation, teamCodes, coaches, uniqueIdsFile})
     }
     processing = false;
     return;

@@ -141,6 +141,16 @@
       "emojiName": "",
       "emojiId": "",
       "skipBeingMentioned": false
+    },
+    {
+      "id": "678370444302221317",
+      "user": "Ellis",
+      "team": "LAK",
+      "sheetsUser": "MikeVick",
+      "emojiName": "",
+      "emojiId": "",
+      "skipBeingMentioned": false
     }
-  ]
+  ],
+  "excludeCoaches": []
 }
