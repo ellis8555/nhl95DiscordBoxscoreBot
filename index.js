@@ -531,6 +531,7 @@ async function processQueue (){
     const { processPureArgs } = task
     // test for admin message changing league settings such as coaches or season number
     const userMessage = processPureArgs.message.content
+    const message = processPureArgs.message
     if(userMessage === 'UPDATE SETTINGS'){
       if(message.author.id === p_adminIdObject['ticklepuss']){
         setPureSettings(processPureArgs)
