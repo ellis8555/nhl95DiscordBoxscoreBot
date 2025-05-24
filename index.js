@@ -533,7 +533,7 @@ async function processQueue (){
     const userMessage = processPureArgs.message.content
     const message = processPureArgs.message
     if(userMessage === 'UPDATE SETTINGS'){
-      if(message.author.id === p_adminIdObject['ticklepuss']){
+      if(message.author.id === p_adminIdObject['ticklepuss'] || message.author.id === p_adminIdObject['ellis']){
         setPureSettings(processPureArgs)
       }
       processing = false;
