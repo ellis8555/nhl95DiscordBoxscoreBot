@@ -925,7 +925,7 @@ async function processErrorsAndSendMessages (){
 };
 
 client.on(Events.MessageCreate, async message => {
-  if (message.author.bot) return;
+  if (message.author.bot && !message.webhookId) return;
   const getServerName = message.guild.name;
   const channelId = message.channel.id; 
   // set vars for W league
