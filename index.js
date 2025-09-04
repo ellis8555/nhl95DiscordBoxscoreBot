@@ -572,6 +572,7 @@ async function processQueue (){
         teamsDictCodes: teamCodes,
       };
       romData = await readOgRomBinaryGameState(romArgs);
+
       // Perform checks and processing as before
       const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
       const gameLengthInt = parseInt(gameLength.replace(":", ""), 10);
@@ -658,7 +659,8 @@ async function processQueue (){
         const { status, image, errorMessage } = await generateBoxscore;
         if(status === "success") {
           const imageBuffer = Buffer.from(image);
-          const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
+          const gamesUniqueId = romData.data.otherGameStats.uniqueGameId
+          const attachment = new AttachmentBuilder(imageBuffer, { name: `${gamesUniqueId}.png` });
             if(sendResponseToOutputchannel) {
               await client.channels.cache.get(boxscoreOutputChannelId).send({ files: [attachment] });
             } else {
@@ -791,7 +793,8 @@ async function processQueue (){
         const { status, image, errorMessage } = await generateBoxscore;
         if(status === "success") {
           const imageBuffer = Buffer.from(image);
-          const attachment = new AttachmentBuilder(imageBuffer, { name: 'boxscore.png' });
+          const gamesUniqueId = romData.data.otherGameStats.uniqueGameId
+          const attachment = new AttachmentBuilder(imageBuffer, { name: `${gamesUniqueId}.png` });
             if(q_sendResponseToOutputchannel) {
               await client.channels.cache.get(q_boxscoreOutputChannelId).send({ files: [attachment] });
             } else {
