@@ -1,0 +1,79 @@
+Name,Team,Pos,JNo,Wgt,Agl,Spd,OfA,DfA,ShP,ChK,H/F,StH,ShA,End,Rgh,Pas,Agr
+Patrick Lalime,AHC,G,40,6,4,4,2,3,4,0,0,0,0,3,3,4,4
+Jaroslav Halak,AHC,G,41,5,6,4,0,2,4,0,1,0,0,4,3,3,4
+Evgeni Nabokov,AUT,G,42,7,5,4,1,3,5,0,1,0,0,4,4,4,4
+Jonathan Bernier,AUT,G,20,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Jose Theodore,BAY,G,60,5,5,5,4,4,4,0,0,0,0,5,4,5,4
+Cory Schneider,BAY,G,35,6,6,4,0,2,2,0,1,0,0,4,5,5,4
+Carey Price,BBM,G,31,8,5,4,3,5,4,0,1,0,0,4,4,5,4
+Olaf Kolzig,BBM,G,30,11,4,3,3,4,4,0,0,0,0,5,5,5,5
+Ryan Miller,BFC,G,31,3,5,5,0,4,5,0,1,0,0,6,6,6,6
+Brian Elliott,BFC,G,37,5,3,4,0,3,3,0,1,0,0,4,3,3,4
+Steve Mason,ETI,G,1,5,4,4,0,5,5,0,0,0,0,5,6,6,5
+Semyon Varlamov,ETI,G,30,5,4,3,0,2,5,0,1,0,0,5,4,4,5
+Tuukka Rask,HAM,G,40,3,5,5,0,2,2,0,1,0,0,4,5,5,4
+Ray Emery,HAM,G,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Henrik Lundqvist,HIG,G,34,6,5,3,2,5,5,0,1,0,0,5,5,5,5
+Dan Ellis,HIG,G,1,5,4,3,0,2,3,0,1,0,0,3,3,3,3
+Fredrik Norrena,HOT,G,30,6,4,4,3,5,4,0,0,0,0,4,4,4,5
+Jimmy Howard,HOT,G,31,9,5,4,0,2,2,0,1,0,0,4,3,3,4
+Cristobal Huet,ING,G,71,8,4,5,0,4,4,0,1,0,0,5,6,6,5
+Scott Clemmensen,ING,G,31,8,3,4,0,5,5,0,1,0,0,4,5,5,4
+Roberto Luongo,KVK,G,80,7,5,5,4,5,6,0,1,0,0,6,6,6,6
+Kevin Weekes,KVK,G,1,7,4,4,3,4,4,0,1,0,0,3,4,4,3
+Brent Johnson,KOL,G,1,7,3,3,1,3,4,0,1,0,0,3,4,4,3
+Curtis Sanford,KOL,G,41,5,3,3,0,4,3,0,1,0,0,4,4,4,4
+Pascal LeClaire,MHA,G,29,7,5,3,1,0,2,0,1,0,0,3,2,2,3
+Manny Fernandez,MHA,G,47,6,4,5,4,5,5,0,0,0,0,4,4,5,4
+Craig Anderson,MHT,G,1,5,5,3,1,3,6,0,1,0,0,5,4,4,5
+Jean-Sebastien Aubin,MHT,G,30,5,5,5,4,3,4,0,0,0,0,4,4,4,4
+Kari Lehtonen,MGG,G,39,6,5,5,5,4,4,0,0,0,0,6,5,5,5
+Mike Smith,MGG,G,32,10,5,3,1,4,5,0,0,0,0,5,5,5,5
+Chris Mason,NBK,G,30,6,4,4,1,5,5,0,1,0,0,4,5,5,4
+Vesa Toskala,NBK,G,37,3,5,5,4,4,4,0,0,0,0,5,5,6,5
+Marc-Andre Fleury,OCW,G,33,4,5,5,5,5,4,0,0,0,0,4,5,5,5
+Alex Auld,OCW,G,35,7,3,3,0,4,4,0,1,0,0,4,4,4,4
+Ilya Bryzgalov,PIT,G,31,8,5,4,2,5,5,0,1,0,0,4,5,5,4
+Dwayne Roloson,PIT,G,1,5,4,5,3,4,4,0,0,0,0,5,5,6,5
+Johan Hedberg,PRO,G,1,6,5,5,3,4,4,0,0,0,0,5,4,5,5
+Tim Thomas,PRO,G,30,7,5,5,1,6,6,0,1,0,0,5,6,6,5
+Nikolai Khabibulin,RIC,G,53,8,5,5,2,4,5,0,1,0,0,5,5,4,5
+Ty Conklin,RIC,G,1,5,3,3,0,4,4,0,1,0,0,3,4,4,3
+Josh Harding,SAG,G,29,6,5,4,0,6,6,0,0,0,0,5,6,6,5
+Curtis Joseph,SAG,G,30,6,4,3,4,4,3,0,0,0,0,4,4,5,5
+Niklas Backstrom,SOV,G,31,7,5,4,0,5,5,0,1,0,0,4,5,5,4
+Antero Niittymaki,SOV,G,30,9,4,4,1,3,4,0,1,0,0,4,4,4,4
+Miikka Kiprusoff,SHS,G,30,6,5,5,3,4,5,0,0,0,0,5,5,5,5
+Jason LaBarbera,SHS,G,1,11,3,3,0,3,3,0,1,0,0,3,4,4,3
+Jean-Sebastien Giguere,SVF,G,30,7,5,5,4,5,5,0,1,0,0,5,5,5,6
+Antti Niemi,SVF,G,1,9,5,4,0,2,2,0,1,0,0,4,3,3,4
+Martin Biron,SUM,G,35,4,4,3,4,4,4,0,1,0,0,4,5,5,5
+Corey Crawford,SUM,G,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Cam Ward,SUN,G,30,5,5,5,3,4,4,0,0,0,0,5,5,6,5
+Al Montoya,SUN,G,50,6,3,4,0,2,0,0,1,0,0,3,2,2,3
+Pekka Rinne,TAI,G,20,8,5,3,1,5,5,0,1,0,0,5,5,5,5
+Chris Osgood,TAI,G,30,5,4,4,3,4,4,0,0,0,0,5,4,5,5
+Marty Turco,TEG,G,35,5,4,4,5,3,3,0,1,0,0,5,5,5,5
+Peter Budaj,TEG,G,31,7,5,3,1,2,3,0,1,0,0,4,3,3,4
+Brian Boucher,TBP,G,41,7,5,4,3,3,4,0,1,0,0,5,5,5,4
+Jonas Hiller,TBP,G,31,5,4,4,3,4,4,0,0,0,0,4,4,4,4
+Martin Brodeur,VHV,G,33,9,5,4,4,6,5,0,0,0,0,5,5,5,5
+Thomas Greiss,VHV,G,1,7,2,3,3,2,2,0,0,0,0,2,2,2,2
+Tomas Vokoun,WDY,G,1,6,5,4,1,4,6,0,0,0,0,5,6,6,5
+Manny Legace,WDY,G,40,8,3,3,0,1,2,0,1,0,0,2,3,3,2
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,,,,,
