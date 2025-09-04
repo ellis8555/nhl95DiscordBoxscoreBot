@@ -793,6 +793,7 @@ async function processQueue (){
         const { status, image, errorMessage } = await generateBoxscore;
         if(status === "success") {
           const imageBuffer = Buffer.from(image);
+          // games id to be used as the boxscore images file name
           const gamesUniqueId = romData.data.otherGameStats.uniqueGameId
           const attachment = new AttachmentBuilder(imageBuffer, { name: `${gamesUniqueId}.png` });
             if(q_sendResponseToOutputchannel) {
