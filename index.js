@@ -660,7 +660,10 @@ async function processQueue (){
         if(status === "success") {
           const imageBuffer = Buffer.from(image);
           const gamesUniqueId = romData.data.otherGameStats.uniqueGameId
-          const attachment = new AttachmentBuilder(imageBuffer, { name: `${gamesUniqueId}.png` });
+          const seasonNumber = gamesUniqueId.slice(0,2)
+          const matchup = gamesUniqueId.slice(2,9)
+          const imageFileName = seasonNumber + "/" + matchup
+          const attachment = new AttachmentBuilder(imageBuffer, { name: `${imageFileName}.png` });
             if(sendResponseToOutputchannel) {
               await client.channels.cache.get(boxscoreOutputChannelId).send({ files: [attachment] });
             } else {
@@ -795,7 +798,10 @@ async function processQueue (){
           const imageBuffer = Buffer.from(image);
           // games id to be used as the boxscore images file name
           const gamesUniqueId = romData.data.otherGameStats.uniqueGameId
-          const attachment = new AttachmentBuilder(imageBuffer, { name: `${gamesUniqueId}.png` });
+          const seasonNumber = gamesUniqueId.slice(0,2)
+          const matchup = gamesUniqueId.slice(2,9)
+          const imageFileName = seasonNumber + "/" + matchup
+          const attachment = new AttachmentBuilder(imageBuffer, { name: `${imageFileName}.png` });
             if(q_sendResponseToOutputchannel) {
               await client.channels.cache.get(q_boxscoreOutputChannelId).send({ files: [attachment] });
             } else {
