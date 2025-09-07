@@ -187,6 +187,7 @@ let adminsListeningChannelId // channel that listens for admin commands
 let saveStatesChannelId // get the channel the bot will be listening in.
 let boxscoreOutputChannelId // the channel that the boxscores will be sent to
 let seasonGamesChannelId
+let boxscoreImageGameId // puss request for ticklebots
 
 let q_boxscoreOutputChannelId
 let q_adminsListeningChannelId
@@ -617,11 +618,12 @@ async function processQueue (){
           romData
         }
         try { // append to google sheets try block
-          const googleSheetsResponse = await appendGoogleSheetsData(sheetsArgsObj);
+          const googleSheetsResponse = await appendGoogleSheetsData(sheetsArgsObj)
           // if error returned throw error
           if(googleSheetsResponse && googleSheetsResponse.status === 'error'){
             throw new Error(googleSheetsResponse.message)
           }
+          boxscoreImageGameId = googleSheetsResponse
         } catch (error) {
           googleSheetApiErrors.push(fileName)
           throw new Error(`\`${fileName}\` ${error.message}`)
@@ -661,8 +663,7 @@ async function processQueue (){
           const imageBuffer = Buffer.from(image);
           const gamesUniqueId = romData.data.otherGameStats.uniqueGameId
           const seasonNumber = gamesUniqueId.slice(0,2)
-          const matchup = gamesUniqueId.slice(2,9)
-          const imageFileName = seasonNumber + "/" + matchup
+          const imageFileName = `${seasonNumber}-${boxscoreImageGameId ?? 'test'}`
           const attachment = new AttachmentBuilder(imageBuffer, { name: `${imageFileName}.png` });
             if(sendResponseToOutputchannel) {
               await client.channels.cache.get(boxscoreOutputChannelId).send({ files: [attachment] });
@@ -775,6 +776,7 @@ async function processQueue (){
           if(googleSheetsResponse && googleSheetsResponse.status === 'error'){
             throw new Error(googleSheetsResponse.message)
           }
+          boxscoreImageGameId = googleSheetsResponse
         } catch (error) {
           q_googleSheetApiErrors.push(fileName)
           throw new Error(`\`${fileName}\` ${error.message}`)
@@ -799,8 +801,7 @@ async function processQueue (){
           // games id to be used as the boxscore images file name
           const gamesUniqueId = romData.data.otherGameStats.uniqueGameId
           const seasonNumber = gamesUniqueId.slice(0,2)
-          const matchup = gamesUniqueId.slice(2,9)
-          const imageFileName = seasonNumber + "/" + matchup
+          const imageFileName = `${seasonNumber}-${boxscoreImageGameId ?? 'test'}`
           const attachment = new AttachmentBuilder(imageBuffer, { name: `${imageFileName}.png` });
             if(q_sendResponseToOutputchannel) {
               await client.channels.cache.get(q_boxscoreOutputChannelId).send({ files: [attachment] });
