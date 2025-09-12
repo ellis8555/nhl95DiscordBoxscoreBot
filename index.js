@@ -47,6 +47,7 @@ let pauseWLeague = bot_consts.pauseWLeague
 let w_games_vs_opponents = bot_consts.w_games_vs_opponents
 let excludeCoaches = bot_consts.excludeCoaches
 let remainingGames = bot_consts.remainingGames
+let isPlayoffs = bot_consts.isPlayoffs
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -63,6 +64,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   w_games_vs_opponents = updatedConsts.w_games_vs_opponents
   excludeCoaches = updatedConsts.excludeCoaches
   remainingGames = updatedConsts.remainingGames
+  isPlayoffs = updatedConsts.isPlayoffs
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
@@ -99,6 +101,7 @@ let q_adminIdObject = q_bot_consts.editPermission
 let q_adminCommands = q_bot_consts.adminCommands
 let q_pauseQLeague = q_bot_consts.pauseQLeague
 let q_excludeCoaches = q_bot_consts.excludeCoaches
+let q_isPlayoffs = q_bot_consts.q_isPlayoffs
 
 // update variables that come from admin within discord channel
 q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) => {
@@ -113,6 +116,7 @@ q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) =>
   q_adminCommands = updatedConsts.adminCommands
   q_pauseQLeague = updatedConsts.pauseQLeague
   q_excludeCoaches = updatedConsts.excludeCoaches
+  q_isPlayoffs = updatedConsts.q_isPlayoffs
   // updates channel in which the boxscores will be posted
   const q_guild = client.guilds.cache.find(guild => guild.name === q_server);
   if(q_guild){
@@ -1046,7 +1050,7 @@ client.on(Events.MessageCreate, async message => {
       } else {
         seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
       }
-      if(seasonGamesPattern.test(message.content)){
+      if(seasonGamesPattern.test(message.content) && !isPlayoffs){
           const userMessage = message.content
           const isMentionOpponentRequest = true
           gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, messageId, userMessage, seasonGamesChannelId})
@@ -1179,7 +1183,7 @@ client.on(Events.MessageCreate, async message => {
     if(channelId === q_seasonGamesChannelId){
       // @ mention remaining opponents
       const seasonGamesPattern = /^[Ss]eason [Gg]ames( ([1-9]|1[0-2])([0-5][0-9])?[APap][Mm])?$/
-      if(seasonGamesPattern.test(message.content)){
+      if(seasonGamesPattern.test(message.content) && !q_isPlayoffs){
           const coachId = message.author.id
           const userMessage = message.content
           const isMentionOpponentRequest = true
