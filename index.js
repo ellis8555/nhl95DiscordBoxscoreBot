@@ -65,6 +65,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   excludeCoaches = updatedConsts.excludeCoaches
   remainingGames = updatedConsts.remainingGames
   isPlayoffs = updatedConsts.isPlayoffs
+  isPlayoffs = updatedConsts.isPlayoffs
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
@@ -116,6 +117,7 @@ q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) =>
   q_adminCommands = updatedConsts.adminCommands
   q_pauseQLeague = updatedConsts.pauseQLeague
   q_excludeCoaches = updatedConsts.excludeCoaches
+  q_isPlayoffs = updatedConsts.q_isPlayoffs
   q_isPlayoffs = updatedConsts.q_isPlayoffs
   // updates channel in which the boxscores will be posted
   const q_guild = client.guilds.cache.find(guild => guild.name === q_server);
