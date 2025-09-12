@@ -1062,7 +1062,7 @@ client.on(Events.MessageCreate, async message => {
       }
       // display remaining opponent logos
       const teamPattern = /^[A-Z]{3}$/
-      if(teamPattern.test(message.content)){
+      if(teamPattern.test(message.content) && !isPlayoffs){
           const isOpponentRequest = true
           const teamAbbreviation = message.content
           gameStateQueue.push({isOpponentRequest, server: getServerName, client, teamAbbreviation, message, seasonGamesChannelId})
@@ -1196,7 +1196,7 @@ client.on(Events.MessageCreate, async message => {
       }
       // display remaining opponent logos
       const teamPattern = /^[A-Z]{3}$/
-      if(teamPattern.test(message.content)){
+      if(teamPattern.test(message.content) && !q_isPlayoffs){
           const isOpponentRequest = true
           const teamAbbreviation = message.content
           gameStateQueue.push({isOpponentRequest, server: getServerName, client, teamAbbreviation, q_seasonGamesChannelId})
