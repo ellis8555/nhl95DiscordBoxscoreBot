@@ -306,7 +306,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       if(p_submitScoresListeningChannel){
         p_submitScoresChannelId = p_submitScoresListeningChannel.id;
       } else {
-        console.log(`Channel q_saveStatesListeningChannel not found.`)
+        console.log(`Channel p_saveStatesListeningChannel not found.`)
       }
 
       // channel for outputting remaining opponents
@@ -314,7 +314,7 @@ client.once(Events.ClientReady, () => { // obtain the channel id for the channel
       if(p_remaining_opponents_output_channel){
         p_seasonGamesChannelId = p_remaining_opponents_output_channel.id;
       } else {
-        console.log(`Channel q_seasonGamesChannelId' not found.`)
+        console.log(`Channel p_seasonGamesChannelId' not found.`)
       }
     } else {
       console.log(`${pureServer} can't be found.`)
@@ -951,6 +951,7 @@ client.on(Events.MessageCreate, async message => {
   
   // set vars for Q league
   if(getServerName === q_server){
+    return
     spreadsheetId = q_spreadsheetId
   }
 
