@@ -69,13 +69,13 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
-    boxscoreOutputChannelId = guild.channels.cache.find(channel => channel.name === boxscoreOutputChannelName).id;
+    boxscoreOutputChannelId = guild.channels.cache.find(channel => channel.name === boxscoreOutputChannelName)?.id || null
     // admins commands channel id
-    adminsListeningChannelId = guild.channels.cache.find(channel => channel.name === adminsListeningChannelName).id
+    adminsListeningChannelId = guild.channels.cache.find(channel => channel.name === adminsListeningChannelName)?.id || null
     // save states listening channels id
-    saveStatesChannelId = guild.channels.cache.find(channel => channel.name === saveStatesListeningChannelName).id;
+    saveStatesChannelId = guild.channels.cache.find(channel => channel.name === saveStatesListeningChannelName)?.id || null
       // season games listening channels id
-    seasonGamesChannelId = guild.channels.cache.find(channel => channel.name === seasonGamesChannel).id;
+    seasonGamesChannelId = guild.channels.cache.find(channel => channel.name === seasonGamesChannel)?.id || null
   }
 })
 
@@ -121,13 +121,13 @@ q_bot_consts_update_emitter.on("q_bot_consts_update_emitter", (updatedConsts) =>
   // updates channel in which the boxscores will be posted
   const q_guild = client.guilds.cache.find(guild => guild.name === q_server);
   if(q_guild){
-    q_boxscoreOutputChannelId = q_guild.channels.cache.find(channel => channel.name === q_boxscoreOutputChannelName).id;
+    q_boxscoreOutputChannelId = q_guild.channels.cache.find(channel => channel.name === q_boxscoreOutputChannelName)?.id || null
     // admins commands channel id
-    q_adminsListeningChannelId = q_guild.channels.cache.find(channel => channel.name === q_adminsListeningChannelName).id
+    q_adminsListeningChannelId = q_guild.channels.cache.find(channel => channel.name === q_adminsListeningChannelName)?.id || null
     // save states listening channels id
-    q_saveStatesChannelId = q_guild.channels.cache.find(channel => channel.name === q_saveStatesListeningChannelName).id;
+    q_saveStatesChannelId = q_guild.channels.cache.find(channel => channel.name === q_saveStatesListeningChannelName)?.id || null
     // season games listening channels id
-    q_seasonGamesChannelId = q_guild.channels.cache.find(channel => channel.name === q_seasonGamesChannel).id;
+    q_seasonGamesChannelId = q_guild.channels.cache.find(channel => channel.name === q_seasonGamesChannel)?.id || null
   }
 })
 
@@ -159,9 +159,9 @@ p_bot_consts_update_emitter.on("p_bot_consts_update_emitter", (updatedConsts) =>
   const p_guild = client.guilds.cache.find(guild => guild.name === pureServer);
   if(p_guild){
     // season games listening channels id
-    p_seasonGamesChannelId = p_guild.channels.cache.find(channel => channel.name === p_seasonGamesChannel).id;
+    p_seasonGamesChannelId = p_guild.channels.cache.find(channel => channel.name === p_seasonGamesChannel)?.id || null
     // submit scores listening channel id
-    p_submitScoresChannelId = p_guild.channels.cache.find(channel => channel.name === p_submitScoresChannel).id;
+    p_submitScoresChannelId = p_guild.channels.cache.find(channel => channel.name === p_submitScoresChannel)?.id || null
   }
 })
 
