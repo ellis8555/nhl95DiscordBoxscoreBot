@@ -951,7 +951,6 @@ client.on(Events.MessageCreate, async message => {
   
   // set vars for Q league
   if(getServerName === q_server){
-    return
     spreadsheetId = q_spreadsheetId
   }
 
@@ -1143,7 +1142,7 @@ client.on(Events.MessageCreate, async message => {
   ////////////////////////////////////
 
   if(getServerName === q_server){
-
+    return
     // check for Q league admin commands
     if(channelId === q_adminsListeningChannelId){
       if(message.author.id === q_adminIdObject['ultramagnus'] || message.author.id === q_adminIdObject['ellis']){
