@@ -1,12 +1,12 @@
 {
   "adminsListeningChannel": "admin-boxscores",
-  "saveStatesListeningChannel": "2009-season-saves",
-  "boxscoreOutputChannel": "2009-season-boxscores",
+  "saveStatesListeningChannel": "2011-saves",
+  "boxscoreOutputChannel": "2011-boxscores",
   "seasonGamesChannel": "season-games",
   "leagueName": "w",
-  "seasonNum": "14",
+  "seasonNum": "16",
   "w_games_vs_opponents": 2,
-  "saveStatePattern": "^W14.*\\.state\\d{1,3}$",
+  "saveStatePattern": "^W16.*\\.state\\d{1,3}$",
   "isPlayoffs": false,
   "pauseWLeague": false,
   "allowDuplicates": true,
@@ -46,18 +46,15 @@
     }
   },
   "teamCodes": [
-    "AHC",
     "AUT",
+    "BAR",
     "BAY",
-    "BBM",
     "BFC",
-    "ETI",
     "HAM",
     "HIG",
-    "HOT",
     "ING",
-    "KVK",
-    "KOL",
+    "ITA",
+    "KAR",
     "MHA",
     "MHT",
     "MGG",
@@ -66,12 +63,11 @@
     "PIT",
     "PRO",
     "RIC",
+    "ROC",
     "SAG",
-    "SOV",
     "SHS",
     "SVF",
     "SUM",
-    "SUN",
     "TAI",
     "TEG",
     "TBP",
@@ -144,14 +140,6 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "315151409190535168",
-      "user": "Ceydan",
-      "team": "HOT",
-      "emojiId": "990611697343541318",
-      "emojiName": "HOT",
-      "skipBeingMentioned": false
-    },
-    {
       "id": "628241421781958684",
       "user": "Chalky",
       "team": "SVF",
@@ -173,14 +161,6 @@
       "team": "SUM",
       "emojiId": "878394564468170812",
       "emojiName": "SUM",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "378336323875897344",
-      "user": "niuhuskie224",
-      "team": "SOV",
-      "emojiId": "943899301971628062",
-      "emojiName": "SOV",
       "skipBeingMentioned": false
     },
     {
@@ -242,9 +222,9 @@
     {
       "id": "918583918838546443",
       "user": "MattyA",
-      "team": "KVK",
+      "team": "KAR",
       "emojiId": "1134590069261471755",
-      "emojiName": "KVK",
+      "emojiName": "KAR",
       "skipBeingMentioned": false
     },
     {
@@ -288,14 +268,6 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "691754174165155941",
-      "user": "MCline",
-      "team": "SUN",
-      "emojiId": "878395106892341288",
-      "emojiName": "SUN",
-      "skipBeingMentioned": false
-    },
-    {
       "id": "204681486484373505",
       "user": "NewJerseyKiller",
       "team": "WDY",
@@ -312,27 +284,31 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "873331397782294569",
-      "user": "LHX",
-      "team": "ETI",
-      "emojiId": "1370384678896533585",
-      "emojiName": "ETI",
+      "id": "1042251245609549824",
+      "user": "Marylandmike",
+      "team": "SHS",
+      "emojiId": "1249551823161786388",
+      "emojiName": "SHS",
       "skipBeingMentioned": false
     },
     {
-      "id": "1182332709532610640",
-      "user": "Heinze",
-      "team": "KOL",
-      "emojiId": "1349766216285425744",
-      "emojiName": "KOL",
+      "id": "882284979441258567",
+      "user": "Dasri",
+      "team": "BAR",
+      "emojiId": "1447685382861885641",
+      "emojiName": "BAR",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "291228680825470978",
+      "user": "The Villain CTJ",
+      "team": "ROC",
+      "emojiId": "1447685363618549820",
+      "emojiName": "ROC",
       "skipBeingMentioned": false
     }
   ],
   "excludeCoaches": [
-    "KVK",
-    "KOL",
-    "AHC",
-    "BBM"
   ],
   "adminCommands": [
     "PAUSE",
