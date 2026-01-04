@@ -347,12 +347,12 @@ async function processQueue (){
     if(server === w_server){
       const { seasonGamesChannelId, messageId } = task
       // get w constants
-      const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
+      const wFilePath = path.join(__dirname, "public", "json", "bot_constants.json")
       const readWFile = fs.readFileSync(wFilePath, "utf-8")
       const w_bot_consts = JSON.parse(readWFile);
 
       // get gamesplayed data from unique id's file
-      const wUniqueIdsFilePath = path.join(process.cwd(), "public", "wUniqueIds.csv")
+      const wUniqueIdsFilePath = path.join(__dirname, "public", "wUniqueIds.csv")
       const uniqueIdsFile = fs.readFileSync(wUniqueIdsFilePath, "utf-8");
       
       const { teamCodes, coaches } = w_bot_consts;
@@ -362,12 +362,12 @@ async function processQueue (){
     if(server === q_server){
       const { q_seasonGamesChannelId } = task
       // get q constants
-      const qFilePath = path.join(process.cwd(), "public", "json", "q_bot_constants.json")
+      const qFilePath = path.join(__dirname, "public", "json", "q_bot_constants.json")
       const readQFile = fs.readFileSync(qFilePath, "utf-8")
       const q_bot_consts = JSON.parse(readQFile);
 
       // get gamesplayed data from unique id's file
-      const qUniqueIdsFilePath = path.join(process.cwd(), "public", "qUniqueIds.csv")
+      const qUniqueIdsFilePath = path.join(__dirname, "public", "qUniqueIds.csv")
       const uniqueIdsFile = fs.readFileSync(qUniqueIdsFilePath, "utf-8");
       
       const { teamCodes, coaches } = q_bot_consts;
@@ -378,12 +378,12 @@ async function processQueue (){
     if(server === pureServer){
       const { p_seasonGamesChannelId } = task
       // get q constants
-      const pFilePath = path.join(process.cwd(), "public", "json", "pure_bot_constants.json")
+      const pFilePath = path.join(__dirname, "public", "json", "pure_bot_constants.json")
       const readPFile = fs.readFileSync(pFilePath, "utf-8")
       const p_bot_consts = JSON.parse(readPFile)
       
       // get gamesplayed data from unique id's file
-      const p_uniqueIdsFilePath = path.join(process.cwd(), "public", "pUniqueIds.csv")
+      const p_uniqueIdsFilePath = path.join(__dirname, "public", "pUniqueIds.csv")
       const uniqueIdsFile = fs.readFileSync(p_uniqueIdsFilePath, "utf-8")
 
       const { teamCodesList: teamCodes, coaches } = p_bot_consts
@@ -400,7 +400,7 @@ async function processQueue (){
 
     if(server === w_server){
       // set w league players mention status
-      const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
+      const wFilePath = path.join(__dirname, "public", "json", "bot_constants.json")
       const readWFile = fs.readFileSync(wFilePath, "utf-8")
       const w_bot_consts = JSON.parse(readWFile);
       const { coaches: w_coaches } = w_bot_consts;
@@ -415,7 +415,7 @@ async function processQueue (){
         }
       }
       // set q league players mention status
-      const qFilePath = path.join(process.cwd(), "public", "json", "q_bot_constants.json")
+      const qFilePath = path.join(__dirname, "public", "json", "q_bot_constants.json")
       const readQFile = fs.readFileSync(qFilePath, "utf-8")
       const q_bot_consts = JSON.parse(readQFile);
       const { coaches: q_coaches } = q_bot_consts;
@@ -430,7 +430,7 @@ async function processQueue (){
         }
       }
       // set pure league players mention status
-      const pFilePath = path.join(process.cwd(), "public", "json", "pure_bot_constants.json")
+      const pFilePath = path.join(__dirname, "public", "json", "pure_bot_constants.json")
       const readPFile = fs.readFileSync(pFilePath, "utf-8")
       const p_bot_consts = JSON.parse(readPFile);
       const { coaches: p_coaches } = p_bot_consts;
@@ -474,12 +474,12 @@ async function processQueue (){
     if(server === w_server){
       const { seasonGamesChannelId } = task
       // get q constants
-      const wFilePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
+      const wFilePath = path.join(__dirname, "public", "json", "bot_constants.json")
       const readWFile = fs.readFileSync(wFilePath, "utf-8")
       const bot_consts = JSON.parse(readWFile);
 
       // get gamesplayed data from unique id's file
-      const wUniqueIdsFilePath = path.join(process.cwd(), "public", "wUniqueIds.csv")
+      const wUniqueIdsFilePath = path.join(__dirname, "public", "wUniqueIds.csv")
       const uniqueIdsFile = fs.readFileSync(wUniqueIdsFilePath, "utf-8");
       
       const { teamCodes, coaches } = bot_consts;
@@ -489,12 +489,12 @@ async function processQueue (){
     if(server === q_server){
       const { q_seasonGamesChannelId } = task
       // get q constants
-      const qFilePath = path.join(process.cwd(), "public", "json", "q_bot_constants.json")
+      const qFilePath = path.join(__dirname, "public", "json", "q_bot_constants.json")
       const readQFile = fs.readFileSync(qFilePath, "utf-8")
       const q_bot_consts = JSON.parse(readQFile);
 
       // get gamesplayed data from unique id's file
-      const qUniqueIdsFilePath = path.join(process.cwd(), "public", "qUniqueIds.csv")
+      const qUniqueIdsFilePath = path.join(__dirname, "public", "qUniqueIds.csv")
       const uniqueIdsFile = fs.readFileSync(qUniqueIdsFilePath, "utf-8");
       
       const { teamCodes, coaches } = q_bot_consts;
@@ -643,7 +643,7 @@ async function processQueue (){
           fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`) 
           // update array that contains remaining matchups when season coming to an end
           // only do this if the array contains season ending matchups count < 20 or so
-          const filePath = path.join(process.cwd(), "public", "json", "bot_constants.json")
+          const filePath = path.join(__dirname, "public", "json", "bot_constants.json")
           const file = fs.readFileSync(filePath, "utf-8")
           const wConstsData = JSON.parse(file)
           const { remainingGames } = wConstsData
