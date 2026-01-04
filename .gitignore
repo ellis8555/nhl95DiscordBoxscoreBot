@@ -4,3 +4,4 @@ s12UniqueIds.csv
 s12UniqueIds-TEST.csv
 serviceKeys.json
 notes.txt
+*.pem
