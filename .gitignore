@@ -1,7 +1,6 @@
 node_modules/
 *.env
-s12UniqueIds.csv
-s12UniqueIds-TEST.csv
+*UniqueIds.csv
 serviceKeys.json
 notes.txt
 *.pem
