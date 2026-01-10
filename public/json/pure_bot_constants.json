@@ -25,7 +25,7 @@
       "streak_col": "I"
     },
     "bsbSettings": {
-      "bsbSheetName": "BSB Settings",
+      "bsbSheetName": "AdamSetup",
       "channelsRange": "A5:B9",
       "coachesStartRange": "A13",
       "coachesEndColumn": "D",
