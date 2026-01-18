@@ -667,13 +667,19 @@ async function processQueue (){
         if(status === "success") {
           const imageBuffer = Buffer.from(image);
           const gamesUniqueId = romData.data.otherGameStats.uniqueGameId
+          const homeTeam = romData.data.otherGameStats.homeTeam
+          const awayTeam = romData.data.otherGameStats.awayTeam
           const seasonNumber = gamesUniqueId.slice(0,2)
           const imageFileName = `${seasonNumber}-${boxscoreImageGameId ?? 'test'}`
           const attachment = new AttachmentBuilder(imageBuffer, { name: `${imageFileName}.png` });
+          // content of boxscore being sent
+          const messagePayload = {
+            files: [attachment]
+          }
             if(sendResponseToOutputchannel) {
-              await client.channels.cache.get(boxscoreOutputChannelId).send({ files: [attachment] });
+              await client.channels.cache.get(boxscoreOutputChannelId).send(messagePayload);
             } else {
-              await task.message.channel.send({ files: [attachment] });
+              await task.message.channel.send(messagePayload);
             }
           }
           if(status === "error") {
