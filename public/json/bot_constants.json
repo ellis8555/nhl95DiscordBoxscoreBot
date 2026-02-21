@@ -306,10 +306,17 @@
       "emojiId": "1447685363618549820",
       "emojiName": "ROC",
       "skipBeingMentioned": false
+    },
+    {
+      "id": "373576219129806859",
+      "user": "MarcusVickEBC",
+      "team": "ITA",
+      "emojiId": "1447630715675082804",
+      "emojiName": "ITA",
+      "skipBeingMentioned": false
     }
   ],
-  "excludeCoaches": [
-  ],
+  "excludeCoaches": [],
   "adminCommands": [
     "PAUSE",
     "RESUME",
@@ -337,6 +344,5 @@
     "HELP SET ROM CSV",
     "UPDATE"
   ],
-  "remainingGames": [
-  ]
+  "remainingGames": []
 }
