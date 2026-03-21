@@ -8,6 +8,7 @@ import readOgRomBinaryGameState from './lib/game-state-parsing/read-og-rom-game-
 import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.js"
 import createWorker from "./lib/workers/createWorker.js";
 import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
+import sendGameDataToDatabase from "./lib/database/sendGameDataToDatabase.js";
 import { bot_consts, q_bot_consts, pure_consts, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
@@ -48,6 +49,8 @@ let w_games_vs_opponents = bot_consts.w_games_vs_opponents
 let excludeCoaches = bot_consts.excludeCoaches
 let remainingGames = bot_consts.remainingGames
 let isPlayoffs = bot_consts.isPlayoffs
+let seeds = bot_consts.seeds
+
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -65,7 +68,8 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   excludeCoaches = updatedConsts.excludeCoaches
   remainingGames = updatedConsts.remainingGames
   isPlayoffs = updatedConsts.isPlayoffs
-  isPlayoffs = updatedConsts.isPlayoffs
+  seeds = updatedConsts.seeds
+
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
   if(guild){
@@ -187,7 +191,7 @@ let spreadsheetId
 let w_spreadsheetId
 let q_spreadsheetId
 let uniqueIdsFilePath
-let uniqueGameStateIds
+let uniqueGameStateIds = []
 let adminsListeningChannelId // channel that listens for admin commands
 let saveStatesChannelId // get the channel the bot will be listening in.
 let boxscoreOutputChannelId // the channel that the boxscores will be sent to
@@ -604,15 +608,75 @@ async function processQueue (){
             duplicateGameStateFileNames.push(fileName)
             throw new Error(`Error: \`${fileName}\` appears to be a duplicate.`)
           }
+          // ensure teams that have already played do not play again via forgetting
           if(isHomeAwayDuplicated){
-            duplicateGameStateFileNames.push(fileName)
-            throw new Error(`Error: \`${fileName}\` home/away sequence has previously been submitted.`)
+            if(!isPlayoffs){
+              duplicateGameStateFileNames.push(fileName)
+              throw new Error(`Error: \`${fileName}\` home/away sequence has previously been submitted.`)
+            }
           }
         }
-  
-      // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
+
       const data = romData.data;
       const league = leagueName
+      
+      // script exclusive to playoff series
+
+      /////////////////////////////////
+      // playoff script in development
+      /////////////////////////////////
+        
+      if (isPlayoffs){
+        
+        const homeTeam = romData.data.otherGameStats.homeTeam
+        if (!Object.hasOwn(seeds, homeTeam)){
+            return
+        }      
+  
+        const awayTeam = romData.data.otherGameStats.awayTeam
+        if (!Object.hasOwn(seeds, awayTeam)){
+            return
+        }      
+  
+        const currentGameFileMatchUp = `${awayTeam}/${homeTeam}`
+  
+        uniqueGameStateIds.pop()
+        const matchups = uniqueGameStateIds.filter(entry => entry[3] === "/")
+        // count how many times this matchup has occured
+        const gameSequenceOccurence = matchups.filter(entry => entry === currentGameFileMatchUp).length
+        // checks that not more than 4 games in the same arena can occur
+        if(gameSequenceOccurence > 3){
+          throw new Error(`Error: 4 games of the same sequence have already been submitted\n\`${fileName}\` was not submitted`)
+        }
+        // check if 7 games have been submitted as an 8th state being submitted is not allowed
+        const reverseCurrentGameFileMatchUp = `${homeTeam}/${awayTeam}`
+        const reverseGameSequenceOccurence = matchups.filter(entry => entry === reverseCurrentGameFileMatchUp).length
+        const totalGamesPlayed = gameSequenceOccurence + reverseGameSequenceOccurence
+        if (totalGamesPlayed >= 7){
+          throw new Error(`Error: 7 game states have been submitted\n\`${fileName}\` was not submitted`)
+        }
+      }
+      /////////////////////////////////
+      // end playoff development script
+      /////////////////////////////////
+
+      // send game data to Puss' database
+      if(bot_consts.writeToDatabase){
+        try { 
+          const gameDataForDB = {
+            league,
+            isPlayoffs,
+            coaches,
+            romData: data,
+            seeds
+          }
+          await sendGameDataToDatabase(gameDataForDB)
+        } catch (error) {
+          throw new Error(error.message)
+        }
+      }
+  
+      // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
       const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname, league });
   
       if(bot_consts.writeToGoogleSheets){
@@ -641,20 +705,22 @@ async function processQueue (){
           uniqueGameStateIds.push(gamesUniqueId); // Update the in-file array
           uniqueGameStateIds.push(matchup); // Update the in-file array
           fs.appendFileSync(uniqueIdsFilePath, `${gamesUniqueId},${matchup},`) 
-          // update array that contains remaining matchups when season coming to an end
-          // only do this if the array contains season ending matchups count < 20 or so
-          const filePath = path.join(__dirname, "public", "json", "bot_constants.json")
-          const file = fs.readFileSync(filePath, "utf-8")
-          const wConstsData = JSON.parse(file)
-          const { remainingGames } = wConstsData
-          if(remainingGames.length > 0){
-            const homeTeam = romData.data.otherGameStats.homeTeam
-            const awayTeam = romData.data.otherGameStats.awayTeam
-            const matchup = `${homeTeam}/${awayTeam}`
-            const getMatchupFromRemainingGames = remainingGames.indexOf(matchup)
-            if(getMatchupFromRemainingGames !== -1){
-              remainingGames.splice(getMatchupFromRemainingGames, 1)
-              fs.writeFileSync(filePath, JSON.stringify(wConstsData, null, 2), "utf-8")
+          if(!isPlayoffs){
+            // update array that contains remaining matchups when season coming to an end
+            // only do this if the array contains season ending matchups count < 20 or so
+            const filePath = path.join(__dirname, "public", "json", "bot_constants.json")
+            const file = fs.readFileSync(filePath, "utf-8")
+            const wConstsData = JSON.parse(file)
+            const { remainingGames } = wConstsData
+            if(remainingGames.length > 0){
+              const homeTeam = romData.data.otherGameStats.homeTeam
+              const awayTeam = romData.data.otherGameStats.awayTeam
+              const matchup = `${homeTeam}/${awayTeam}`
+              const getMatchupFromRemainingGames = remainingGames.indexOf(matchup)
+              if(getMatchupFromRemainingGames !== -1){
+                remainingGames.splice(getMatchupFromRemainingGames, 1)
+                fs.writeFileSync(filePath, JSON.stringify(wConstsData, null, 2), "utf-8")
+              }
             }
           }
         } catch (error) {
@@ -685,7 +751,7 @@ async function processQueue (){
           if(status === "error") {
             throw new Error(errorMessage);
           }
-        }
+        }        
   
       const sentCompleteMessage = await message.channel.send(`Complete: \`${name}\``)
       userProcessingMessages.push(sentCompleteMessage.id)
