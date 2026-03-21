@@ -4,3 +4,4 @@ node_modules/
 serviceKeys.json
 notes.txt
 *.pem
+*standings.json
