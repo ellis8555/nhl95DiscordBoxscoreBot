@@ -9,7 +9,8 @@ import appendGoogleSheetsData from "./lib/google-sheets/appendGoogleSheetsData.j
 import createWorker from "./lib/workers/createWorker.js";
 import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
 import sendGameDataToDatabase from "./lib/database/sendGameDataToDatabase.js";
-import { bot_consts, q_bot_consts, pure_consts, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter } from "./lib/constants/consts.js";
+import updateStandings from "./lib/standings/updateStandings.js";
+import { bot_consts, q_bot_consts, pure_consts, w_standings, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter, w_standings_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
 import setPureSettings from "./lib/pureLeague/setPureSettings.js"
@@ -50,7 +51,8 @@ let excludeCoaches = bot_consts.excludeCoaches
 let remainingGames = bot_consts.remainingGames
 let isPlayoffs = bot_consts.isPlayoffs
 let seeds = bot_consts.seeds
-
+let updateLeagueStandings = bot_consts.updateStandings
+let standings = w_standings
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -69,6 +71,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   remainingGames = updatedConsts.remainingGames
   isPlayoffs = updatedConsts.isPlayoffs
   seeds = updatedConsts.seeds
+  updateLeagueStandings = updatedConsts.updateStandings
 
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
@@ -81,6 +84,12 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
       // season games listening channels id
     seasonGamesChannelId = guild.channels.cache.find(channel => channel.name === seasonGamesChannel)?.id || null
   }
+})
+
+// w league standings listening event
+w_standings_update_emitter.on("w_standings_update_emitter", (updatedConsts) => {
+  standings = JSON.parse(updatedConsts)
+  console.log(standings)
 })
 
 ////////////////
@@ -751,7 +760,16 @@ async function processQueue (){
           if(status === "error") {
             throw new Error(errorMessage);
           }
-        }        
+        }      
+        
+      // create and or update league standings in standings.json file(s)
+      if(updateLeagueStandings && !isPlayoffs){
+        try {
+          updateStandings({data})
+        } catch (error) {
+          throw new Error("Error in updating league JSON file standings. Tickleweb and sheets were updated successfully")
+        }
+      }        
   
       const sentCompleteMessage = await message.channel.send(`Complete: \`${name}\``)
       userProcessingMessages.push(sentCompleteMessage.id)
