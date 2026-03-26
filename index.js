@@ -10,6 +10,7 @@ import createWorker from "./lib/workers/createWorker.js";
 import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
 import sendGameDataToDatabase from "./lib/database/sendGameDataToDatabase.js";
 import updateStandings from "./lib/standings/updateStandings.js";
+import displayStandings from "./lib/index/displayStandings.js";
 import { bot_consts, q_bot_consts, pure_consts, w_standings, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter, w_standings_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
@@ -89,7 +90,6 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
 // w league standings listening event
 w_standings_update_emitter.on("w_standings_update_emitter", (updatedConsts) => {
   standings = JSON.parse(updatedConsts)
-  console.log(standings)
 })
 
 ////////////////
@@ -543,6 +543,18 @@ async function processQueue (){
     }
     processing = false;
     return;
+  }
+
+  // show standings in channel
+  if(task.isShowStandingsRequest){
+    const { server, client, messageContent } = task;
+    if(server === w_server){
+      const { seasonGamesChannelId } = task
+      const leagueName = "W"
+      await displayStandings(seasonGamesChannelId, {client, leagueName, messageContent, standings, coaches})
+    }
+    processing = false;
+    return;    
   }
 
   // process incoming tasks from pure league
@@ -1187,6 +1199,18 @@ client.on(Events.MessageCreate, async message => {
         }
         return
       }
+    }
+
+    // display standings in discord channel
+    const displayStandingsPattern = /^(STANDINGS%?|BUBBLE)$/
+    if(displayStandingsPattern.test(message.content) && !isPlayoffs){
+        const isShowStandingsRequest = true
+        const messageContent = message.content
+        gameStateQueue.push({isShowStandingsRequest, server: getServerName, client, messageContent, seasonGamesChannelId})
+        if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+          processQueue()
+        }
+        return      
     }
 
     // begin processing W league saved states
