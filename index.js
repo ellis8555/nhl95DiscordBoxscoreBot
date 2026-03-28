@@ -54,6 +54,7 @@ let isPlayoffs = bot_consts.isPlayoffs
 let seeds = bot_consts.seeds
 let updateLeagueStandings = bot_consts.updateStandings
 let standings = w_standings
+let writeToDatabase = bot_consts.writeToDatabase
 
 // update variables that come from admin within discord channel
 bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
@@ -73,6 +74,7 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
   isPlayoffs = updatedConsts.isPlayoffs
   seeds = updatedConsts.seeds
   updateLeagueStandings = updatedConsts.updateStandings
+  writeToDatabase = updatedConsts.writeToDatabase
 
   // updates channel in which the boxscores will be posted
   const guild = client.guilds.cache.find(guild => guild.name === server);
@@ -682,7 +684,8 @@ async function processQueue (){
       /////////////////////////////////
 
       // send game data to Puss' database
-      if(bot_consts.writeToDatabase){
+
+      if(writeToDatabase){
         try { 
           const gameDataForDB = {
             league,
@@ -696,7 +699,6 @@ async function processQueue (){
           throw new Error(error.message)
         }
       }
-  
       // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
       const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname, league });
   
