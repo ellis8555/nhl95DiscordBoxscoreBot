@@ -696,9 +696,17 @@ async function processQueue (){
           }
           await sendGameDataToDatabase(gameDataForDB)
         } catch (error) {
-          throw new Error(error.message)
+          const logFilePath = path.join(__dirname, "public", "logs", "tickle.log")
+          const logEntry = `
+          [${new Date().toISOString()}]
+          Stack: ${error.stack}
+          `
+          fs.writeFileSync(logFilePath, logEntry, {
+            flag: "a"
+          })
         }
       }
+
       // Handle file processing (e.g., generating boxscore, appending data to Google Sheets)
       const generateBoxscore = createWorker('./lib/workers/scripts/createBoxscore.js', { data, __dirname, league });
   
