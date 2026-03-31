@@ -1209,19 +1209,20 @@ client.on(Events.MessageCreate, async message => {
         }
         return
       }
+      
+      // display standings in discord channel
+      const displayStandingsPattern = /^(STANDINGS%?|BUBBLE)$/
+      if(displayStandingsPattern.test(message.content) && !isPlayoffs){
+          const isShowStandingsRequest = true
+          const messageContent = message.content
+          gameStateQueue.push({isShowStandingsRequest, server: getServerName, client, messageContent, seasonGamesChannelId})
+          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
+            processQueue()
+          }
+          return      
+      }
     }
 
-    // display standings in discord channel
-    const displayStandingsPattern = /^(STANDINGS%?|BUBBLE)$/
-    if(displayStandingsPattern.test(message.content) && !isPlayoffs){
-        const isShowStandingsRequest = true
-        const messageContent = message.content
-        gameStateQueue.push({isShowStandingsRequest, server: getServerName, client, messageContent, seasonGamesChannelId})
-        if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
-          processQueue()
-        }
-        return      
-    }
 
     // begin processing W league saved states
     if (channelId !== saveStatesChannelId) return; // channel id obtained in Clientready event
