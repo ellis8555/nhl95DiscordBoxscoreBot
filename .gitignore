@@ -5,4 +5,4 @@ serviceKeys.json
 notes.txt
 *.pem
 *standings.json
-tickle.log
+*.log
