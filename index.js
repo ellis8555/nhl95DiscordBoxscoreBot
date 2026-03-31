@@ -789,7 +789,7 @@ async function processQueue (){
         try {
           updateStandings({data})
         } catch (error) {
-          throw new Error("Error in updating league JSON file standings. Tickleweb and sheets were updated successfully")
+          throw new Error("Error in updating BSB standings file. Not important just a note...")
         }
       }        
   
