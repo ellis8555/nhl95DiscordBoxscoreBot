@@ -4,9 +4,9 @@
   "boxscoreOutputChannel": "2011-boxscores",
   "seasonGamesChannel": "season-games",
   "leagueName": "w",
-  "seasonNum": "16",
+  "seasonNum": "17",
   "w_games_vs_opponents": 2,
-  "saveStatePattern": "^W16.*\\.state\\d{1,3}$",
+  "saveStatePattern": "^W17.*\\.state\\d{1,3}$",
   "isPlayoffs": false,
   "pauseWLeague": false,
   "allowDuplicates": true,
@@ -15,7 +15,7 @@
   "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
   "writeToDatabase": false,
-  "updateStandings": true,
+  "updateStandings": false,
   "editPermission": {
     "ultramagnus": "869668599550332958",
     "ellis": "678370444302221317"
