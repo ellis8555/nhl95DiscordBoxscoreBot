@@ -15,7 +15,7 @@
   "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
   "writeToDatabase": false,
-  "updateStandings": false,
+  "updateStandings": true,
   "editPermission": {
     "ultramagnus": "869668599550332958",
     "ellis": "678370444302221317"
@@ -52,6 +52,8 @@
     "BAR",
     "BAY",
     "BFC",
+    "DHG",
+    "GRH",
     "HAM",
     "HIG",
     "ING",
@@ -66,7 +68,6 @@
     "PRO",
     "RIC",
     "ROC",
-    "SAG",
     "SHS",
     "SVF",
     "SUM",
@@ -315,6 +316,22 @@
       "team": "ITA",
       "emojiId": "1447630715675082804",
       "emojiName": "ITA",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "692183787509121046",
+      "user": "Moses Bogart",
+      "team": "GRH",
+      "emojiId": "1486729910587490445",
+      "emojiName": "GRH",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "378302345894821909",
+      "user": "vancecookcobxin",
+      "team": "DHG",
+      "emojiId": "1486729741531873450",
+      "emojiName": "DHG",
       "skipBeingMentioned": false
     }
   ],
