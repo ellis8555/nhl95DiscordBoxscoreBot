@@ -94,9 +94,10 @@ w_standings_update_emitter.on("w_standings_update_emitter", (updatedConsts) => {
 })
 
 // w league playoffs listening event
-let {seeds, playoffTree} = watch_playoffs_consts
+let {seeds, reverseSeeds, playoffTree} = watch_playoffs_consts
 w_playoffs_update_emitter.on("w_playoffs_update_emitter", (updatedConsts) => {
   seeds = updatedConsts.seeds
+  reverseSeeds = updatedConsts.reverseSeeds
   playoffTree = updatedConsts.playoffTree
 })
 
