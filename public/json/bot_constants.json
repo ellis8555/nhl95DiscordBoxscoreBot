@@ -335,10 +335,6 @@
       "skipBeingMentioned": false
     }
   ],
-  "seeds": {
-          "SUM": 1,
-          "TBP": 2
-        },
   "excludeCoaches": [],
   "adminCommands": [
     "PAUSE",

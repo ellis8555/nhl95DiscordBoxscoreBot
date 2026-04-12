@@ -11,7 +11,7 @@ import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
 import sendGameDataToDatabase from "./lib/database/sendGameDataToDatabase.js";
 import updateStandings from "./lib/standings/updateStandings.js";
 import displayStandings from "./lib/index/displayStandings.js";
-import { bot_consts, q_bot_consts, pure_consts, w_standings, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter, w_standings_update_emitter } from "./lib/constants/consts.js";
+import { bot_consts, q_bot_consts, pure_consts, w_standings, watch_playoffs_consts, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter, w_standings_update_emitter, w_playoffs_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
 import setPureSettings from "./lib/pureLeague/setPureSettings.js"
@@ -51,7 +51,6 @@ let w_games_vs_opponents = bot_consts.w_games_vs_opponents
 let excludeCoaches = bot_consts.excludeCoaches
 let remainingGames = bot_consts.remainingGames
 let isPlayoffs = bot_consts.isPlayoffs
-let seeds = bot_consts.seeds
 let updateLeagueStandings = bot_consts.updateStandings
 let standings = w_standings
 let writeToDatabase = bot_consts.writeToDatabase
@@ -92,6 +91,13 @@ bot_consts_update_emitter.on("bot_consts_update_emitter", (updatedConsts) => {
 // w league standings listening event
 w_standings_update_emitter.on("w_standings_update_emitter", (updatedConsts) => {
   standings = JSON.parse(updatedConsts)
+})
+
+// w league playoffs listening event
+let {seeds, playoffTree} = watch_playoffs_consts
+w_playoffs_update_emitter.on("w_playoffs_update_emitter", (updatedConsts) => {
+  seeds = updatedConsts.seeds
+  playoffTree = updatedConsts.playoffTree
 })
 
 ////////////////
