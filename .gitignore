@@ -5,4 +5,5 @@ serviceKeys.json
 notes.txt
 *.pem
 *standings.json
+*playoffs.json
 *.log
