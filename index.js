@@ -1,4 +1,4 @@
-import fs from "node:fs"
+import fs, { truncate } from "node:fs"
 import path from "node:path";
 import { fileURLToPath } from 'url';
 import { google } from "googleapis";
@@ -11,6 +11,7 @@ import cleanUpBotMessages from "./lib/index/cleanUpBotMessages.js";
 import sendGameDataToDatabase from "./lib/database/sendGameDataToDatabase.js";
 import updateStandings from "./lib/standings/updateStandings.js";
 import displayStandings from "./lib/index/displayStandings.js";
+import updatePlayoffTree from "./lib/playoffs/updatePlayoffTree.js";
 import { bot_consts, q_bot_consts, pure_consts, w_standings, watch_playoffs_consts, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter, w_standings_update_emitter, w_playoffs_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
@@ -94,11 +95,12 @@ w_standings_update_emitter.on("w_standings_update_emitter", (updatedConsts) => {
 })
 
 // w league playoffs listening event
-let {seeds, reverseSeeds, playoffTree} = watch_playoffs_consts
+let {seeds, reverseSeeds, playoffTree, seriesResults} = watch_playoffs_consts
 w_playoffs_update_emitter.on("w_playoffs_update_emitter", (updatedConsts) => {
   seeds = updatedConsts.seeds
   reverseSeeds = updatedConsts.reverseSeeds
   playoffTree = updatedConsts.playoffTree
+  seriesResults = updatedConsts.seriesResults
 })
 
 ////////////////
@@ -657,7 +659,6 @@ async function processQueue (){
       /////////////////////////////////
         
       if (isPlayoffs){
-        
         const homeTeam = romData.data.otherGameStats.homeTeam
         if (!Object.hasOwn(seeds, homeTeam)){
             return
@@ -667,23 +668,58 @@ async function processQueue (){
         if (!Object.hasOwn(seeds, awayTeam)){
             return
         }      
-  
+        
+        // get seeds and matchups to ensure the series exists
+        const homeTeamSeed = seeds[homeTeam]
+        const awayTeamSeed = seeds[awayTeam]
+
+        // does series exist
+        const matchingSeries = playoffTree.findIndex(series =>
+          series.includes(homeTeamSeed) && series.includes(awayTeamSeed)
+        );
+
+        if(matchingSeries === -1){
+          throw new Error('This matchup was not found')
+        }
+        
         const currentGameFileMatchUp = `${awayTeam}/${homeTeam}`
   
-        uniqueGameStateIds.pop()
-        const matchups = uniqueGameStateIds.filter(entry => entry[3] === "/")
-        // count how many times this matchup has occured
-        const gameSequenceOccurence = matchups.filter(entry => entry === currentGameFileMatchUp).length
-        // checks that not more than 4 games in the same arena can occur
-        if(gameSequenceOccurence > 3){
-          throw new Error(`Error: 4 games of the same sequence have already been submitted\n\`${fileName}\` was not submitted`)
+        // begin creating series object which tracks where the series is at
+        // first check if the series has a submitted state yet
+        const seriesIndex = seriesResults.findIndex(series => 
+          series.hasOwnProperty(homeTeam) && series.hasOwnProperty(awayTeam)
+        )
+        
+        const winningTeam = romData.data.otherGameStats.winningTeam
+        // create the series in the seriesResults array
+        if(seriesIndex === -1){
+          const seriesObj = {
+            [homeTeam]: winningTeam === homeTeam ? 1 : 0,
+            [awayTeam]: winningTeam === awayTeam ? 1 : 0
+          }
+          seriesResults.push(seriesObj)
         }
-        // check if 7 games have been submitted as an 8th state being submitted is not allowed
-        const reverseCurrentGameFileMatchUp = `${homeTeam}/${awayTeam}`
-        const reverseGameSequenceOccurence = matchups.filter(entry => entry === reverseCurrentGameFileMatchUp).length
-        const totalGamesPlayed = gameSequenceOccurence + reverseGameSequenceOccurence
-        if (totalGamesPlayed >= 7){
-          throw new Error(`Error: 7 game states have been submitted\n\`${fileName}\` was not submitted`)
+        // if series has already begun then find the series and increment the result
+        if (seriesIndex !== -1) {
+          if(seriesResults[seriesIndex][homeTeam] === 4){
+            throw new Error(`${homeTeam} is at 4 wins and has won the series\n\`${fileName}\` was not submitted`)
+          }  
+          if(seriesResults[seriesIndex][awayTeam] === 4){
+            throw new Error(`${awayTeam} is at 4 wins and has won the series\n\`${fileName}\` was not submitted`)
+          }
+
+          if (winningTeam === homeTeam) {
+            seriesResults[seriesIndex][homeTeam]++;
+          } else if (winningTeam === awayTeam) {
+            seriesResults[seriesIndex][awayTeam]++;
+          }
+          
+          // update playoff tree if series has ended
+          if (seriesResults[seriesIndex][homeTeam] === 4 || seriesResults[seriesIndex][awayTeam]){
+            const indexForUpdatingPlayoffTree = updatePlayoffTree({seriesIndex})
+            playoffTree[indexForUpdatingPlayoffTree].push(seeds[winningTeam])
+            console.log(playoffTree)
+          }
         }
       }
       /////////////////////////////////
@@ -810,6 +846,20 @@ async function processQueue (){
       if(gameStateQueue.length > 0 && !isProcessingErrors){
         processQueue()
       } else {
+        // if playoffs update series standings to file
+        if(isPlayoffs){
+          const updatedWPlayoffData = {
+            seeds,
+            reverseSeeds,
+            playoffTree,
+            seriesResults
+          }
+
+          // write to file the updated playoff data
+          const playoffsFilePath = path.join(__dirname, "public", "json", "standings", "w_playoffs.json")
+          fs.writeFileSync(playoffsFilePath, JSON.stringify(updatedWPlayoffData, null, 2), "utf-8")
+        }
+        // final clean discord clean up
         cleanUpMessagesId = message.id;
         processErrorsAndSendMessages();
       }
@@ -1259,7 +1309,7 @@ client.on(Events.MessageCreate, async message => {
       
           if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
             processQueue()
-        }
+          }
     } else {
       const channel = client.channels.cache.get(saveStatesChannelId);
       await channel.send("⏸: BSB is currently on pause. Your state will be processed later.") 
