@@ -715,10 +715,9 @@ async function processQueue (){
           }
           
           // update playoff tree if series has ended
-          if (seriesResults[seriesIndex][homeTeam] === 4 || seriesResults[seriesIndex][awayTeam]){
+          if (seriesResults[seriesIndex][homeTeam] === 4 || seriesResults[seriesIndex][awayTeam] === 4){
             const indexForUpdatingPlayoffTree = updatePlayoffTree({seriesIndex})
             playoffTree[indexForUpdatingPlayoffTree].push(seeds[winningTeam])
-            console.log(playoffTree)
           }
         }
       }
