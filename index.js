@@ -845,22 +845,19 @@ async function processQueue (){
       if(gameStateQueue.length > 0 && !isProcessingErrors){
         processQueue()
       } else {
-        // if playoffs update series standings to file
-        if(isPlayoffs){
+        // update playoff json file. if !playoffs this updates the seeds and reverseSeeds
           const updatedWPlayoffData = {
             seeds,
             reverseSeeds,
             playoffTree,
             seriesResults
           }
-
           // write to file the updated playoff data
           const playoffsFilePath = path.join(__dirname, "public", "json", "standings", "w_playoffs.json")
           fs.writeFileSync(playoffsFilePath, JSON.stringify(updatedWPlayoffData, null, 2), "utf-8")
-        }
         // final clean discord clean up
         cleanUpMessagesId = message.id;
-        processErrorsAndSendMessages();
+        await processErrorsAndSendMessages();
       }
     }
   }
@@ -998,7 +995,7 @@ async function processQueue (){
         processQueue()
       } else {
         q_cleanUpMessagesId = message.id;
-        processErrorsAndSendMessages();
+        await processErrorsAndSendMessages();
       }
     }
   }
@@ -1099,7 +1096,7 @@ async function processErrorsAndSendMessages (){
     q_googleSheetApiErrors.length = 0;
     q_readingGameStateError.length = 0;
   } catch {
-    console.log('catch block inside of processErrorsSendMessages needs to be adjusted...')
+    console.log(console.error('processErrorsAndSendMessages error:', err))
   } finally {
     isProcessingErrors = false; // Allow new processing to begin
     if (gameStateQueue.length > 0 && !processing) {
