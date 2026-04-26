@@ -1,4 +1,4 @@
-import fs, { truncate } from "node:fs"
+import fs from "node:fs"
 import path from "node:path";
 import { fileURLToPath } from 'url';
 import { google } from "googleapis";
@@ -1064,8 +1064,13 @@ async function processErrorsAndSendMessages (){
     } else {
       if(userProcessingMessages.length > 0){
         await cleanUpBotMessages(client, saveStatesChannelId, userProcessingMessages)
-        const message = await w_channel.messages.fetch(cleanUpMessagesId);
-        await message.react('✅')
+        let message;
+        try {
+          message = await w_channel.messages.fetch(cleanUpMessagesId);
+          await message.react('✅');
+        } catch (err) {
+          console.error("Failed to fetch/react W message:", err);
+        }
       }
     }
     // Send error message to the user
@@ -1095,7 +1100,7 @@ async function processErrorsAndSendMessages (){
     q_duplicateGameStateFileNames.length = 0;
     q_googleSheetApiErrors.length = 0;
     q_readingGameStateError.length = 0;
-  } catch {
+  } catch (err) {
     console.log(console.error('processErrorsAndSendMessages error:', err))
   } finally {
     isProcessingErrors = false; // Allow new processing to begin
