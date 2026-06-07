@@ -689,7 +689,7 @@ async function processQueue (){
         const seriesIndex = seriesResults.findIndex(series => 
           series.hasOwnProperty(homeTeam) && series.hasOwnProperty(awayTeam)
         )
-        
+
         const winningTeam = romData.data.otherGameStats.winningTeam
         // create the series in the seriesResults array
         if(seriesIndex === -1){
@@ -699,6 +699,7 @@ async function processQueue (){
           }
           seriesResults.push(seriesObj)
         }
+      
         // if series has already begun then find the series and increment the result
         if (seriesIndex !== -1) {
           if(seriesResults[seriesIndex][homeTeam] === 4){
@@ -713,10 +714,10 @@ async function processQueue (){
           } else if (winningTeam === awayTeam) {
             seriesResults[seriesIndex][awayTeam]++;
           }
-          
+
           // update playoff tree if series has ended
           if (seriesResults[seriesIndex][homeTeam] === 4 || seriesResults[seriesIndex][awayTeam] === 4){
-            const indexForUpdatingPlayoffTree = updatePlayoffTree({seriesIndex})
+            const indexForUpdatingPlayoffTree = updatePlayoffTree({matchingSeries})
             playoffTree[indexForUpdatingPlayoffTree].push(seeds[winningTeam])
           }
         }
