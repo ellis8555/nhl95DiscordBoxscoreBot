@@ -617,12 +617,10 @@ async function processQueue (){
 
       // Perform checks and processing as before
       const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
-      const gameLengthInt = parseInt(gameLength.replace(":", ""), 10);
-      if(gameLengthInt < 1500){
+      if(gameLength < 15){
         readingGameStateError.push(fileName)
-        throw new Error(`Error: \`${fileName}\` is short of 15:00.`);
+        throw new Error(`Error: \`${fileName}\` is short of 15 minutes played.`);
       }
-  
         // check that both teams are not the same. 
         if(romData.data.otherGameStats.homeTeam === romData.data.otherGameStats.awayTeam){
           readingGameStateError.push(fileName)
@@ -1268,7 +1266,7 @@ client.on(Events.MessageCreate, async message => {
         }
         return
       }
-      
+
       // display standings in discord channel
       const displayStandingsPattern = /^(STANDINGS%?|BUBBLE)$/
       if(displayStandingsPattern.test(message.content) && !isPlayoffs){

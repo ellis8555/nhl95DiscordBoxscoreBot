@@ -1,25 +1,51 @@
 {
   "adminsListeningChannel": "admin-boxscores",
-  "saveStatesListeningChannel": "2011-saves",
-  "boxscoreOutputChannel": "2011-boxscores",
+  "saveStatesListeningChannel": "2012-saves",
+  "boxscoreOutputChannel": "2012-boxscores",
   "seasonGamesChannel": "season-games",
-  "leagueName": "w",
-  "seasonNum": "17",
   "w_games_vs_opponents": 2,
-  "saveStatePattern": "^W17.*\\.state\\d{1,3}$",
+  "saveStatePattern": "^W17PO.*\\.state\\d{1,3}$",
   "isPlayoffs": false,
+  "editPermission": {
+    "ellis": "678370444302221317"
+  },
+  "adminCommands": [
+    "PAUSE",
+    "RESUME",
+    "GET",
+    "SET",
+    "HELP",
+    "GET SETTINGS",
+    "GET COACHES",
+    "GET COMMANDS",
+    "GET SEASON NUMBER",
+    "GET TEAMCODES",
+    "SET DUPLICATES",
+    "SET SHEETS",
+    "SET BOXSCORE",
+    "SET ADMIN CHANNEL",
+    "SET STATE CHANNEL",
+    "SET BOXSCORE CHANNEL",
+    "SET SAVE STATE",
+    "SET SEASON",
+    "SET TEAMCODES",
+    "SET ROM CSV",
+    "HELP SET CHANNELS",
+    "HELP SET SAVE STATE",
+    "HELP SET TEAM CODES",
+    "HELP SET ROM CSV",
+    "UPDATE"
+  ],
   "pauseWLeague": false,
   "allowDuplicates": true,
   "writeToUniqueIdsFile": false,
   "writeToGoogleSheets": false,
   "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
+  "leagueName": "w",
+  "seasonNum": "17",
   "writeToDatabase": false,
-  "updateStandings": true,
-  "editPermission": {
-    "ultramagnus": "869668599550332958",
-    "ellis": "678370444302221317"
-  },
+  "updateStandings": false,
   "appendGoogleSheets": {
     "countRowRange": "H:H",
     "rawData": {
@@ -79,12 +105,52 @@
   ],
   "coaches": [
     {
+      "id": "692039117499793469",
+      "user": "autobahn",
+      "team": "AUT",
+      "emojiId": "1040258542629826691",
+      "emojiName": "AUT",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "241253413722128385",
+      "user": "Jer_33",
+      "team": "BAY",
+      "emojiId": "1039716048510922802",
+      "emojiName": "BAY",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "1211045587483623484",
+      "user": "Krav",
+      "team": "BFC",
+      "emojiId": "1302374329627054195",
+      "emojiName": "BFC",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "932744327191490651",
+      "user": "GMDS",
+      "team": "HAM",
+      "emojiId": "943898587786539130",
+      "emojiName": "HAM",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "694697891733831761",
+      "user": "wolf_of_highland",
+      "team": "HIG",
+      "emojiId": "897245384601108490",
+      "emojiName": "HIG",
+      "skipBeingMentioned": false
+    },
+    {
       "id": "694688440440193186",
       "user": "shawnbell_",
       "team": "TBP",
       "emojiId": "890999482970435665",
       "emojiName": "TBP",
-      "skipBeingMentioned": false
+      "skipBeingMentioned": true
     },
     {
       "id": "144973906070077440",
@@ -100,14 +166,6 @@
       "team": "TEG",
       "emojiId": "918653529953034240",
       "emojiName": "THT",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "1211045587483623484",
-      "user": "Krav",
-      "team": "BFC",
-      "emojiId": "1302374329627054195",
-      "emojiName": "BFC",
       "skipBeingMentioned": false
     },
     {
@@ -135,27 +193,11 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "932744327191490651",
-      "user": "GMDS",
-      "team": "HAM",
-      "emojiId": "943898587786539130",
-      "emojiName": "HAM",
-      "skipBeingMentioned": false
-    },
-    {
       "id": "628241421781958684",
       "user": "Chalky",
       "team": "SVF",
       "emojiId": "923579320251842580",
       "emojiName": "SVF",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "692039117499793469",
-      "user": "autobahn",
-      "team": "AUT",
-      "emojiId": "1040258542629826691",
-      "emojiName": "AUT",
       "skipBeingMentioned": false
     },
     {
@@ -167,19 +209,11 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "678370444302221317",
+      "id": "869668599550332958",
       "user": "ultramagnus",
       "team": "VHV",
       "emojiId": "1303127943098138725",
       "emojiName": "VHV",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "694697891733831761",
-      "user": "wolf_of_highland",
-      "team": "HIG",
-      "emojiId": "897245384601108490",
-      "emojiName": "HIG",
       "skipBeingMentioned": false
     },
     {
@@ -188,22 +222,6 @@
       "team": "PRO",
       "emojiId": "918148694820405308",
       "emojiName": "PRO",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "241253413722128385",
-      "user": "Jer_33",
-      "team": "BAY",
-      "emojiId": "1039716048510922802",
-      "emojiName": "BAY",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "733156682456105062",
-      "user": "Philly Chris",
-      "team": "BBM",
-      "emojiId": "1301994452570603520",
-      "emojiName": "BBM",
       "skipBeingMentioned": false
     },
     {
@@ -226,7 +244,7 @@
       "id": "918583918838546443",
       "user": "MattyA",
       "team": "KAR",
-      "emojiId": "1134590069261471755",
+      "emojiId": "1447629097684697270",
       "emojiName": "KAR",
       "skipBeingMentioned": false
     },
@@ -255,11 +273,11 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "174615392461783040",
-      "user": "Jeelock",
-      "team": "SAG",
-      "emojiId": "996936838675701850",
-      "emojiName": "SAG",
+      "id": "373576219129806859",
+      "user": "MarcusVickEBC",
+      "team": "ITA",
+      "emojiId": "1447630715675082804",
+      "emojiName": "ITA",
       "skipBeingMentioned": false
     },
     {
@@ -279,26 +297,10 @@
       "skipBeingMentioned": false
     },
     {
-      "id": "678370444302221317",
-      "user": "Ellis",
-      "team": "AHC",
-      "emojiId": "897245476703830037",
-      "emojiName": "AHC",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "1042251245609549824",
-      "user": "Marylandmike",
-      "team": "SHS",
-      "emojiId": "1249551823161786388",
-      "emojiName": "SHS",
-      "skipBeingMentioned": false
-    },
-    {
       "id": "882284979441258567",
       "user": "Dasri",
       "team": "BAR",
-      "emojiId": "1447685382861885641",
+      "emojiId": "1447630932646301789",
       "emojiName": "BAR",
       "skipBeingMentioned": false
     },
@@ -306,16 +308,8 @@
       "id": "291228680825470978",
       "user": "The Villain CTJ",
       "team": "ROC",
-      "emojiId": "1447685363618549820",
+      "emojiId": "1447630562826387631",
       "emojiName": "ROC",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "373576219129806859",
-      "user": "MarcusVickEBC",
-      "team": "ITA",
-      "emojiId": "1447630715675082804",
-      "emojiName": "ITA",
       "skipBeingMentioned": false
     },
     {
@@ -335,33 +329,7 @@
       "skipBeingMentioned": false
     }
   ],
+  "seeds": {},
   "excludeCoaches": [],
-  "adminCommands": [
-    "PAUSE",
-    "RESUME",
-    "GET",
-    "SET",
-    "HELP",
-    "GET SETTINGS",
-    "GET COACHES",
-    "GET COMMANDS",
-    "GET SEASON NUMBER",
-    "GET TEAMCODES",
-    "SET DUPLICATES",
-    "SET SHEETS",
-    "SET BOXSCORE",
-    "SET ADMIN CHANNEL",
-    "SET STATE CHANNEL",
-    "SET BOXSCORE CHANNEL",
-    "SET SAVE STATE",
-    "SET SEASON",
-    "SET TEAMCODES",
-    "SET ROM CSV",
-    "HELP SET CHANNELS",
-    "HELP SET SAVE STATE",
-    "HELP SET TEAM CODES",
-    "HELP SET ROM CSV",
-    "UPDATE"
-  ],
   "remainingGames": []
 }
