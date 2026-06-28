@@ -1,6 +1,6 @@
 {
-  "currentSeason": "20",
-  "seasonGamesChannel": "s20-games",
+  "currentSeason": "21",
+  "seasonGamesChannel": "s21-games",
   "p_games_vs_opponents": 2,
   "listeningChannel": "pure-scores",
   "pureLeagueScoreExpression": "^\\s*(?:EDIT\\s+)?[a-zA-Z]{3}\\s+(\\d+)\\s*-\\s+[a-zA-Z]{3}\\s+(\\d+)\\s*$",
@@ -64,16 +64,16 @@
     {
       "id": "582240735793774618",
       "user": "Puss",
-      "team": "TOR",
+      "team": "ANA",
       "sheetsUser": "Puss",
       "emojiName": "",
       "emojiId": "",
-      "skipBeingMentioned": true
+      "skipBeingMentioned": false
     },
     {
       "id": "1211045587483623484",
       "user": "Krav",
-      "team": "STL",
+      "team": "BOS",
       "sheetsUser": "Krav",
       "emojiName": "",
       "emojiId": "",
@@ -82,7 +82,7 @@
     {
       "id": "874726051790594051",
       "user": "Nips",
-      "team": "CAL",
+      "team": "SJS",
       "sheetsUser": "Nips",
       "emojiName": "",
       "emojiId": "",
@@ -91,8 +91,17 @@
     {
       "id": "1009697012737921055",
       "user": "MNYoda",
-      "team": "MTL",
+      "team": "NYI",
       "sheetsUser": "MNYoda",
+      "emojiName": "",
+      "emojiId": "",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "939897819681161296",
+      "user": "DON DON",
+      "team": "WPG",
+      "sheetsUser": "DonDon",
       "emojiName": "",
       "emojiId": "",
       "skipBeingMentioned": false
@@ -100,26 +109,8 @@
     {
       "id": "144973906070077440",
       "user": "segathon",
-      "team": "BUF",
+      "team": "LAK",
       "sheetsUser": "Segathon",
-      "emojiName": "",
-      "emojiId": "",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "694688440440193186",
-      "user": "shawnbell_",
-      "team": "PIT",
-      "sheetsUser": "GaelicGopher",
-      "emojiName": "",
-      "emojiId": "",
-      "skipBeingMentioned": false
-    },
-    {
-      "id": "802225742523531325",
-      "user": "Nathan",
-      "team": "CHI",
-      "sheetsUser": "Nathan",
       "emojiName": "",
       "emojiId": "",
       "skipBeingMentioned": false
@@ -127,7 +118,7 @@
     {
       "id": "1042251245609549824",
       "user": "marylandmike.",
-      "team": "PHL",
+      "team": "MTL",
       "sheetsUser": "MarylandMike",
       "emojiName": "",
       "emojiId": "",
@@ -136,8 +127,26 @@
     {
       "id": "373576219129806859",
       "user": "MikeVick",
-      "team": "QUE",
+      "team": "VAN",
       "sheetsUser": "MikeVick",
+      "emojiName": "",
+      "emojiId": "",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "882284979441258567",
+      "user": "DSN",
+      "team": "NYR",
+      "sheetsUser": "DSN",
+      "emojiName": "",
+      "emojiId": "",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "691684263698890878",
+      "user": "GaelicGopher",
+      "team": "CHI",
+      "sheetsUser": "GaelicGopher",
       "emojiName": "",
       "emojiId": "",
       "skipBeingMentioned": false
