@@ -5,7 +5,7 @@
   "seasonGamesChannel": "season-games",
   "w_games_vs_opponents": 2,
   "saveStatePattern": "^W17PO.*\\.state\\d{1,3}$",
-  "isPlayoffs": true,
+  "isPlayoffs": false,
   "editPermission": {
     "ellis": "678370444302221317"
   },
@@ -40,12 +40,12 @@
   "allowDuplicates": true,
   "writeToUniqueIdsFile": false,
   "writeToGoogleSheets": false,
-  "sendBoxscore": true,
+  "sendBoxscore": false,
   "sendResponseToOutputchannel": true,
   "leagueName": "w",
   "seasonNum": "17",
   "writeToDatabase": false,
-  "updateStandings": true,
+  "updateStandings": false,
   "appendGoogleSheets": {
     "countRowRange": "H:H",
     "rawData": {
