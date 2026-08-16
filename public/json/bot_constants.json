@@ -1,10 +1,10 @@
 {
   "adminsListeningChannel": "admin-boxscores",
-  "saveStatesListeningChannel": "2012-saves",
-  "boxscoreOutputChannel": "2012-boxscores",
+  "saveStatesListeningChannel": "2013-saves",
+  "boxscoreOutputChannel": "2013-boxscores",
   "seasonGamesChannel": "season-games",
   "w_games_vs_opponents": 2,
-  "saveStatePattern": "^W17PO.*\\.state\\d{1,3}$",
+  "saveStatePattern": "^W18.*\\.state\\d{1,3}$",
   "isPlayoffs": false,
   "editPermission": {
     "ellis": "678370444302221317"
@@ -40,10 +40,10 @@
   "allowDuplicates": true,
   "writeToUniqueIdsFile": false,
   "writeToGoogleSheets": false,
-  "sendBoxscore": false,
+  "sendBoxscore": true,
   "sendResponseToOutputchannel": true,
   "leagueName": "w",
-  "seasonNum": "17",
+  "seasonNum": "18",
   "writeToDatabase": false,
   "updateStandings": false,
   "appendGoogleSheets": {
@@ -101,7 +101,8 @@
     "TEG",
     "TBP",
     "VHV",
-    "WDY"
+    "WDY",
+    "ETI"
   ],
   "coaches": [
     {
@@ -326,6 +327,14 @@
       "team": "DHG",
       "emojiId": "1486729741531873450",
       "emojiName": "DHG",
+      "skipBeingMentioned": false
+    },
+    {
+      "id": "873331397782294569",
+      "user": "LHX",
+      "team": "ETI",
+      "emojiId": "1537785649388855397",
+      "emojiName": "ETI",
       "skipBeingMentioned": false
     }
   ],
