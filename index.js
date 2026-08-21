@@ -617,7 +617,7 @@ async function processQueue (){
 
       // Perform checks and processing as before
       const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
-      if(gameLength < 15){
+      if(gameLength < 10){
         readingGameStateError.push(fileName)
         throw new Error(`Error: \`${fileName}\` is short of 15 minutes played.`);
       }
@@ -891,7 +891,7 @@ async function processQueue (){
       // Perform checks and processing as before
       const { 'GAME LENGTH': gameLength } = romData.data.otherGameStats;
       const gameLengthInt = parseInt(gameLength.replace(":", ""), 10);
-      if(gameLengthInt < 1500){
+      if(gameLengthInt < 1000){
         q_readingGameStateError.push(fileName)
         throw new Error(`Error: \`${fileName}\` is short of 15:00.`);
       }
