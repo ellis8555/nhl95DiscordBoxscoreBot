@@ -810,8 +810,27 @@ async function processQueue (){
           const seasonNumber = gamesUniqueId.slice(0,2)
           const imageFileName = `${seasonNumber}-${boxscoreImageGameId ?? 'test'}`
           const attachment = new AttachmentBuilder(imageBuffer, { name: `${imageFileName}.png` });
+          // tanking alerts
+          const tank_1 = "RIC"
+          let tankingMessage = "";
+          if (romData.data.otherGameStats.losingTeam === tank_1){
+            const listOfBottomLevelTeams = ["KAR", "ING"]
+            const listOfLowerLevelTeams = ["BAY", "BFC", "DHG", "ROC"]
+            // obvious tank result
+            if(listOfBottomLevelTeams.includes(romData.data.otherGameStats.winningTeam)){
+              tankingMessage += `:military_helmet::boom::military_helmet: Take cover! Incoming tank fire! :military_helmet::boom::military_helmet:`
+            } else if(listOfLowerLevelTeams.includes(romData.data.otherGameStats.winningTeam)){
+              // quite suspicious tank result
+              tankingMessage += `:rotating_light::military_helmet: Tanks on the move!! :military_helmet::rotating_light:`
+            } else {
+              // general suspected tank result
+              tankingMessage += `:rotating_light: Reports of a tank... :rotating_light:`
+            }
+          }
+
           // content of boxscore being sent
           const messagePayload = {
+            content: tankingMessage,
             files: [attachment]
           }
             if(sendResponseToOutputchannel) {
