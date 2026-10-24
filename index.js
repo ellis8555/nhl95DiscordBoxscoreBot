@@ -1288,7 +1288,7 @@ client.on(Events.MessageCreate, async message => {
 
       // display standings in discord channel
       const displayStandingsPattern = /^(STANDINGS%?|BUBBLE)$/
-      if(displayStandingsPattern.test(message.content) && !isPlayoffs){
+      if(displayStandingsPattern.test(message.content)){
           const isShowStandingsRequest = true
           const messageContent = message.content
           gameStateQueue.push({isShowStandingsRequest, server: getServerName, client, messageContent, seasonGamesChannelId})
