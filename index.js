@@ -12,7 +12,7 @@ import sendGameDataToDatabase from "./lib/database/sendGameDataToDatabase.js";
 import updateStandings from "./lib/standings/updateStandings.js";
 import displayStandings from "./lib/index/displayStandings.js";
 import updatePlayoffTree from "./lib/playoffs/updatePlayoffTree.js";
-import { bot_consts, q_bot_consts, pure_consts, w_standings, watch_playoffs_consts, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter, w_standings_update_emitter, w_playoffs_update_emitter } from "./lib/constants/consts.js";
+import { allowedGuilds, bot_consts, q_bot_consts, pure_consts, w_standings, watch_playoffs_consts, bot_consts_update_emitter, q_bot_consts_update_emitter, p_bot_consts_update_emitter, w_standings_update_emitter, w_playoffs_update_emitter } from "./lib/constants/consts.js";
 // pure files
 import processPure from "./lib/pureLeague/processPure.js";
 import setPureSettings from "./lib/pureLeague/setPureSettings.js"
@@ -206,6 +206,19 @@ const client = new Client({
   ]
 });
 
+client.on(Events.GuildCreate, async (guild) => {
+  if (!allowedGuilds.includes(guild.id)) {
+    console.log(`Unauthorized guild detected: ${guild.name} (${guild.id})`);
+
+    try {
+      await guild.leave();
+      console.log(`Left unauthorized guild: ${guild.name}`);
+    } catch (error) {
+      console.error(`Failed to leave unauthorized guild:`, error);
+    }
+  }
+})
+
 let sheets;
 let spreadsheetId
 let w_spreadsheetId
@@ -242,8 +255,22 @@ const q_duplicateGameStateFileNames = []; // holds fileNames for states that are
 const q_readingGameStateError = [] // holds errors related to reading in the game file
 const q_googleSheetApiErrors = [];  // holds references to any errors during game appends
 
-client.once(Events.ClientReady, () => { // obtain the channel id for the channel that is being listened to
+client.once(Events.ClientReady, async() => { // obtain the channel id for the channel that is being listened to
   console.log(`Logged in as ${client.user.tag}!`);
+
+  // Leave any guild that is not explicitly authorized
+  for (const guild of client.guilds.cache.values()) {
+    if (!allowedGuilds.includes(guild.id)) {
+      console.log(`Removing bot from unauthorized guild: ${guild.name} (${guild.id})`);
+
+      try {
+        await guild.leave();
+        console.log(`Successfully left ${guild.name}`);
+      } catch (error) {
+        console.error(`Failed to leave ${guild.name}:`, error);
+      }
+    }
+  }
 
   // get W server
   const guild = client.guilds.cache.find(guild => guild.name === server);
@@ -575,7 +602,7 @@ async function processQueue (){
     const userMessage = processPureArgs.message.content
     const message = processPureArgs.message
     if(userMessage === 'UPDATE SETTINGS'){
-      if(message.author.id === p_adminIdObject['ticklepuss']){
+      if(message.author.id === p_adminIdObject['ticklepuss'] || message.author.id === p_adminIdObject['ellis']){
         setPureSettings(processPureArgs)
       }
       processing = false;
@@ -1129,6 +1156,7 @@ async function processErrorsAndSendMessages (){
 };
 
 client.on(Events.MessageCreate, async message => {
+  if (!message.guild || !allowedGuilds.includes(message.guild.id)) return;
   if (message.author.bot && !message.webhookId) return;
   const getServerName = message.guild.name;
   const channelId = message.channel.id; 
