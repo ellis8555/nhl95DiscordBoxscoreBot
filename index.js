@@ -19,6 +19,8 @@ const __dirname = path.dirname(__filename);
 ///////////////////
 
 const {  
+  token,
+  pure_server,
   p_uniqueIdsFileName,
 } = pure_consts
 
