@@ -20,23 +20,16 @@ const __dirname = path.dirname(__filename);
 
 const {  
   token,
-  pure_server,
-  p_uniqueIdsFileName,
 } = pure_consts
 
-const p_uniqueIdsFile = p_uniqueIdsFileName
 let p_seasonGamesChannel = pure_consts.seasonGamesChannel
 let p_submitScoresChannel = pure_consts.listeningChannel
-let p_seasonNumber = pure_consts.currentSeason
-let p_teamCodes = pure_consts.teamCodesList
 let p_adminIdObject = pure_consts.editPermission
 let p_excludeCoaches = pure_consts.excludeCoaches
 
 // update variables that come from admin within discord channel
 p_bot_consts_update_emitter.on("p_bot_consts_update_emitter", (updatedConsts) => {
   p_seasonGamesChannel = updatedConsts.seasonGamesChannel
-  p_seasonNumber = updatedConsts.currentSeason
-  p_teamCodes = updatedConsts.teamCodesList
   p_adminIdObject = updatedConsts.editPermission
   p_submitScoresChannel = updatedConsts.listeningChannel
   p_excludeCoaches = updatedConsts.excludeCoaches
@@ -75,16 +68,6 @@ client.on(Events.GuildCreate, async (guild) => {
 })
 
 let sheets;
-let spreadsheetId
-let w_spreadsheetId
-let q_spreadsheetId
-let uniqueIdsFilePath
-let uniqueGameStateIds = []
-let adminsListeningChannelId // channel that listens for admin commands
-let saveStatesChannelId // get the channel the bot will be listening in.
-let boxscoreOutputChannelId // the channel that the boxscores will be sent to
-let seasonGamesChannelId
-let boxscoreImageGameId // puss request for ticklebots
 
 let p_seasonGamesChannelId
 let p_submitScoresChannelId
@@ -92,12 +75,6 @@ let p_submitScoresChannelId
 const gameStateQueue = []; // holds incoming game states to be processed
 let processing = false; // checks if game state is currently being processed from the queue;
 let isProcessingErrors = false; // checks if bot is performing error message tasks
-
-let cleanUpMessagesId;
-const userProcessingMessages = []; // holds id of processing/complete messages in order to be cleaned up
-const duplicateGameStateFileNames = []; // holds fileNames for states that are duplicates
-const readingGameStateError = [] // holds errors related to reading in the game file
-const googleSheetApiErrors = [];  // holds references to any errors during game appends
 
 client.once(Events.ClientReady, async() => { // obtain the channel id for the channel that is being listened to
   console.log(`Logged in as ${client.user.tag}!`);
