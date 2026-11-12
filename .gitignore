@@ -2,7 +2,7 @@ node_modules/
 *.env
 *UniqueIds.csv
 serviceKeys.json
-notes.txt
+notes.md
 *.pem
 *standings.json
 *playoffs.json
