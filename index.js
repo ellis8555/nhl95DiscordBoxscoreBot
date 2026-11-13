@@ -127,54 +127,91 @@ client.once(Events.ClientReady, async() => { // obtain the channel id for the ch
 
 });
 
-async function processQueue (){
-  if(gameStateQueue.length === 0 || processing || isProcessingErrors) {
-    return; // If queue is empty or processing a file;
+async function processQueue() {
+  if (gameStateQueue.length === 0 || processing || isProcessingErrors) {
+    return; // If queue is empty or processing a file
   }
-  processing = true; // processing is occuring
-  const task = gameStateQueue.shift(); // Get the first file in the queue
 
-  // @ mention remaining opponents W, Q and Pure leagues
-  if(task.isMentionOpponentRequest){
-    const { server, client, coachId, userMessage } = task;
+  processing = true; // processing is occurring
 
-    if(server === pureServer){
-      const { p_seasonGamesChannelId } = task
-      // get q constants
-      const pFilePath = path.join(__dirname, "public", "json", "pure_bot_constants.json")
-      const readPFile = fs.readFileSync(pFilePath, "utf-8")
-      const p_bot_consts = JSON.parse(readPFile)
-      
-      // get gamesplayed data from unique id's file
-      const p_uniqueIdsFilePath = path.join(__dirname, "public", "pUniqueIds.csv")
-      const uniqueIdsFile = fs.readFileSync(p_uniqueIdsFilePath, "utf-8")
+  try {
 
-      const { teamCodesList: teamCodes, coaches } = p_bot_consts
-      await mentionRemainingOpponents(p_seasonGamesChannelId, p_excludeCoaches, {server, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile})
+    // Continue processing until the queue is empty
+    while (gameStateQueue.length > 0 && !isProcessingErrors) {
+
+      const task = gameStateQueue.shift(); // Get the first file in the queue
+
+      try {
+
+        // @ mention remaining opponents
+        if (task.isMentionOpponentRequest) {
+
+          const { client, coachId, userMessage, p_seasonGamesChannelId } = task;
+
+          // get q constants
+          const pFilePath = path.join(__dirname, "public", "json", "pure_bot_constants.json");
+          const readPFile = fs.readFileSync(pFilePath, "utf-8");
+          const p_bot_consts = JSON.parse(readPFile);
+
+          // get gamesplayed data from unique id's file
+          const p_uniqueIdsFilePath = path.join(__dirname, "public", "pUniqueIds.csv");
+          const uniqueIdsFile = fs.readFileSync(p_uniqueIdsFilePath, "utf-8");
+
+          const { teamCodesList: teamCodes, coaches } = p_bot_consts;
+
+          await mentionRemainingOpponents(
+            p_seasonGamesChannelId,
+            p_excludeCoaches,
+            { server: pureServer, client, coachId, teamCodes, userMessage, coaches, uniqueIdsFile }
+          );
+
+        } else {
+
+          // process incoming tasks
+
+          const { processPureArgs } = task;
+
+          // test for admin message changing league settings such as coaches or season number
+          const userMessage = processPureArgs.message.content;
+          const message = processPureArgs.message;
+
+          if (userMessage === 'UPDATE SETTINGS') {
+
+            if (
+              message.author.id === p_adminIdObject['ticklepuss'] ||
+              message.author.id === p_adminIdObject['ellis']
+            ) {
+              await setPureSettings(processPureArgs);
+            }
+
+          } else {
+
+            // process a score entry
+            await processPure(processPureArgs);
+
+          }
+        }
+
+      } catch (error) {
+        console.error("Error processing queue task:", error);
+      }
     }
 
-    processing = false;
-    return;
-  }
+  } catch (error) {
+    console.error("Error processing queue:", error);
 
-  // process incoming tasks from pure league
-  if(task.server === pureServer){
-    const { processPureArgs } = task
-    // test for admin message changing league settings such as coaches or season number
-    const userMessage = processPureArgs.message.content
-    const message = processPureArgs.message
-    if(userMessage === 'UPDATE SETTINGS'){
-      if(message.author.id === p_adminIdObject['ticklepuss'] || message.author.id === p_adminIdObject['ellis']){
-        setPureSettings(processPureArgs)
-      }
-      processing = false;
-    } else {
-      // process a score entry
-      await processPure(processPureArgs)
-      processing = false;
+  } finally {
+    processing = false; // processing has finished
+
+    console.log(`Queue processing finished. Remaining tasks: ${gameStateQueue.length}`);
+
+    // Restart processing if tasks remain and error processing isn't active
+    if (gameStateQueue.length > 0 && !isProcessingErrors) {
+      processQueue();
     }
   }
 }
+
 
 client.on(Events.MessageCreate, async message => {
   if (!message.guild || !allowedGuilds.includes(message.guild.id)) return;
@@ -186,14 +223,13 @@ client.on(Events.MessageCreate, async message => {
   // process pure league score input
   //////////////////////////////////
   
-  if(getServerName === pureServer){ 
     // pure league score submissions block
     if(channelId === p_submitScoresChannelId){
       const pureArgs = {
         sheets,
         message
       }
-      gameStateQueue.push({ server: pureServer, processPureArgs: pureArgs });
+      gameStateQueue.push({server: pureServer, processPureArgs: pureArgs });
       if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
         processQueue()
       }
@@ -208,19 +244,13 @@ client.on(Events.MessageCreate, async message => {
        if(seasonGamesPattern.test(message.content)){
          const userMessage = message.content
          const isMentionOpponentRequest = true
-         gameStateQueue.push({isMentionOpponentRequest, server: getServerName, client, coachId, userMessage, p_seasonGamesChannelId})
+         gameStateQueue.push({isMentionOpponentRequest, server: pureServer, client, coachId, userMessage, p_seasonGamesChannelId})
          if(gameStateQueue.length > 0 && !processing && !isProcessingErrors){
            processQueue()
          }
          return;
      }
    }
-  }
-  
-  //////////////////////////////////
-  // end processing pure league
-  //////////////////////////////////
-
   });
 
 
