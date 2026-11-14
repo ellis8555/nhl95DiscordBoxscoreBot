@@ -83,7 +83,6 @@ client.once(Events.ClientReady, async() => { // obtain the channel id for the ch
   for (const guild of client.guilds.cache.values()) {
     if (!allowedGuilds.includes(guild.id)) {
       console.log(`Removing bot from unauthorized guild: ${guild.name} (${guild.id})`);
-
       try {
         await guild.leave();
         console.log(`Successfully left ${guild.name}`);
@@ -119,6 +118,7 @@ client.once(Events.ClientReady, async() => { // obtain the channel id for the ch
       const p_submitScoresListeningChannel = p_guild.channels.cache.find(channel => channel.name === p_submitScoresChannel)
       if(p_submitScoresListeningChannel){
         p_submitScoresChannelId = p_submitScoresListeningChannel.id;
+        await p_submitScoresListeningChannel.send("🟢 **BSB is now ONLINE.**")
       } else {
         console.log(`Channel p_saveStatesListeningChannel not found.`)
       }
@@ -127,6 +127,7 @@ client.once(Events.ClientReady, async() => { // obtain the channel id for the ch
       const p_remaining_opponents_output_channel = p_guild.channels.cache.find(channel => channel.name === p_seasonGamesChannel)
       if(p_remaining_opponents_output_channel){
         p_seasonGamesChannelId = p_remaining_opponents_output_channel.id;
+        await p_remaining_opponents_output_channel.send("🟢 **BSB is now ONLINE.**")
       } else {
         console.log(`Channel p_seasonGamesChannelId' not found.`)
       }
@@ -260,5 +261,26 @@ client.on(Events.MessageCreate, async message => {
    }
   });
 
+// send message to discord channels notifying users BSB is offline
+process.once("SIGINT", async () => {
 
+  try {
+    const p_submitScoresChannel = await client.channels.fetch(p_submitScoresChannelId);
+    const p_seasonGamesChannel = await client.channels.fetch(p_seasonGamesChannelId);
+
+    if (p_submitScoresChannel) {
+      await p_submitScoresChannel.send("🔴 **BSB is OFFLINE. Will alert when back online**");
+    }
+
+    if (p_seasonGamesChannel) {
+      await p_seasonGamesChannel.send("🔴 **BSB is OFFLINE. Will alert when back online**");
+    }
+
+  } catch (error) {
+    console.error("Failed to send offline notification:", error);
+  }
+
+  client.destroy();
+  process.exit(0);
+});
 client.login(token);
