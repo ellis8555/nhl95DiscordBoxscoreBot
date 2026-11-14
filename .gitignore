@@ -1,6 +1,6 @@
 node_modules/
 *.env
-*UniqueIds.csv
+pUniqueIds.csv
 serviceKeys.json
 notes.md
 *.pem

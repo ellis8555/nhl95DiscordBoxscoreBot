@@ -104,7 +104,16 @@ client.once(Events.ClientReady, async() => { // obtain the channel id for the ch
           credentials: serviceAccount,
           scopes: ["https://www.googleapis.com/auth/spreadsheets"],
         });
-        sheets = google.sheets({ version: "v4", auth });
+
+      const authClient = await auth.getClient();
+
+      // Use Node's built-in fetch instead of node-fetch
+      authClient.gaxios.defaults.fetchImplementation = globalThis.fetch;
+
+      // Verify authentication before initializing Sheets
+      await authClient.getAccessToken();
+
+      sheets = google.sheets({ version: "v4", auth: authClient });
 
       // channel listening for save states
       const p_submitScoresListeningChannel = p_guild.channels.cache.find(channel => channel.name === p_submitScoresChannel)
@@ -202,8 +211,6 @@ async function processQueue() {
 
   } finally {
     processing = false; // processing has finished
-
-    console.log(`Queue processing finished. Remaining tasks: ${gameStateQueue.length}`);
 
     // Restart processing if tasks remain and error processing isn't active
     if (gameStateQueue.length > 0 && !isProcessingErrors) {
