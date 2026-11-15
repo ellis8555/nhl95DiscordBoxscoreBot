@@ -4,6 +4,4 @@ pUniqueIds.csv
 serviceKeys.json
 notes.md
 *.pem
-*standings.json
-*playoffs.json
 *.log
